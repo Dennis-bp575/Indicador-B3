@@ -52,6 +52,8 @@ async function executarScanner() {
     let totalMatchesHoje = 0;
     let totalMatchesPalavras = 0; // O primeiro número
     let totalReversoesCandle = 0; // O segundo número (Martelo OU Engolfo)
+    let direcaoIbovespaHoje = "estavel";
+
 
     // Efeito Visual: Transforma o botão em "Carregando..."
     botaoAtualizar.disabled = true;
@@ -103,11 +105,31 @@ async function executarScanner() {
 
                 if(!dataSinal) dataSinal = new Date(c51.date * 1000).toLocaleDateString('pt-BR');
 
-                // Mede a variação percentual de hoje deste ativo para calcular a direção da bolsa
-                if(c50.close > 0) {
-                    somaVariacaoBolsa += ((c51.close - c50.close) / c50.close);
-                    totalAtivosValidos++;
+                try {
+                    console.log("Consultando o fechamento oficial do Ibovespa...");
+                    const urlIbov = `https://brapi.dev{token}`;
+                    const respostaIbov = await fetch(urlIbov);
+                    
+                    if (respostaIbov.ok) {
+                        const dadosIbov = await respostaIbov.json();
+                        if (dadosIbov.results && dadosIbov.results[0].historicalDataPrice) {
+                            const historicoIbov = dadosIbov.results[0].historicalDataPrice;
+                            
+                            // Pega os dois últimos dias do índice para comparar o fechamento
+                            const ibovHoje = historicoIbov[historicoIbov.length - 1];
+                            const ibovOntem = historicoIbov[historicoIbov.length - 2];
+            
+                            // Define se o fechamento oficial foi de Alta ou Baixa
+                            direcaoIbovespaHoje = ibovHoje.close > ibovOntem.close ? "subiu" : "desceu";
+                            console.log(`📊 Ibovespa hoje: ${direcaoIbovespaHoje} (Fechamento: ${ibovHoje.close})`);
+                        }
+                    }
+                } catch (erroIbov) {
+                    console.error("Erro ao recuperar dados do Ibovespa:", erroIbov.message);
+                    // Fallback de segurança: se a API falhar no índice, assume estável para não quebrar o app
+                    direcaoIbovespaHoje = "estavel"; 
                 }
+
 
                 // Mapeamento exato das 7 colunas (B até H) do seu Excel
                 const chavesColunas = ['open', 'high', 'low', 'close', 'volume', 'alma1', 'alma2']; 
@@ -183,7 +205,7 @@ async function executarScanner() {
     const direcaoBolsaHoje = variacaoMediaBolsa > 0 ? "subiu" : "desceu";
 
     // Executa a rotina do LocalStorage para processar palpites passados e salvar o de hoje
-    processarEGravarLocalStorage(dataSinal, totalMatchesPalavras, totalReversoesCandle, direcaoBolsaHoje);
+    processarEGravarLocalStorage(dataSinal, totalMatchesPalavras, totalReversoesCandle, direcaoIbovespaHoje);
 
     // Renderiza a tela
     blocoResultadoAtual.innerHTML = `Resultado atual: <span class="text-emerald-400">${totalMatchesPalavras} e ${totalReversoesCandle}</span>`;
