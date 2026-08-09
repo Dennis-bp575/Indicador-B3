@@ -327,7 +327,7 @@ function desenharHistoricoNaTela() {
             <div class="flex items-center justify-between bg-gray-850 border border-gray-800 rounded-xl p-4 shadow-sm">
                 <div class="flex flex-col">
                     <span class="font-bold text-white text-base">Matches: ${item.placar}</span>
-                    <span class="text-xs text-gray-500">Data do Sinal: ${item.data}</span>
+                    <span class="text-xs text-gray-500">Data do Sinal: ${item.dataSinal}</span>
                 </div>
                 <div class="flex items-center gap-2 font-bold px-3 py-1 rounded-full text-xs ${classeCor}">
                     Bolsa: ${item.resultadoBolsa}
