@@ -73,19 +73,48 @@ async function executarScanner() {
 
             const dadosBrutos = await response.json();
             
-            // Verifica se a API retornou os dados corretamente
             if (dadosBrutos.results && dadosBrutos.results[0] && dadosBrutos.results[0].historicalDataPrice) {
                 const ativo = dadosBrutos.results[0];
                 const historicoCompleto = ativo.historicalDataPrice;
 
-                // Captura exatamente os últimos 3 dias (Linhas 51, 50, 49)
-                const ultimos3Dias = historicoCompleto.slice(-3);
+                // 1. Extrai apenas os preços de fechamento para alimentar a ALMA
+                const precosFechamento = historicoCompleto.map(c => c.close);
 
-                // --- SUA LÓGICA VAI ENTRAR AQUI ---
-                // Vamos simular que gerou uma palavra e deu match para testar a tela
-                let deuMatch = false; 
-                let palavraGerada = "AGUARDANDO_LOGICA";
-                // ----------------------------------
+                // 2. Calcula as duas ALMAs para cada linha do histórico
+                // AJUSTE AQUI: Mude os números 9 e 21 para os períodos exatos que você usa no Excel
+                const periodoAlma1 = 9;  
+                const periodoAlma2 = 21; 
+
+                historicoCompleto.forEach((candle, index) => {
+                    candle.alma1 = calcularALMA(precosFechamento, index, periodoAlma1);
+                    candle.alma2 = calcularALMA(precosFechamento, index, periodoAlma2);
+                });
+
+                // 3. Agora sim, captura os últimos 3 dias com as ALMAs calculadas inseridas neles!
+                const ultimos3Dias = historicoCompleto.slice(-3);
+                const c51 = ultimos3Dias[2]; // Linha 51
+                const c50 = ultimos3Dias[1]; // Linha 50
+                const c49 = ultimos3Dias[0]; // Linha 49
+
+                // Mapeamento exato das 7 colunas (B até H) do seu Excel
+                const chavesColunas = ['open', 'high', 'low', 'close', 'volume', 'alma1', 'alma2']; 
+
+                let palavraGerada = "";
+
+                // Monta a palavra de 14 letras cruzando dados e médias
+                for (let i = 0; i < 7; i++) {
+                    const propriedade = chavesColunas[i];
+
+                    const v51 = Number(c51[propriedade]) || 0;
+                    const v50 = Number(c50[propriedade]) || 0;
+                    const v49 = Number(c49[propriedade]) || 0;
+
+                    palavraGerada += v51 > v50 ? "A" : v51 < v50 ? "V" : "I";
+                    palavraGerada += v50 > v49 ? "A" : v50 < v49 ? "V" : "I";
+                }
+
+                // Verifica match com os tokens matemáticos de 14 letras
+                let deuMatch = TOKENS_INDICADORES.includes(palavraGerada);
 
                 if (deuMatch) {
                     totalMatchesHoje++;
@@ -95,14 +124,11 @@ async function executarScanner() {
                     ticker: ticker,
                     nome: ativo.shortName,
                     preco: ativo.regularMarketPrice,
-                    dados: ultimos3Dias,
                     palavra: palavraGerada,
                     match: deuMatch
                 });
 
-                console.log(`✅ ${ticker} processado.`);
-            } else {
-                console.warn(`⚠️ Sem dados históricos para: ${ticker}`);
+                console.log(`✅ ${ticker} processado. Assinatura: ${palavraGerada} | Match: ${deuMatch}`);
             }
 
         } catch (error) {
@@ -125,6 +151,36 @@ async function executarScanner() {
     // Retorna os dados caso precise usar em outra função
     return resultadosProcessados;
 }
+
+// ==========================================================
+// FUNÇÃO ALMA EM JAVASCRIPT PURO
+// ==========================================================
+function calcularALMA(precos, indexAtual, tamanhoDesejado) {
+    if (indexAtual === 0) return precos[0];
+
+    const windowSize = Math.min(tamanhoDesejado, indexAtual + 1);
+    const offset = 0.85;
+    const sigma = 6;
+
+    const m = offset * (windowSize - 1);
+    const s = windowSize / sigma;
+
+    let somaPesos = 0;
+    let somaPonderada = 0;
+
+    for (let i = 0; i < windowSize; i++) {
+        const precoIndex = indexAtual - (windowSize - 1) + i;
+        const preco = precos[precoIndex];
+
+        const peso = Math.exp(-Math.pow(i - m, 2) / (2 * Math.pow(s, 2)));
+
+        somaPonderada += preco * peso;
+        somaPesos += peso;
+    }
+
+    return somaPesos === 0 ? 0 : (somaPonderada / somaPesos);
+}
+
 
 // ==========================================
 // 4. ATIVAÇÃO DO BOTÃO
