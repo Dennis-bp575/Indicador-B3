@@ -294,9 +294,9 @@ function processarEGravarLocalStorage(dataSinal, totalMatchesPalavras, totalReve
         dataSinal: dataSinal, 
         matches: totalMatchesPalavras,
         reversoes: totalReversoesCandle,
-        resultadoBolsa: "AGUARDANDO..." // Fica no aguardo do pregão posterior
+        placar: `${totalMatchesPalavras} e ${totalReversoesCandle}`, 
+        resultadoBolsa: "AGUARDANDO..." 
     };
-
     // Evita duplicar a linha de previsão se o app rodar mais de uma vez no mesmo dia
     const jaExisteSinalHoje = historicoSalvo.some(reg => reg.dataSinal === dataSinal);
     if (!jaExisteSinalHoje) {
@@ -317,9 +317,9 @@ function desenharHistoricoNaTela() {
     historicoSalvo.reverse().forEach(item => {
         let classeCor = "bg-gray-800 border-gray-700 text-gray-400";
         
-        if (item.resultadoBolsa.includes("subiu") || item.resultadoBolsa.includes("V")) {
+        if (item.resultadoBolsa.includes("subiu") || item.resultadoBolsa) {
             classeCor = "bg-emerald-950 bg-opacity-40 border-emerald-800 text-emerald-400";
-        } else if (item.resultadoBolsa.includes("desceu") || item.resultadoBolsa.includes("^")) {
+        } else if (item.resultadoBolsa.includes("desceu") || item.resultadoBolsa) {
             classeCor = "bg-rose-950 bg-opacity-40 border-rose-900 text-rose-400";
         }
 
