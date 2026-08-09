@@ -103,7 +103,7 @@ async function executarScanner() {
                 const c50 = ultimos3Dias[1]; // Linha 50
                 const c49 = ultimos3Dias[0]; // Linha 49
 
-                if(!dataSinal) dataSinal = new Date(c51.date * 1000).toLocaleDateString('pt-BR');
+                // if(!dataSinal) dataSinal = new Date(c51.date * 1000).toLocaleDateString('pt-BR');
 
                
 
