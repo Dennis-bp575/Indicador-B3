@@ -166,7 +166,10 @@ async function executarScanner() {
 
  try {
         console.log("Consultando o fechamento oficial do Ibovespa...");
-        const urlIbov = `https://brapi.dev{token}`;
+             
+        const urlIbov =  `https://brapi.dev/api/quote/${"%5EBVSP"}` +
+                `?range=3mo&interval=1d&token=${token}`;
+             
         const respostaIbov = await fetch(urlIbov);
         
         if (respostaIbov.ok) {
