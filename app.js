@@ -53,7 +53,7 @@ async function executarScanner() {
     let totalMatchesPalavras = 0; // O primeiro número
     let totalReversoesCandle = 0; // O segundo número (Martelo OU Engolfo)
     let direcaoIbovespaHoje = "estavel";
-    let dataSinal = new Date().toLocaleDateString('pt-BR'); 
+    let dataSinal = ""; 
 
     // Efeito Visual: Transforma o botão em "Carregando..."
     botaoAtualizar.disabled = true;
@@ -104,7 +104,10 @@ async function executarScanner() {
                 const c49 = ultimos3Dias[0]; // Linha 49
 
                 // if(!dataSinal) dataSinal = new Date(c51.date * 1000).toLocaleDateString('pt-BR');
-
+                // Captura a data real do pregão apenas uma vez (na primeira ação válida)
+                if (!dataSinal && c51 && c51.date) { 
+                    dataSinal = new Date(c51.date * 1000).toLocaleDateString('pt-BR');
+                }
                
 
                 // Mapeamento exato das 7 colunas (B até H) do seu Excel
@@ -204,10 +207,9 @@ async function executarScanner() {
         <span>Atualizar Dados da Bolsa</span>
     `;
 
-    // Descobre a direção média da bolsa HOJE (Subiu ou Desceu)
-    //const variacaoMediaBolsa = totalAtivosValidos > 0 ? (somaVariacaoBolsa / totalAtivosValidos) : 0;
-   // const direcaoBolsaHoje = variacaoMediaBolsa > 0 ? "subiu" : "desceu";
-
+    if (!dataSinal) {
+        dataSinal = new Date().toLocaleDateString('pt-BR');
+    }
     // Executa a rotina do LocalStorage para processar palpites passados e salvar o de hoje
     processarEGravarLocalStorage(dataSinal, totalMatchesPalavras, totalReversoesCandle, direcaoIbovespaHoje);
 
