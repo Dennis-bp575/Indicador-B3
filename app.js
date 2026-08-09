@@ -264,7 +264,7 @@ function calcularALMA(precos, indexAtual, tamanhoDesejado) {
 
 function processarEGravarLocalStorage(dataSinal, totalMatchesPalavras, totalReversoesCandle, direcaoIbovespaHoje, dataIbov) {
     // 1. Pega o histórico existente ou cria um array vazio
-    let historicoSalvo = JSON.parse(localStorage.getItem('historico_quant')) || [];
+    let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
 
     // 1. CONVERTE AS DATAS PARA COMPARAÇÃO (Formato brasileiro dd/mm/aaaa para Objeto Date)
     function converterData(stringData) {
@@ -304,14 +304,14 @@ function processarEGravarLocalStorage(dataSinal, totalMatchesPalavras, totalReve
     }
 
     // 4. GRAVAÇÃO SEGURA NO LOCAL STORAGE
-    localStorage.setItem('historico_quant', JSON.stringify(historicoSalvo));
+    localStorage.setItem('historico_B3', JSON.stringify(historicoSalvo));
 }
 // ==========================================
 // 5. RENDERIZADOR DO HISTÓRICO VISUAL
 // ==========================================
 function desenharHistoricoNaTela() {
     blocoListaHistorico.innerHTML = "";
-    let historicoSalvo = JSON.parse(localStorage.getItem('historico_quant')) || [];
+    let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
 
     // Inverte a ordem para exibir o mais recente no topo
     historicoSalvo.reverse().forEach(item => {
