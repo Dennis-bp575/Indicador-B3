@@ -54,6 +54,7 @@ async function executarScanner() {
     let totalReversoesCandle = 0; // O segundo número (Martelo OU Engolfo)
     let direcaoIbovespaHoje = "estavel";
     let dataSinal = ""; 
+    let dataHojeFormatada; 
 
     // Efeito Visual: Transforma o botão em "Carregando..."
     botaoAtualizar.disabled = true;
@@ -168,32 +169,36 @@ async function executarScanner() {
     } // Fim do for
 
  try {
-        console.log("Consultando o fechamento oficial do Ibovespa...");
-             
-        const urlIbov =  `https://brapi.dev/api/quote/${"%5EBVSP"}` +
-                `?range=3mo&interval=1d&token=${token}`;
-             
-        const respostaIbov = await fetch(urlIbov);
-        
-        if (respostaIbov.ok) {
-            const dadosIbov = await respostaIbov.json();
-            if (dadosIbov.results && dadosIbov.results[0].historicalDataPrice) {
-                const historicoIbov = dadosIbov.results[0].historicalDataPrice;
-                
-                // Pega os dois últimos dias do índice para comparar o fechamento
-                const ibovHoje = historicoIbov[historicoIbov.length - 1];
-                const ibovOntem = historicoIbov[historicoIbov.length - 2];
+    console.log("Consultando o fechamento oficial do Ibovespa...");
+         
+    const urlIbov =  `https://brapi.dev/api/quote/${"%5EBVSP"}` +
+            `?range=3mo&interval=1d&token=${token}`;
+         
+    const respostaIbov = await fetch(urlIbov);
+    
+    if (respostaIbov.ok) {
+        const dadosIbov = await respostaIbov.json();
+        if (dadosIbov.results && dadosIbov.results[0].historicalDataPrice) {
+            const historicoIbov = dadosIbov.results[0].historicalDataPrice;
+            
+            // Pega os dois últimos dias do índice para comparar o fechamento
+            const ibovHoje = historicoIbov[historicoIbov.length - 1];
+            const ibovOntem = historicoIbov[historicoIbov.length - 2];
 
-                // Define se o fechamento oficial foi de Alta ou Baixa
-                direcaoIbovespaHoje = ibovHoje.close > ibovOntem.close ? "subiu" : "desceu";
-                console.log(`📊 Ibovespa hoje: ${direcaoIbovespaHoje} (Fechamento: ${ibovHoje.close})`);
-            }
+            const dataHojeRaw = ibovHoje.date; 
+            dataHojeFormatada = new Date(dataHojeRaw * 1000).toLocaleDateString('pt-BR');
+
+            // Define se o fechamento oficial foi de Alta ou Baixa
+            direcaoIbovespaHoje = ibovHoje.close > ibovOntem.close ? "subiu" : "desceu";
+            
+            console.log(`📊 Ibovespa em ${dataHojeFormatada}: ${direcaoIbovespaHoje} (Fechamento: ${ibovHoje.close})`);
         }
-    } catch (erroIbov) {
-        console.error("Erro ao recuperar dados do Ibovespa:", erroIbov.message);
-        // Fallback de segurança: se a API falhar no índice, assume estável para não quebrar o app
-        direcaoIbovespaHoje = "estavel"; 
     }
+} catch (erroIbov) {
+    console.error("Erro ao recuperar dados do Ibovespa:", erroIbov.message);
+    direcaoIbovespaHoje = "estavel"; 
+}
+
 
     // Atualiza a tela com o total de matches encontrados
     blocoResultadoAtual.innerHTML = `<span class="text-emerald-400">${totalMatchesPalavras} e ${totalReversoesCandle}</span>`;
@@ -211,7 +216,13 @@ async function executarScanner() {
         dataSinal = new Date().toLocaleDateString('pt-BR');
     }
     // Executa a rotina do LocalStorage para processar palpites passados e salvar o de hoje
-    processarEGravarLocalStorage(dataSinal, totalMatchesPalavras, totalReversoesCandle, direcaoIbovespaHoje);
+    processarEGravarLocalStorage(
+                dataSinal, 
+                totalMatchesPalavras, 
+                totalReversoesCandle, 
+                direcaoIbovespaHoje,
+                dataHojeFormatada // ⬅️ Nova variável adicionada aqui
+            );
 
     desenharHistoricoNaTela();
 
@@ -250,32 +261,38 @@ function calcularALMA(precos, indexAtual, tamanhoDesejado) {
 // ==========================================
 // 4. GERENCIADOR DO LOCALSTORAGE
 // ==========================================
-function processarEGravarLocalStorage(dataHoje, matchesHoje, reversoesHoje, direcaoHoje) {
+function processarEGravarLocalStorage(dataHoje, matchesHoje, reversoesHoje, direcaoHoje, dataHojeFormatada) {
+function processarEGravarLocalStorage(dataSinal, totalMatchesPalavras, totalReversoesCandle, direcaoIbovespaHoje, dataIbov) {
     // 1. Pega o histórico existente ou cria um array vazio
     let historicoSalvo = JSON.parse(localStorage.getItem('historico_quant')) || [];
 
-    // 2. Se houver um palpite aberto (gerado no dia anterior), atualiza ele com o resultado real da bolsa HOJE
-    if (historicoSalvo.length > 0) {
-        let ultimoRegistro = historicoSalvo[historicoSalvo.length - 1];
-        if (ultimoRegistro.resultadoBolsa === "AGUARDANDO...") {
-            ultimoRegistro.resultadoBolsa = direcaoHoje === "subiu" ? "/ subiu" : "V desceu";
-        }
+   const registroAguardando = [...historicoSalvo].reverse().find(reg => reg.resultadoBolsa === "AGUARDANDO...");
+
+    if (registroAguardando) {
+        // Atualiza a linha do dia 07/08 com o resultado da bolsa coletado hoje (segunda-feira)
+        registroAguardando.resultadoBolsa = direcaoIbovespaHoje === "subiu" ? "▲ subiu" : "▼ desceu";
+        console.log(`✅ Sucesso: O sinal do dia ${registroAguardando.dataSinal} foi atualizado com o fechamento de hoje (${dataIbov}): ${direcaoIbovespaHoje}`);
+    } else {
+        console.log("Nenhum sinal anterior pendente de resultado da bolsa.");
     }
 
-    // 3. Verifica se o sinal de hoje já foi salvo para não duplicar cliques no mesmo dia
-    const jaTemHoje = historicoSalvo.some(reg => reg.data === dataHoje);
-    if (!jaTemHoje) {
-        historicoSalvo.push({
-            data: dataHoje,
-            placar: `${matchesHoje} e ${reversoesHoje}`,
-            resultadoBolsa: "AGUARDANDO..." // Fica em aberto até você rodar o scanner no dia seguinte!
-        });
+    // 2. CRIA O NOVO SINAL DE HOJE (Que vai ficar aguardando o próximo fechamento)
+    const novoRegistro = {
+        dataSinal: dataSinal, // Ex: Data de hoje (segunda-feira)
+        matches: totalMatchesPalavras,
+        reversoes: totalReversoesCandle,
+        resultadoBolsa: "AGUARDANDO..." // Fica aberto para a próxima consulta
+    };
+
+    // Evita duplicar o sinal se você rodar o script mais de uma vez no mesmo dia
+    const jaExisteSinalHoje = historicoSalvo.some(reg => reg.dataSinal === dataSinal);
+    if (!jaExisteSinalHoje) {
+        historicoSalvo.push(novoRegistro);
     }
 
-    // 4. Devolve os dados atualizados para a memória do navegador
+    // 3. GRAVAÇÃO COMPLETA NO LOCAL STORAGE
     localStorage.setItem('historico_quant', JSON.stringify(historicoSalvo));
 }
-
 // ==========================================
 // 5. RENDERIZADOR DO HISTÓRICO VISUAL
 // ==========================================
