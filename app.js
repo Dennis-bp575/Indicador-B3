@@ -201,8 +201,8 @@ async function executarScanner() {
     `;
 
     // Descobre a direção média da bolsa HOJE (Subiu ou Desceu)
-    const variacaoMediaBolsa = totalAtivosValidos > 0 ? (somaVariacaoBolsa / totalAtivosValidos) : 0;
-    const direcaoBolsaHoje = variacaoMediaBolsa > 0 ? "subiu" : "desceu";
+    //const variacaoMediaBolsa = totalAtivosValidos > 0 ? (somaVariacaoBolsa / totalAtivosValidos) : 0;
+   // const direcaoBolsaHoje = variacaoMediaBolsa > 0 ? "subiu" : "desceu";
 
     // Executa a rotina do LocalStorage para processar palpites passados e salvar o de hoje
     processarEGravarLocalStorage(dataSinal, totalMatchesPalavras, totalReversoesCandle, direcaoIbovespaHoje);
