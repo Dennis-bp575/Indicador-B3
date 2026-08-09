@@ -211,12 +211,7 @@ async function executarScanner() {
     // Executa a rotina do LocalStorage para processar palpites passados e salvar o de hoje
     processarEGravarLocalStorage(dataSinal, totalMatchesPalavras, totalReversoesCandle, direcaoIbovespaHoje);
 
-    // Renderiza a tela
-    blocoResultadoAtual.innerHTML = `Resultado atual: <span class="text-emerald-400">${totalMatchesPalavras} e ${totalReversoesCandle}</span>`;
     desenharHistoricoNaTela();
-
-    botaoAtualizar.disabled = false;
-    botaoAtualizar.innerHTML = `<span>Atualizar Dados da Bolsa</span>`;
 
     return resultadosProcessados;
 }
