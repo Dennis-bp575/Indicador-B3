@@ -105,31 +105,7 @@ async function executarScanner() {
 
                 if(!dataSinal) dataSinal = new Date(c51.date * 1000).toLocaleDateString('pt-BR');
 
-                try {
-                    console.log("Consultando o fechamento oficial do Ibovespa...");
-                    const urlIbov = `https://brapi.dev{token}`;
-                    const respostaIbov = await fetch(urlIbov);
-                    
-                    if (respostaIbov.ok) {
-                        const dadosIbov = await respostaIbov.json();
-                        if (dadosIbov.results && dadosIbov.results[0].historicalDataPrice) {
-                            const historicoIbov = dadosIbov.results[0].historicalDataPrice;
-                            
-                            // Pega os dois últimos dias do índice para comparar o fechamento
-                            const ibovHoje = historicoIbov[historicoIbov.length - 1];
-                            const ibovOntem = historicoIbov[historicoIbov.length - 2];
-            
-                            // Define se o fechamento oficial foi de Alta ou Baixa
-                            direcaoIbovespaHoje = ibovHoje.close > ibovOntem.close ? "subiu" : "desceu";
-                            console.log(`📊 Ibovespa hoje: ${direcaoIbovespaHoje} (Fechamento: ${ibovHoje.close})`);
-                        }
-                    }
-                } catch (erroIbov) {
-                    console.error("Erro ao recuperar dados do Ibovespa:", erroIbov.message);
-                    // Fallback de segurança: se a API falhar no índice, assume estável para não quebrar o app
-                    direcaoIbovespaHoje = "estavel"; 
-                }
-
+               
 
                 // Mapeamento exato das 7 colunas (B até H) do seu Excel
                 const chavesColunas = ['open', 'high', 'low', 'close', 'volume', 'alma1', 'alma2']; 
@@ -187,6 +163,31 @@ async function executarScanner() {
             console.error(`❌ Erro em ${ticker}:`, error.message);
         }
     } // Fim do for
+
+ try {
+        console.log("Consultando o fechamento oficial do Ibovespa...");
+        const urlIbov = `https://brapi.dev{token}`;
+        const respostaIbov = await fetch(urlIbov);
+        
+        if (respostaIbov.ok) {
+            const dadosIbov = await respostaIbov.json();
+            if (dadosIbov.results && dadosIbov.results[0].historicalDataPrice) {
+                const historicoIbov = dadosIbov.results[0].historicalDataPrice;
+                
+                // Pega os dois últimos dias do índice para comparar o fechamento
+                const ibovHoje = historicoIbov[historicoIbov.length - 1];
+                const ibovOntem = historicoIbov[historicoIbov.length - 2];
+
+                // Define se o fechamento oficial foi de Alta ou Baixa
+                direcaoIbovespaHoje = ibovHoje.close > ibovOntem.close ? "subiu" : "desceu";
+                console.log(`📊 Ibovespa hoje: ${direcaoIbovespaHoje} (Fechamento: ${ibovHoje.close})`);
+            }
+        }
+    } catch (erroIbov) {
+        console.error("Erro ao recuperar dados do Ibovespa:", erroIbov.message);
+        // Fallback de segurança: se a API falhar no índice, assume estável para não quebrar o app
+        direcaoIbovespaHoje = "estavel"; 
+    }
 
     // Atualiza a tela com o total de matches encontrados
     blocoResultadoAtual.innerHTML = `Resultado atual: <span class="text-emerald-400">${totalMatchesPalavras} e ${totalReversoesCandle}</span>`;
