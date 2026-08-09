@@ -53,7 +53,7 @@ async function executarScanner() {
     let totalMatchesPalavras = 0; // O primeiro número
     let totalReversoesCandle = 0; // O segundo número (Martelo OU Engolfo)
     let direcaoIbovespaHoje = "estavel";
-
+    let dataSinal = new Date().toLocaleDateString('pt-BR'); 
 
     // Efeito Visual: Transforma o botão em "Carregando..."
     botaoAtualizar.disabled = true;
