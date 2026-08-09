@@ -261,36 +261,49 @@ function calcularALMA(precos, indexAtual, tamanhoDesejado) {
 // ==========================================
 // 4. GERENCIADOR DO LOCALSTORAGE
 // ==========================================
-function processarEGravarLocalStorage(dataHoje, matchesHoje, reversoesHoje, direcaoHoje, dataHojeFormatada) {
+
 function processarEGravarLocalStorage(dataSinal, totalMatchesPalavras, totalReversoesCandle, direcaoIbovespaHoje, dataIbov) {
     // 1. Pega o histórico existente ou cria um array vazio
     let historicoSalvo = JSON.parse(localStorage.getItem('historico_quant')) || [];
 
-   const registroAguardando = [...historicoSalvo].reverse().find(reg => reg.resultadoBolsa === "AGUARDANDO...");
-
-    if (registroAguardando) {
-        // Atualiza a linha do dia 07/08 com o resultado da bolsa coletado hoje (segunda-feira)
-        registroAguardando.resultadoBolsa = direcaoIbovespaHoje === "subiu" ? "▲ subiu" : "▼ desceu";
-        console.log(`✅ Sucesso: O sinal do dia ${registroAguardando.dataSinal} foi atualizado com o fechamento de hoje (${dataIbov}): ${direcaoIbovespaHoje}`);
-    } else {
-        console.log("Nenhum sinal anterior pendente de resultado da bolsa.");
+    // 1. CONVERTE AS DATAS PARA COMPARAÇÃO (Formato brasileiro dd/mm/aaaa para Objeto Date)
+    function converterData(stringData) {
+        if (!stringData) return new Date(0);
+        const [dia, mes, ano] = stringData.split('/');
+        return new Date(ano, mes - 1, dia);
     }
 
-    // 2. CRIA O NOVO SINAL DE HOJE (Que vai ficar aguardando o próximo fechamento)
+    // 2. BUSCA O SINAL MAIS RECENTE QUE FICOU AGUARDANDO
+    const registroAguardando = [...historicoSalvo].reverse().find(reg => reg.resultadoBolsa === "AGUARDANDO...");
+
+    if (registroAguardando) {
+        const dataDoSinalSalvo = converterData(registroAguardando.dataSinal);
+        const dataDoFechamentoAtual = converterData(dataIbov);
+
+        // Só atualiza se o fechamento atual for de um dia posterior ao sinal gerado
+        if (dataDoFechamentoAtual > dataDoSinalSalvo) {
+            registroAguardando.resultadoBolsa = direcaoIbovespaHoje === "subiu" ? "▲ subiu" : "▼ desceu";
+            console.log(`✅ Sinal de ${registroAguardando.dataSinal} atualizado com o pregão posterior de ${dataIbov}: ${direcaoIbovespaHoje}`);
+        } else {
+            console.log(`⏳ Aguardando o pregão do dia posterior para o sinal de ${registroAguardando.dataSinal}. O fechamento de ${dataIbov} não é posterior.`);
+        }
+    }
+
+    // 3. CRIA O NOVO SINAL DA RODADA ATUAL (Previsão para o próximo pregão)
     const novoRegistro = {
-        dataSinal: dataSinal, // Ex: Data de hoje (segunda-feira)
+        dataSinal: dataSinal, 
         matches: totalMatchesPalavras,
         reversoes: totalReversoesCandle,
-        resultadoBolsa: "AGUARDANDO..." // Fica aberto para a próxima consulta
+        resultadoBolsa: "AGUARDANDO..." // Fica no aguardo do pregão posterior
     };
 
-    // Evita duplicar o sinal se você rodar o script mais de uma vez no mesmo dia
+    // Evita duplicar a linha de previsão se o app rodar mais de uma vez no mesmo dia
     const jaExisteSinalHoje = historicoSalvo.some(reg => reg.dataSinal === dataSinal);
     if (!jaExisteSinalHoje) {
         historicoSalvo.push(novoRegistro);
     }
 
-    // 3. GRAVAÇÃO COMPLETA NO LOCAL STORAGE
+    // 4. GRAVAÇÃO SEGURA NO LOCAL STORAGE
     localStorage.setItem('historico_quant', JSON.stringify(historicoSalvo));
 }
 // ==========================================
