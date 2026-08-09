@@ -41,12 +41,16 @@ const botaoAtualizar = document.getElementById('btn-atualizar');
 const blocoResultadoAtual = document.getElementById('resultado-atual');
 const blocoListaHistorico = document.getElementById('lista-historico');
 
+
+
 // ==========================================
 // 3. FUNÇÃO PRINCIPAL DO SCANNER
 // ==========================================
 async function executarScanner() {
     let resultadosProcessados = [];
     let totalMatchesHoje = 0;
+    let totalMatchesPalavras = 0; // O primeiro número
+    let totalReversoesCandle = 0; // O segundo número (Martelo OU Engolfo)
 
     // Efeito Visual: Transforma o botão em "Carregando..."
     botaoAtualizar.disabled = true;
@@ -120,6 +124,23 @@ async function executarScanner() {
                     totalMatchesHoje++;
                 }
 
+                // Lógica do Martelo (Candle 51)
+                const corpo51 = Math.abs(c51.close - c51.open);
+                const sombraInf51 = Math.min(c51.open, c51.close) - c51.low;
+                const sombraSup51 = c51.high - Math.max(c51.open, c51.close);
+                const ehMartelo = (sombraInf51 >= 2 * corpo51) && (sombraSup51 <= corpo51 * 0.1);
+
+                // Lógica do Engolfo de Alta (Candle 50 + Candle 51)
+                const candle50Baixa = c50.close < c50.open;
+                const candle51Alta = c51.close > c51.open;
+                const ehEngolfo = candle50Baixa && candle51Alta && (c51.open <= c50.close) && (c51.close > c50.open);
+
+                // Validação 2: Aconteceu Martelo OU Engolfo de Alta?
+                if (ehMartelo || ehEngolfo) {
+                    totalReversoesCandle++;
+                }
+
+            
                 resultadosProcessados.push({
                     ticker: ticker,
                     nome: ativo.shortName,
@@ -137,7 +158,7 @@ async function executarScanner() {
     } // Fim do for
 
     // Atualiza a tela com o total de matches encontrados
-    blocoResultadoAtual.innerHTML = `Resultado atual: <span class="text-emerald-400">${totalMatchesHoje}</span>`;
+    blocoResultadoAtual.innerHTML = `Resultado atual: <span class="text-emerald-400">${totalMatchesPalavras} e ${totalReversoesCandle}</span>`;
 
     // Restaura o botão ao estado original
     botaoAtualizar.disabled = false;
