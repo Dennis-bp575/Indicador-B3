@@ -121,7 +121,7 @@ async function executarScanner() {
                 let deuMatch = TOKENS_INDICADORES.includes(palavraGerada);
 
                 if (deuMatch) {
-                    totalMatchesHoje++;
+                    totalMatchesPalavras++;
                 }
 
                 // Lógica do Martelo (Candle 51)
