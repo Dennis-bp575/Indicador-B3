@@ -17,14 +17,22 @@
             <p class="text-sm text-gray-400 mt-1">Monitorando 50 ações em tempo real</p>
         </header>
 
-        <!-- CARD PRINCIPAL: RESULTADO ATUAL -->
+        <!-- CARD PRINCIPAL: RESULTADO ATUAL (OTIMIZADO PARA MOBILE) -->
         <div class="bg-gray-850 bg-opacity-50 border border-gray-800 rounded-2xl p-6 text-center shadow-xl backdrop-blur-sm">
-            <p class="text-gray-400 text-sm uppercase tracking-wider font-semibold">Último Fechamento</p>
-            <!-- O ID "resultado-atual" será preenchido pelo JavaScript com o total de matches atuais -->
-            <div id="resultado-atual" class="text-4xl font-extrabold text-white mt-2">
-                Resultado atual: <span class="text-emerald-400">0</span>
+            <p class="text-gray-400 text-sm uppercase tracking-wider font-semibold">Previsão Estatística</p>
+            <p class="text-xs text-gray-500 mt-0.5">Sinais detectados no fechamento</p>
+            
+            <!-- Rótulo Principal -->
+            <div class="text-gray-300 font-medium mt-4 text-base">
+                Resultado atual:
+            </div>
+            
+            <!-- Números grandes centralizados e isolados abaixo (ID para o JS injetar) -->
+            <div id="resultado-atual" class="text-5xl font-extrabold text-emerald-400 tracking-tight mt-1">
+                0 e 0
             </div>
         </div>
+
 
         <!-- BOTÃO DE ATUALIZAÇÃO MANUAL -->
         <div class="px-1">
