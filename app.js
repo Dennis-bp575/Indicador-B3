@@ -41,6 +41,7 @@ const botaoAtualizar = document.getElementById('btn-atualizar');
 const blocoResultadoAtual = document.getElementById('resultado-atual');
 const blocoListaHistorico = document.getElementById('lista-historico');
 
+desenharHistoricoNaTela();
 
 
 // ==========================================
@@ -99,6 +100,14 @@ async function executarScanner() {
                 const c51 = ultimos3Dias[2]; // Linha 51
                 const c50 = ultimos3Dias[1]; // Linha 50
                 const c49 = ultimos3Dias[0]; // Linha 49
+
+                if(!dataSinal) dataSinal = new Date(c51.date * 1000).toLocaleDateString('pt-BR');
+
+                // Mede a variação percentual de hoje deste ativo para calcular a direção da bolsa
+                if(c50.close > 0) {
+                    somaVariacaoBolsa += ((c51.close - c50.close) / c50.close);
+                    totalAtivosValidos++;
+                }
 
                 // Mapeamento exato das 7 colunas (B até H) do seu Excel
                 const chavesColunas = ['open', 'high', 'low', 'close', 'volume', 'alma1', 'alma2']; 
@@ -169,7 +178,20 @@ async function executarScanner() {
         <span>Atualizar Dados da Bolsa</span>
     `;
 
-    // Retorna os dados caso precise usar em outra função
+    // Descobre a direção média da bolsa HOJE (Subiu ou Desceu)
+    const variacaoMediaBolsa = totalAtivosValidos > 0 ? (somaVariacaoBolsa / totalAtivosValidos) : 0;
+    const direcaoBolsaHoje = variacaoMediaBolsa > 0 ? "subiu" : "desceu";
+
+    // Executa a rotina do LocalStorage para processar palpites passados e salvar o de hoje
+    processarEGravarLocalStorage(dataSinal, totalMatchesPalavras, totalReversoesCandle, direcaoBolsaHoje);
+
+    // Renderiza a tela
+    blocoResultadoAtual.innerHTML = `Resultado atual: <span class="text-emerald-400">${totalMatchesPalavras} e ${totalReversoesCandle}</span>`;
+    desenharHistoricoNaTela();
+
+    botaoAtualizar.disabled = false;
+    botaoAtualizar.innerHTML = `<span>Atualizar Dados da Bolsa</span>`;
+
     return resultadosProcessados;
 }
 
@@ -202,9 +224,66 @@ function calcularALMA(precos, indexAtual, tamanhoDesejado) {
     return somaPesos === 0 ? 0 : (somaPonderada / somaPesos);
 }
 
+// ==========================================
+// 4. GERENCIADOR DO LOCALSTORAGE
+// ==========================================
+function processarEGravarLocalStorage(dataHoje, matchesHoje, reversoesHoje, direcaoHoje) {
+    // 1. Pega o histórico existente ou cria um array vazio
+    let historicoSalvo = JSON.parse(localStorage.getItem('historico_quant')) || [];
+
+    // 2. Se houver um palpite aberto (gerado no dia anterior), atualiza ele com o resultado real da bolsa HOJE
+    if (historicoSalvo.length > 0) {
+        let ultimoRegistro = historicoSalvo[historicoSalvo.length - 1];
+        if (ultimoRegistro.resultadoBolsa === "AGUARDANDO...") {
+            ultimoRegistro.resultadoBolsa = direcaoHoje === "subiu" ? "/ subiu" : "V desceu";
+        }
+    }
+
+    // 3. Verifica se o sinal de hoje já foi salvo para não duplicar cliques no mesmo dia
+    const jaTemHoje = historicoSalvo.some(reg => reg.data === dataHoje);
+    if (!jaTemHoje) {
+        historicoSalvo.push({
+            data: dataHoje,
+            placar: `${matchesHoje} e ${reversoesHoje}`,
+            resultadoBolsa: "AGUARDANDO..." // Fica em aberto até você rodar o scanner no dia seguinte!
+        });
+    }
+
+    // 4. Devolve os dados atualizados para a memória do navegador
+    localStorage.setItem('historico_quant', JSON.stringify(historicoSalvo));
+}
 
 // ==========================================
-// 4. ATIVAÇÃO DO BOTÃO
+// 5. RENDERIZADOR DO HISTÓRICO VISUAL
 // ==========================================
+function desenharHistoricoNaTela() {
+    blocoListaHistorico.innerHTML = "";
+    let historicoSalvo = JSON.parse(localStorage.getItem('historico_quant')) || [];
+
+    // Inverte a ordem para exibir o mais recente no topo
+    historicoSalvo.reverse().forEach(item => {
+        let classeCor = "bg-gray-800 border-gray-700 text-gray-400";
+        
+        if (item.resultadoBolsa.includes("subiu") || item.resultadoBolsa.includes("V")) {
+            classeCor = "bg-emerald-950 bg-opacity-40 border-emerald-800 text-emerald-400";
+        } else if (item.resultadoBolsa.includes("desceu") || item.resultadoBolsa.includes("^")) {
+            classeCor = "bg-rose-950 bg-opacity-40 border-rose-900 text-rose-400";
+        }
+
+        const linhaHtml = `
+            <div class="flex items-center justify-between bg-gray-850 border border-gray-800 rounded-xl p-4 shadow-sm">
+                <div class="flex flex-col">
+                    <span class="font-bold text-white text-base">Matches: ${item.placar}</span>
+                    <span class="text-xs text-gray-500">Data do Sinal: ${item.data}</span>
+                </div>
+                <div class="flex items-center gap-2 font-bold px-3 py-1 rounded-full text-xs ${classeCor}">
+                    Bolsa: ${item.resultadoBolsa}
+                </div>
+            </div>
+        `;
+        blocoListaHistorico.insertAdjacentHTML('beforeend', linhaHtml);
+    });
+}
+
 botaoAtualizar.addEventListener('click', executarScanner);
 
