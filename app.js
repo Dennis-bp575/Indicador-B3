@@ -61,7 +61,9 @@ async function executarScanner() {
     for (const ticker of meusAtivos) {
         try {
             await esperar(100);
-            const url = `https://brapi.dev{ticker}?range=3mo&interval=1d&token=${token}`;
+            const url =
+                `https://brapi.dev/api/quote/${ticker}` +
+                `?range=3mo&interval=1d&token=${token}`;
 
             const response = await fetch(url);
             
