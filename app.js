@@ -193,7 +193,7 @@ async function executarScanner() {
     }
 
     // Atualiza a tela com o total de matches encontrados
-    blocoResultadoAtual.innerHTML = `Resultado atual: <span class="text-emerald-400">${totalMatchesPalavras} e ${totalReversoesCandle}</span>`;
+    blocoResultadoAtual.innerHTML = `<span class="text-emerald-400">${totalMatchesPalavras} e ${totalReversoesCandle}</span>`;
 
     // Restaura o botão ao estado original
     botaoAtualizar.disabled = false;
