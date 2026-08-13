@@ -397,17 +397,37 @@ function desenharHistoricoNaTela() {
             classeCor = "bg-rose-950 bg-opacity-40 border-rose-900 text-rose-400";
         }
 
-        const linhaHtml = `
-            <div class="flex items-center justify-between bg-gray-850 border border-gray-800 rounded-xl p-4 shadow-sm">
-                <div class="flex flex-col">
-                    <span class="font-bold text-white text-base">Matches: ${item.placar}</span>
-                    <span class="text-xs text-gray-500">Data do Sinal: ${item.dataSinal}</span>
+        // 1. Mantém a sua lógica para a 'classeCor' (que cuida do Fechamento)
+            // e adiciona esta linha abaixo para definir a cor do badge da Abertura:
+            const classeCorAbertura = item.aberturaBolsa?.includes("alta") 
+                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" 
+                : item.aberturaBolsa?.includes("baixa") 
+                ? "bg-orange-500/10 text-orange-400 border border-orange-500/20" 
+                : "bg-gray-800 text-gray-400"; // Caso esteja "AGUARDANDO..."
+            
+            // 2. A sua constante com o HTML atualizado:
+            const linhaHtml = `
+                <div class="flex items-center justify-between bg-gray-850 border border-gray-800 rounded-xl p-4 shadow-sm">
+                    <div class="flex flex-col">
+                        <span class="font-bold text-white text-base">Matches: ${item.placar}</span>
+                        <span class="text-xs text-gray-500">Data do Sinal: ${item.dataSinal}</span>
+                    </div>
+                    
+                    <!-- Grupo de Badges à direita -->
+                    <div class="flex flex-col sm:flex-row items-end sm:items-center gap-2">
+                        <!-- Novo Badge de Abertura -->
+                        <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCorAbertura}">
+                            Abertura: ${item.aberturaBolsa || "AGUARDANDO..."}
+                        </div>
+                        
+                        <!-- Seu Badge Antigo de Fechamento -->
+                        <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCor}">
+                            Fechamento: ${item.resultadoBolsa}
+                        </div>
+                    </div>
                 </div>
-                <div class="flex items-center gap-2 font-bold px-3 py-1 rounded-full text-xs ${classeCor}">
-                    Bolsa: ${item.resultadoBolsa}
-                </div>
-            </div>
-        `;
+            `;
+
         blocoListaHistorico.insertAdjacentHTML('beforeend', linhaHtml);
     });
 }
