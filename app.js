@@ -147,15 +147,15 @@ async function executarScanner() {
 
                         // --- SISTEMA NOVO (Abertura B e Fechamento E contra as outras = 14 letras) ---
                         // Mapeando as variáveis direto das propriedades do seu objeto de dados
-                        const B51 = Number(c51["abertura"]) || 0; // Ajuste o nome da propriedade se for diferente
-                        const C51 = Number(c51["maxima"]) || 0;
-                        const D51 = Number(c51["minima"]) || 0;
-                        const E51 = Number(c51["fechamento"]) || 0;
+                        const B51 = Number(c51["propriedade"]) || 0; // Ajuste o nome da propriedade se for diferente
+                        const C51 = Number(c51["propriedade"]) || 0;
+                        const D51 = Number(c51["propriedade"]) || 0;
+                        const E51 = Number(c51["propriedade"]) || 0;
                         
-                        const B50 = Number(c50["abertura"]) || 0;
-                        const C50 = Number(c50["maxima"]) || 0;
-                        const D50 = Number(c50["minima"]) || 0;
-                        const E50 = Number(c50["fechamento"]) || 0;
+                        const B50 = Number(c50["propriedade"]) || 0;
+                        const C50 = Number(c50["propriedade"]) || 0;
+                        const D50 = Number(c50["propriedade"]) || 0;
+                        const E50 = Number(c50["propriedade"]) || 0;
                         
                         let novaPalavraGerada = "";
                         
