@@ -181,7 +181,7 @@ async function executarScanner() {
                         if (TOKENS_FONTE_SECUNDARIA.includes(novaPalavraGerada)) {
                             totalMatchesFonteSecundaria++;
                         }
-                        
+                      console.log(novaPalavraGerada, totalMatchesFonteSecundaria)
 
                 // Lógica do Martelo (Candle 51)
                 const corpo51 = Math.abs(c51.close - c51.open);
@@ -249,7 +249,8 @@ async function executarScanner() {
 
 
     // Atualiza a tela com o total de matches encontrados
-    blocoResultadoAtual.innerHTML = `<span class="text-emerald-400">${totalMatchesPalavras} e ${totalReversoesCandle}</span>`;
+    blocoResultadoAtual.innerHTML = `<span 
+                class="text-emerald-400">${totalMatchesPalavras} e ${totalReversoesCandle} e ${totalMatchesFonteSecundaria}</span>`;
 
     // Restaura o botão ao estado original
     botaoAtualizar.disabled = false;
