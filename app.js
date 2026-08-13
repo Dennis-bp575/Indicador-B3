@@ -65,7 +65,8 @@ async function executarScanner() {
     let dataSinal = ""; 
     let dataHojeFormatada; 
     let totalMatchesFonteSecundaria = 0; 
-
+    let direcaoAberturaHoje = "";  // <-- DECLARADA AQUI NO INÍCIO
+    
     // Efeito Visual: Transforma o botão em "Carregando..."
     botaoAtualizar.disabled = true;
     botaoAtualizar.innerHTML = `
@@ -216,7 +217,7 @@ async function executarScanner() {
         }
     } // Fim do for
 
- try {
+try {
     console.log("Consultando o fechamento oficial do Ibovespa...");
          
     const urlIbov =  `https://brapi.dev/api/quote/${"%5EBVSP"}` +
@@ -229,7 +230,7 @@ async function executarScanner() {
         if (dadosIbov.results && dadosIbov.results[0].historicalDataPrice) {
             const historicoIbov = dadosIbov.results[0].historicalDataPrice;
             
-            // Pega os dois últimos dias do índice para comparar o fechamento
+            // Pega os dois últimos dias do índice
             const ibovHoje = historicoIbov[historicoIbov.length - 1];
             const ibovOntem = historicoIbov[historicoIbov.length - 2];
 
@@ -238,8 +239,8 @@ async function executarScanner() {
 
             // Define se o fechamento oficial foi de Alta ou Baixa
             direcaoIbovespaHoje = ibovHoje.close > ibovOntem.close ? "subiu" : "desceu";
-            
-            console.log(`📊 Ibovespa em ${dataHojeFormatada}: ${direcaoIbovespaHoje} (Fechamento: ${ibovHoje.close})`);
+            direcaoAberturaHoje = ibovHoje.open > ibovOntem.close ? "subiu" : "desceu";
+            console.log(`📊 Ibovespa em ${dataHojeFormatada}: ${direcaoIbovespaHoje} (Fechamento: ${direcaoAberturaHoje})`);
         }
     }
 } catch (erroIbov) {
@@ -271,8 +272,10 @@ async function executarScanner() {
                 totalMatchesFonteSecundaria,
                 totalReversoesCandle, 
                 direcaoIbovespaHoje,
-                dataHojeFormatada // ⬅️ Nova variável adicionada aqui
+                dataHojeFormatada,   // ⬅️ Passando a data formatada da API
+                direcaoAberturaHoje  // ⬅️ Passando a direção da abertura
             );
+
 
     desenharHistoricoNaTela();
 
@@ -312,7 +315,8 @@ function calcularALMA(precos, indexAtual, tamanhoDesejado) {
 // 4. GERENCIADOR DO LOCALSTORAGE
 // ==========================================
 
-function processarEGravarLocalStorage(dataSinal, totalMatchesPalavras, totalMatchesFonteSecundaria, totalReversoesCandle, direcaoIbovespaHoje, dataIbov) {
+function processarEGravarLocalStorage(dataSinal, totalMatchesPalavras, totalMatchesFonteSecundaria,
+                                      totalReversoesCandle, direcaoIbovespaHoje, dataIbov, direcaoAberturaHoje) {
     // 1. Pega o histórico existente ou cria um array vazio
     let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
 
@@ -326,15 +330,20 @@ function processarEGravarLocalStorage(dataSinal, totalMatchesPalavras, totalMatc
     // 2. BUSCA O SINAL MAIS RECENTE QUE FICOU AGUARDANDO
     const registroAguardando = [...historicoSalvo].reverse().find(reg => reg.resultadoBolsa === "AGUARDANDO...");
 
-    if (registroAguardando) {
-        const dataDoSinalSalvo = converterData(registroAguardando.dataSinal);
-        const dataDoFechamentoAtual = converterData(dataIbov);
-
-        // Só atualiza se o fechamento atual for de um dia posterior ao sinal gerado
-        if (dataDoFechamentoAtual > dataDoSinalSalvo) {
-            registroAguardando.resultadoBolsa = direcaoIbovespaHoje === "subiu" ? "▲ subiu" : "▼ desceu";
-            console.log(`✅ Sinal de ${registroAguardando.dataSinal} atualizado com o pregão posterior de ${dataIbov}: ${direcaoIbovespaHoje}`);
-        } else {
+    if (dataDoFechamentoAtual > dataDoSinalSalvo) {
+                // 1. Atualiza o resultado do fechamento (que você já tinha)
+                registroAguardando.resultadoBolsa = direcaoIbovespaHoje === "subiu" ? "▲ subiu" : "▼ desceu";
+                
+                // 2. INCLUI OS NOSSOS NOVOS PARÂMETROS NO REGISTRO
+                registroAguardando.aberturaBolsa = direcaoAberturaHoje === "subiu" ? "▲ abriu em alta" : "▼ abriu em baixa";
+                registroAguardando.dataRealValidacao = dataHojeFormatada; // Salva a data oficial capturada da API
+            
+                console.log(`✅ Sinal de ${registroAguardando.dataSinal} atualizado com o pregão de ${dataHojeFormatada}!`);
+                console.log(`➡️ Abertura: ${registroAguardando.aberturaBolsa} | Fechamento: ${registroAguardando.resultadoBolsa}`);
+                
+                // O código abaixo para gravar no LocalStorage continuará igual, 
+                // mas agora o objeto "registroAguardando" já vai com os dados novos embutidos!
+            } else {
             console.log(`⏳ Aguardando o pregão do dia posterior para o sinal de ${registroAguardando.dataSinal}. O fechamento de ${dataIbov} não é posterior.`);
         }
     }
