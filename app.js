@@ -360,14 +360,10 @@ function processarEGravarLocalStorage(
     if (!sinalJaExiste) {
         const novoSinal = {
                 dataSinal: dataSinal,
-                // Mantém a propriedade que o seu HTML usa para renderizar na tela
-                placar: `${totalMatchesPalavras}-${totalMatchesFonteSecundaria}-${totalReversoesCandle}`, 
-                
-                // Mantém as variáveis separadas para o nosso futuro banco de dados
                 matchesPalavras: totalMatchesPalavras,
                 matchesFonteSecundaria: totalMatchesFonteSecundaria,
                 reversoesCandle: totalReversoesCandle,
-                
+                placar: `${totalMatchesPalavras}-${totalMatchesFonteSecundaria}-${totalReversoesCandle}`, 
                 resultadoBolsa: "AGUARDANDO...", 
                 aberturaBolsa: "AGUARDANDO...",
                 dataRealValidacao: "AGUARDANDO..."
