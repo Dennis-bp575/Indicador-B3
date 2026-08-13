@@ -251,7 +251,7 @@ try {
 
     // Atualiza a tela com o total de matches encontrados
     blocoResultadoAtual.innerHTML = `<span 
-                class="text-emerald-400">${totalMatchesPalavras} e ${totalReversoesCandle} e ${totalMatchesFonteSecundaria}</span>`;
+                class="text-emerald-400">${totalMatchesPalavras}-${totalReversoesCandle}-${totalMatchesFonteSecundaria}</span>`;
 
     // Restaura o botão ao estado original
     botaoAtualizar.disabled = false;
