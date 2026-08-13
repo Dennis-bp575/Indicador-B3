@@ -156,7 +156,7 @@ async function executarScanner() {
                         const C50 = Number(c50["high"]) || 0;
                         const D50 = Number(c50["low"]) || 0;
                         const E50 = Number(c50["close"]) || 0;
-                        
+                        console.log(B51, C51, D51, E51);
                         let novaPalavraGerada = "";
                         
                         // Bloco B51 (7 letras)
