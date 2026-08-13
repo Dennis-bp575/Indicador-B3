@@ -157,7 +157,7 @@ async function executarScanner() {
                         const C50 = Number(c50["high"]) || 0;
                         const D50 = Number(c50["low"]) || 0;
                         const E50 = Number(c50["close"]) || 0;
-                        console.log(B51, C51, D51, E51);
+                        
                         let novaPalavraGerada = "";
                         
                         // Bloco B51 (7 letras)
@@ -182,7 +182,7 @@ async function executarScanner() {
                         if (TOKENS_FONTE_SECUNDARIA.includes(novaPalavraGerada)) {
                             totalMatchesFonteSecundaria++;
                         }
-                      console.log(novaPalavraGerada, totalMatchesFonteSecundaria)
+                      
 
                 // Lógica do Martelo (Candle 51)
                 const corpo51 = Math.abs(c51.close - c51.open);
@@ -357,29 +357,45 @@ function processarEGravarLocalStorage(
     // Verifica se o sinal de hoje já não foi salvo para evitar duplicados na mesma data
     const sinalJaExiste = historicoSalvo.some(reg => reg.dataSinal === dataSinal);
 
-    if (!sinalJaExiste) {
-        const novoSinal = {
-                dataSinal: dataSinal,
-                matchesPalavras: totalMatchesPalavras,
-                matchesFonteSecundaria: totalMatchesFonteSecundaria,
-                reversoesCandle: totalReversoesCandle,
-                placar: `${totalMatchesPalavras}-${totalMatchesFonteSecundaria}-${totalReversoesCandle}`, 
-                resultadoBolsa: "AGUARDANDO...", 
-                aberturaBolsa: "AGUARDANDO...",
-                dataRealValidacao: "AGUARDANDO..."
-            };
+            // ... dentro da sua função processarEGravarLocalStorage ...
+            
+            // 1. PEGA O HORÁRIO ATUAL DO SISTEMA
+            const agora = new Date();
+            const horaAtual = agora.getHours();
+            const minutoAtual = agora.getMinutes();
+            
+            // Converte tudo para minutos totais desde o início do dia (17h00 = 17 * 60 = 1020 minutos)
+            const minutosTotais = (horaAtual * 60) + minutoAtual;
+            const limiteMinutos = 17 * 60; // 17h00 cravadas
+            
+            // 2. SÓ REALIZA A CRIAÇÃO E SALVAMENTO SE FOR DEPOIS DAS 17H
+            if (minutosTotais >= limiteMinutos) {
+                
+                // Seu bloco que você acabou de arrumar entra aqui:
+                if (!sinalJaExiste) {
+                    const novoSinal = {
+                        dataSinal: dataSinal,
+                        placar: `${totalMatchesPalavras}-${totalMatchesFonteSecundaria}-${totalReversoesCandle}`,
+                        matchesPalavras: totalMatchesPalavras,
+                        matchesFonteSecundaria: totalMatchesFonteSecundaria,
+                        reversoesCandle: totalReversoesCandle,
+                        resultadoBolsa: "AGUARDANDO...",
+                        aberturaBolsa: "AGUARDANDO...",
+                        dataRealValidacao: "AGUARDANDO..."
+                    };
+            
+                    historicoSalvo.push(novoSinal);
+                    console.log(`🎯 Novo sinal de hoje (${dataSinal}) salvo com sucesso.`);
+                }
+            
+                // Grava apenas se passar da hora permitida
+                localStorage.setItem('historico_B3', JSON.stringify(historicoSalvo));
+            
+            } else {
+                // Se rodar antes das 17h, o app roda na tela mas não mexe no histórico do LocalStorage!
+                console.log(`⚠️ Modo de Visualização: O sinal não foi gravado no histórico porque ainda são ${horaAtual}:${minutoAtual.toString().padStart(2, '0')}. Gravação liberada apenas após às 17:00.`);
+            }
 
-
-        // Adiciona o novo sinal no fim da lista
-        historicoSalvo.push(novoSinal);
-        console.log(`🎯 Novo sinal de hoje (${dataSinal}) gerado com sucesso e salvo com status AGUARDANDO...`);
-    } else {
-        console.log(`⚠️ O sinal da data ${dataSinal} já existe no histórico. Nenhuma duplicata foi inserida.`);
-    }
-
-    // 5. SALVA A LISTA ATUALIZADA DE VOLTA NO LOCALSTORAGE
-    localStorage.setItem('historico_B3', JSON.stringify(historicoSalvo));
-    console.log("💾 Base de dados 'historico_B3' atualizada com sucesso no navegador.");
 }
 
 // ==========================================
