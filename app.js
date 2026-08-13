@@ -404,7 +404,7 @@ function processarEGravarLocalStorage(
 function desenharHistoricoNaTela() {
     blocoListaHistorico.innerHTML = "";
     let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
-            console.log(historicoSalvo.dataSinal)
+   
     // Inverte a ordem para exibir o mais recente no topo
     historicoSalvo.reverse().forEach(item => {
         let classeCor = "bg-gray-800 border-gray-700 text-gray-400";
