@@ -24,6 +24,15 @@ const TOKENS_INDICADORES = [
   "VVVVVVAVVVVVVV", "VVVVVVVVAAVVVV", "VVVVVVVVVAVAAA", "VVVVVVVVVVVVVV"
 ];
 
+const TOKENS_FONTE_SECUNDARIA = [
+  "AIAAAAAVAVVAAV", "AVAAAAAVAVAIAA", "AVAAAAAVAVIAAA", "AVAAAAAVAVVIAV",
+  "AVAAAVAAAVAAAA", "AVAIAVAAAVAAAA", "AVVAAAIVAVVAAV", "AVVAAAVVAVVAAV",
+  "AVVAAAVVAVVIAV", "AVVAAAVVVVVAVV", "AVVAAAVVVVVIAV", "AVVAAVIAAVAAAA",
+  "AVVAAVVAAVAAAA", "AVVAAVVAAVVAAA", "AVVAAVVAAVVAAV", "AVVIAVVAAVAAAA",
+  "AVVIAVVAAVVAAV", "VVVAAAVVVVVIVV", "VVVAAVAAIVVAAA", "VVVIAVAAAVAAAA",
+  "VVVIVVVAAVVAAA"
+];
+
 
 // Token de autenticação da Brapi (Substitua pelo seu token gratuito gerado no site deles)
 const token = "whN8hFPcawDXwGhjRLAoN7"; 
@@ -55,6 +64,7 @@ async function executarScanner() {
     let direcaoIbovespaHoje = "estavel";
     let dataSinal = ""; 
     let dataHojeFormatada; 
+    let totalMatchesFonteSecundaria = 0; 
 
     // Efeito Visual: Transforma o botão em "Carregando..."
     botaoAtualizar.disabled = true;
@@ -135,6 +145,44 @@ async function executarScanner() {
                     totalMatchesPalavras++;
                 }
 
+                        // --- SISTEMA NOVO (Abertura B e Fechamento E contra as outras = 14 letras) ---
+                        // Mapeando as variáveis direto das propriedades do seu objeto de dados
+                        const B51 = Number(c51["abertura"]) || 0; // Ajuste o nome da propriedade se for diferente
+                        const C51 = Number(c51["maxima"]) || 0;
+                        const D51 = Number(c51["minima"]) || 0;
+                        const E51 = Number(c51["fechamento"]) || 0;
+                        
+                        const B50 = Number(c50["abertura"]) || 0;
+                        const C50 = Number(c50["maxima"]) || 0;
+                        const D50 = Number(c50["minima"]) || 0;
+                        const E50 = Number(c50["fechamento"]) || 0;
+                        
+                        let novaPalavraGerada = "";
+                        
+                        // Bloco B51 (7 letras)
+                        novaPalavraGerada += B51 > B50 ? "A" : B51 < B50 ? "V" : "I";
+                        novaPalavraGerada += B51 > C51 ? "A" : B51 < C51 ? "V" : "I";
+                        novaPalavraGerada += B51 > C50 ? "A" : B51 < C50 ? "V" : "I";
+                        novaPalavraGerada += B51 > D51 ? "A" : B51 < D51 ? "V" : "I";
+                        novaPalavraGerada += B51 > D50 ? "A" : B51 < D50 ? "V" : "I";
+                        novaPalavraGerada += B51 > E51 ? "A" : B51 < E51 ? "V" : "I";
+                        novaPalavraGerada += B51 > E50 ? "A" : B51 < E50 ? "V" : "I";
+                        
+                        // Bloco E51 (7 letras)
+                        novaPalavraGerada += E51 > B51 ? "A" : E51 < B51 ? "V" : "I";
+                        novaPalavraGerada += E51 > B50 ? "A" : E51 < B50 ? "V" : "I";
+                        novaPalavraGerada += E51 > C51 ? "A" : E51 < C51 ? "V" : "I";
+                        novaPalavraGerada += E51 > C50 ? "A" : E51 < C50 ? "V" : "I";
+                        novaPalavraGerada += E51 > D51 ? "A" : E51 < D51 ? "V" : "I";
+                        novaPalavraGerada += E51 > D50 ? "A" : E51 < D50 ? "V" : "I";
+                        novaPalavraGerada += E51 > E50 ? "A" : E51 < E50 ? "V" : "I";
+                        
+                        // Verifica match com os novos tokens e conta na variável separada
+                        if (TOKENS_FONTE_SECUNDARIA.includes(novaPalavraGerada)) {
+                            totalMatchesFonteSecundaria++;
+                        }
+                        
+
                 // Lógica do Martelo (Candle 51)
                 const corpo51 = Math.abs(c51.close - c51.open);
                 const sombraInf51 = Math.min(c51.open, c51.close) - c51.low;
@@ -160,7 +208,7 @@ async function executarScanner() {
                     match: deuMatch
                 });
 
-                console.log(`✅ ${ticker} processado. Assinatura: ${palavraGerada} | Match: ${deuMatch}`);
+                //console.log(`✅ ${ticker} processado. Assinatura: ${palavraGerada} | Match: ${deuMatch}`);
             }
 
         } catch (error) {
@@ -219,6 +267,7 @@ async function executarScanner() {
     processarEGravarLocalStorage(
                 dataSinal, 
                 totalMatchesPalavras, 
+                totalMatchesFonteSecundaria,
                 totalReversoesCandle, 
                 direcaoIbovespaHoje,
                 dataHojeFormatada // ⬅️ Nova variável adicionada aqui
@@ -262,7 +311,7 @@ function calcularALMA(precos, indexAtual, tamanhoDesejado) {
 // 4. GERENCIADOR DO LOCALSTORAGE
 // ==========================================
 
-function processarEGravarLocalStorage(dataSinal, totalMatchesPalavras, totalReversoesCandle, direcaoIbovespaHoje, dataIbov) {
+function processarEGravarLocalStorage(dataSinal, totalMatchesPalavras, totalMatchesFonteSecundaria, totalReversoesCandle, direcaoIbovespaHoje, dataIbov) {
     // 1. Pega o histórico existente ou cria um array vazio
     let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
 
@@ -293,8 +342,9 @@ function processarEGravarLocalStorage(dataSinal, totalMatchesPalavras, totalReve
     const novoRegistro = {
         dataSinal: dataSinal, 
         matches: totalMatchesPalavras,
+        matchesSecundario: totalMatchesFonteSecundaria,
         reversoes: totalReversoesCandle,
-        placar: `${totalMatchesPalavras} e ${totalReversoesCandle}`, 
+        placar: `${totalMatchesPalavras} e ${totalReversoesCandle} e ${totalMatchesFonteSecundaria}`, 
         resultadoBolsa: "AGUARDANDO..." 
     };
     // Evita duplicar a linha de previsão se o app rodar mais de uma vez no mesmo dia
