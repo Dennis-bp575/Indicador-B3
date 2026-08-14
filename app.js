@@ -12,7 +12,7 @@ const meusAtivos = ["B3SA3", "PETR4", "CSAN3", "ITSA4", "ITUB4",
             "AXIA3", "MRVE3", "RENT3", "USIM5", "CEAB3",
             "EGIE3", "BPAC11", "RADL3", "BRKM5", "PETR3", 
             "BEEF3", "POMO4", "CMIG4", "PRIO3", "MBRF3",
-            "CPFE3", "ENEV3", "WEGE3", "ALOS3"]; 
+            "CPFE3", "ENEV3", "WEGE3", "ALOS3", "%5EBVSP"]; 
 
 // VARIÁVEL FIXA COM AS 24 PALAVRAS DE INDICAÇÃO (PADRÕES SEQUENCIAIS)
 const TOKENS_INDICADORES = [
@@ -48,200 +48,195 @@ function formatarTickers(listaDeAtivos) {
     return listaDeAtivos.join(',');
 }
 
-
 // ==========================================
 // 3. FUNÇÃO PRINCIPAL DO SCANNER
 // ==========================================
 async function executarScanner() {
+            
+            let totalMatchesHoje = 0;
+            let totalMatchesPalavras = 0; 
+            let totalReversoesCandle = 0;
+            let direcaoIbovespaHoje = "estavel";
+            let dataSinal = ""; 
+            let dataHojeFormatada; 
+            let totalMatchesFonteSecundaria = 0; 
+            let direcaoAberturaHoje = "";  
+            
+            botaoAtualizar.disabled = true;
+            botaoAtualizar.innerHTML = `
+                        <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://w3.org">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.253 8H18"></path>
+                        </svg>
+                        <span>Analisando 50 ações...</span>
+            `;
 
-    let totalMatchesHoje = 0;
-    let totalMatchesPalavras = 0; 
-    let totalReversoesCandle = 0;
-    let direcaoIbovespaHoje = "estavel";
-    let dataSinal = ""; 
-    let dataHojeFormatada; 
-    let totalMatchesFonteSecundaria = 0; 
-    let direcaoAberturaHoje = "";  
-
-    botaoAtualizar.disabled = true;
-    botaoAtualizar.innerHTML = `
-        <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://w3.org">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.253 8H18"></path>
-        </svg>
-        <span>Analisando 50 ações...</span>
-    `;
-
-    // 1. Transformamos o array de 50 ativos em uma string única separada por vírgulas
+            // 1. Transformamos o array de 50 ativos em uma string única separada por vírgulas
             const tickersFormatados = formatarTickers(meusAtivos);
             
             try {
-                // 2. Montamos a URL passando todos os 50 ativos de uma vez só
-                const url = `https://brapi.dev/api/quote/${tickersFormatados}?range=3mo&interval=1d&token=${token}`;
-            
-                // 3. Fazemos uma única requisição para a API
-                const response = await fetch(url);
-                if (!response.ok) {
+                        // 2. Montamos a URL passando todos os 50 ativos de uma vez só
+                        const url = `https://brapi.dev/api/quote/${tickersFormatados}?range=3mo&interval=1d&token=${token}`;
+                        
+                        // 3. Fazemos uma única requisição para a API
+                        const response = await fetch(url);
+                        if (!response.ok) {
                             throw new Error(`HTTP ${response.status} - ${response.statusText}`);
                         }
-
                         
-            const dadosBrutos = await response.json();
+                        const dadosBrutos = await response.json();
+                        
+                        // 1. Verificamos se a Brapi realmente devolveu a lista de resultados
+                        if (dadosBrutos.results && Array.isArray(dadosBrutos.results)) {
+                                    // 2. Criamos um loop para passar por cada um dos 50 ativos devolvidos
+                                    dadosBrutos.results.forEach(ativo => {
+                                                // 3. Verificamos se o ativo atual do loop tem dados históricos válidos
+                                                if (ativo.historicalDataPrice && ativo.historicalDataPrice.length > 0) {
+                                                            // Agora 'ativo' muda a cada volta do loop (PETR4, VALE3, etc.)
+                                                            const historicoCompleto = ativo.historicalDataPrice;
+                                                            
+                                                            const precosFechamento = historicoCompleto.map(c => c.close);
+                                                            const periodoAlma1 = 9;  
+                                                            const periodoAlma2 = 21; 
+
+                                                            historicoCompleto.forEach((candle, index) => {
+                                                                        candle.alma1 = calcularALMA(precosFechamento, index, periodoAlma1);
+                                                                        candle.alma2 = calcularALMA(precosFechamento, index, periodoAlma2);
+                                                            });
+
+                                                            // 1. Descobrimos em qual posição (índice) do histórico está a nossa última atualização
+                                                            const indiceUltimaConversao = historicoCompleto.findIndex(candle => {
+                                                                const dataCandleFormatada = new Date(candle.date * 1000).toLocaleDateString('pt-BR');
+                                                                return dataCandleFormatada === ultimaAtualizacao;
+                                                            });
+                        
+                                                            // 2. Definimos quem são os candles de análise com base nesse índice encontrado
+                                                            let c49, c50, c51;
+                                                            
+                                                            if (indiceUltimaConversao !== -1 && indiceUltimaConversao + 1 < historicoCompleto.length) {
+                                                                // Se achou a data antiga, o 'hoje' passa a ser o próximo dia disponível no histórico para preencher a lacuna!
+                                                                c49 = historicoCompleto[indiceUltimaConversao - 1]; // Anteontem real
+                                                                c50 = historicoCompleto[indiceUltimaConversao];     // Ontem real (última guardada)
+                                                                c51 = historicoCompleto[indiceUltimaConversao + 1]; // Hoje real (a nova lacuna sendo preenchida)
+                                                            } else {
+                                                                // Se não achou a data no histórico (ou já está no último dia), usa os 3 últimos da lista por segurança
+                                                                const ultimos3Dias = historicoCompleto.slice(-3);
+                                                                c49 = ultimos3Dias[0];
+                                                                c50 = ultimos3Dias[1];
+                                                                c51 = ultimos3Dias[2];
+                                                            }
+                                                            
+                                                            // 3. Atualizamos a dataSinal com base no candle decidido
+                                                            dataSinal = new Date(c51.date * 1000).toLocaleDateString('pt-BR');
+                                                            const chavesColunas = ['open', 'high', 'low', 'close', 'volume', 'alma1', 'alma2']; 
+                                                            let palavraGerada = "";
+                                                            
+                                                            // Monta a palavra de 14 letras cruzando dados e médias
+                                                            for (let i = 0; i < 7; i++) {
+                                                                        const propriedade = chavesColunas[i];
+                                                                        
+                                                                        const v51 = Number(c51[propriedade]) || 0;
+                                                                        const v50 = Number(c50[propriedade]) || 0;
+                                                                        const v49 = Number(c49[propriedade]) || 0;
+                                                                        
+                                                                        palavraGerada += v51 > v50 ? "A" : v51 < v50 ? "V" : "I";
+                                                                        palavraGerada += v50 > v49 ? "A" : v50 < v49 ? "V" : "I";
+                                                            }
+
+                                                            // Verifica match com os tokens matemáticos de 14 letras
+                                                            let deuMatch = TOKENS_INDICADORES.includes(palavraGerada);
+                                                            
+                                                            if (deuMatch) {
+                                                                        totalMatchesPalavras++;
+                                                            }
+
+                                                            const B51 = Number(c51["open"]) || 0; // Ajuste o nome da propriedade se for diferente
+                                                            const C51 = Number(c51["high"]) || 0;
+                                                            const D51 = Number(c51["low"]) || 0;
+                                                            const E51 = Number(c51["close"]) || 0;
+                                                            
+                                                            const B50 = Number(c50["open"]) || 0;
+                                                            const C50 = Number(c50["high"]) || 0;
+                                                            const D50 = Number(c50["low"]) || 0;
+                                                            const E50 = Number(c50["close"]) || 0;
+                                                                        
+                                                            let novaPalavraGerada = "";
+                                                            
+                                                            // Bloco B51 (7 letras)
+                                                            novaPalavraGerada += B51 > B50 ? "A" : B51 < B50 ? "V" : "I";
+                                                            novaPalavraGerada += B51 > C51 ? "A" : B51 < C51 ? "V" : "I";
+                                                            novaPalavraGerada += B51 > C50 ? "A" : B51 < C50 ? "V" : "I";
+                                                            novaPalavraGerada += B51 > D51 ? "A" : B51 < D51 ? "V" : "I";
+                                                            novaPalavraGerada += B51 > D50 ? "A" : B51 < D50 ? "V" : "I";
+                                                            novaPalavraGerada += B51 > E51 ? "A" : B51 < E51 ? "V" : "I";
+                                                            novaPalavraGerada += B51 > E50 ? "A" : B51 < E50 ? "V" : "I";
             
-            // 1. Verificamos se a Brapi realmente devolveu a lista de resultados
-            if (dadosBrutos.results && Array.isArray(dadosBrutos.results)) {
-                // 2. Criamos um loop para passar por cada um dos 50 ativos devolvidos
-                dadosBrutos.results.forEach(ativo => {
-                    // 3. Verificamos se o ativo atual do loop tem dados históricos válidos
-                    if (ativo.historicalDataPrice && ativo.historicalDataPrice.length > 0) {
-                        // Agora 'ativo' muda a cada volta do loop (PETR4, VALE3, etc.)
-                        const historicoCompleto = ativo.historicalDataPrice;
+                                                            // Bloco E51 (7 letras)
+                                                            novaPalavraGerada += E51 > B51 ? "A" : E51 < B51 ? "V" : "I";
+                                                            novaPalavraGerada += E51 > B50 ? "A" : E51 < B50 ? "V" : "I";
+                                                            novaPalavraGerada += E51 > C51 ? "A" : E51 < C51 ? "V" : "I";
+                                                            novaPalavraGerada += E51 > C50 ? "A" : E51 < C50 ? "V" : "I";
+                                                            novaPalavraGerada += E51 > D51 ? "A" : E51 < D51 ? "V" : "I";
+                                                            novaPalavraGerada += E51 > D50 ? "A" : E51 < D50 ? "V" : "I";
+                                                            novaPalavraGerada += E51 > E50 ? "A" : E51 < E50 ? "V" : "I";
+                                                            
+                                                            // Verifica match com os novos tokens e conta na variável separada
+                                                            if (TOKENS_FONTE_SECUNDARIA.includes(novaPalavraGerada)) {
+                                                                totalMatchesFonteSecundaria++;
+                                                            }           
+                                                            
+                                                            // Lógica do Martelo (Candle 51)
+                                                            const corpo51 = Math.abs(c51.close - c51.open);
+                                                            const sombraInf51 = Math.min(c51.open, c51.close) - c51.low;
+                                                            const sombraSup51 = c51.high - Math.max(c51.open, c51.close);
+                                                            const ehMartelo = (sombraInf51 >= 2 * corpo51) && (sombraSup51 <= corpo51 * 0.1);
+                                                            
+                                                            // Lógica do Engolfo de Alta (Candle 50 + Candle 51)
+                                                            const candle50Baixa = c50.close < c50.open;
+                                                            const candle51Alta = c51.close > c51.open;
+                                                            const ehEngolfo = candle50Baixa && candle51Alta && (c51.open <= c50.close) && (c51.close > c50.open);
 
-                        const precosFechamento = historicoCompleto.map(c => c.close);
-                        const periodoAlma1 = 9;  
-                        const periodoAlma2 = 21; 
-
-                            historicoCompleto.forEach((candle, index) => {
-                                candle.alma1 = calcularALMA(precosFechamento, index, periodoAlma1);
-                                candle.alma2 = calcularALMA(precosFechamento, index, periodoAlma2);
-                            });
-
-                           // 1. Descobrimos em qual posição (índice) do histórico está a nossa última atualização
-                        const indiceUltimaConversao = historicoCompleto.findIndex(candle => {
-                            const dataCandleFormatada = new Date(candle.date * 1000).toLocaleDateString('pt-BR');
-                            return dataCandleFormatada === ultimaAtualizacao;
-                        });
-                        
-                        // 2. Definimos quem são os candles de análise com base nesse índice encontrado
-                        let c49, c50, c51;
-                        
-                        if (indiceUltimaConversao !== -1 && indiceUltimaConversao + 1 < historicoCompleto.length) {
-                            // Se achou a data antiga, o 'hoje' passa a ser o próximo dia disponível no histórico para preencher a lacuna!
-                            c49 = historicoCompleto[indiceUltimaConversao - 1]; // Anteontem real
-                            c50 = historicoCompleto[indiceUltimaConversao];     // Ontem real (última guardada)
-                            c51 = historicoCompleto[indiceUltimaConversao + 1]; // Hoje real (a nova lacuna sendo preenchida)
-                        } else {
-                            // Se não achou a data no histórico (ou já está no último dia), usa os 3 últimos da lista por segurança
-                            const ultimos3Dias = historicoCompleto.slice(-3);
-                            c49 = ultimos3Dias[0];
-                            c50 = ultimos3Dias[1];
-                            c51 = ultimos3Dias[2];
+                                                            // Validação 2: Aconteceu Martelo OU Engolfo de Alta?
+                                                            if (ehMartelo || ehEngolfo) {
+                                                                        totalReversoesCandle++;
+                                                            }
+                                                }
+                                    });
                         }
-                        
-                        // 3. Atualizamos a dataSinal com base no candle decidido
-                        dataSinal = new Date(c51.date * 1000).toLocaleDateString('pt-BR');
-                        const chavesColunas = ['open', 'high', 'low', 'close', 'volume', 'alma1', 'alma2']; 
-                        let palavraGerada = "";
-
-                            // Monta a palavra de 14 letras cruzando dados e médias
-                            for (let i = 0; i < 7; i++) {
-                                const propriedade = chavesColunas[i];
             
-                                const v51 = Number(c51[propriedade]) || 0;
-                                const v50 = Number(c50[propriedade]) || 0;
-                                const v49 = Number(c49[propriedade]) || 0;
-            
-                                palavraGerada += v51 > v50 ? "A" : v51 < v50 ? "V" : "I";
-                                palavraGerada += v50 > v49 ? "A" : v50 < v49 ? "V" : "I";
-                            }
-
-                            // Verifica match com os tokens matemáticos de 14 letras
-                            let deuMatch = TOKENS_INDICADORES.includes(palavraGerada);
-            
-                            if (deuMatch) {
-                                totalMatchesPalavras++;
-                            }
-
-                
-                        const B51 = Number(c51["open"]) || 0; // Ajuste o nome da propriedade se for diferente
-                        const C51 = Number(c51["high"]) || 0;
-                        const D51 = Number(c51["low"]) || 0;
-                        const E51 = Number(c51["close"]) || 0;
-                        
-                        const B50 = Number(c50["open"]) || 0;
-                        const C50 = Number(c50["high"]) || 0;
-                        const D50 = Number(c50["low"]) || 0;
-                        const E50 = Number(c50["close"]) || 0;
-                        
-                        let novaPalavraGerada = "";
-                        
-                        // Bloco B51 (7 letras)
-                        novaPalavraGerada += B51 > B50 ? "A" : B51 < B50 ? "V" : "I";
-                        novaPalavraGerada += B51 > C51 ? "A" : B51 < C51 ? "V" : "I";
-                        novaPalavraGerada += B51 > C50 ? "A" : B51 < C50 ? "V" : "I";
-                        novaPalavraGerada += B51 > D51 ? "A" : B51 < D51 ? "V" : "I";
-                        novaPalavraGerada += B51 > D50 ? "A" : B51 < D50 ? "V" : "I";
-                        novaPalavraGerada += B51 > E51 ? "A" : B51 < E51 ? "V" : "I";
-                        novaPalavraGerada += B51 > E50 ? "A" : B51 < E50 ? "V" : "I";
-                        
-                        // Bloco E51 (7 letras)
-                        novaPalavraGerada += E51 > B51 ? "A" : E51 < B51 ? "V" : "I";
-                        novaPalavraGerada += E51 > B50 ? "A" : E51 < B50 ? "V" : "I";
-                        novaPalavraGerada += E51 > C51 ? "A" : E51 < C51 ? "V" : "I";
-                        novaPalavraGerada += E51 > C50 ? "A" : E51 < C50 ? "V" : "I";
-                        novaPalavraGerada += E51 > D51 ? "A" : E51 < D51 ? "V" : "I";
-                        novaPalavraGerada += E51 > D50 ? "A" : E51 < D50 ? "V" : "I";
-                        novaPalavraGerada += E51 > E50 ? "A" : E51 < E50 ? "V" : "I";
-                        
-                        // Verifica match com os novos tokens e conta na variável separada
-                        if (TOKENS_FONTE_SECUNDARIA.includes(novaPalavraGerada)) {
-                            totalMatchesFonteSecundaria++;
-                        }
-                      
-            
-                            // Lógica do Martelo (Candle 51)
-                            const corpo51 = Math.abs(c51.close - c51.open);
-                            const sombraInf51 = Math.min(c51.open, c51.close) - c51.low;
-                            const sombraSup51 = c51.high - Math.max(c51.open, c51.close);
-                            const ehMartelo = (sombraInf51 >= 2 * corpo51) && (sombraSup51 <= corpo51 * 0.1);
-            
-                            // Lógica do Engolfo de Alta (Candle 50 + Candle 51)
-                            const candle50Baixa = c50.close < c50.open;
-                            const candle51Alta = c51.close > c51.open;
-                            const ehEngolfo = candle50Baixa && candle51Alta && (c51.open <= c50.close) && (c51.close > c50.open);
-            
-                            // Validação 2: Aconteceu Martelo OU Engolfo de Alta?
-                            if (ehMartelo || ehEngolfo) {
-                                totalReversoesCandle++;
-                            }
-
-                                
+            } catch (error) {
+                        console.error(`❌ Erro em ${ticker}:`, error.message);
             }
 
-        } catch (error) {
-            console.error(`❌ Erro em ${ticker}:`, error.message);
-        }
-    } // Fim do for
-
-try {
-    console.log("Consultando o fechamento oficial do Ibovespa...");
-         
-    const urlIbov =  `https://brapi.dev/api/quote/${"%5EBVSP"}` +
-            `?range=3mo&interval=1d&token=${token}`;
-         
-    const respostaIbov = await fetch(urlIbov);
-    
-    if (respostaIbov.ok) {
-        const dadosIbov = await respostaIbov.json();
-        if (dadosIbov.results && dadosIbov.results[0].historicalDataPrice) {
-            const historicoIbov = dadosIbov.results[0].historicalDataPrice;
+            try {
+                console.log("Consultando o fechamento oficial do Ibovespa...");
+                     
+                const urlIbov =  `https://brapi.dev/api/quote/${"%5EBVSP"}` +
+                        `?range=3mo&interval=1d&token=${token}`;
+                     
+                const respostaIbov = await fetch(urlIbov);
+                
+                if (respostaIbov.ok) {
+                    const dadosIbov = await respostaIbov.json();
+                    if (dadosIbov.results && dadosIbov.results[0].historicalDataPrice) {
+                        const historicoIbov = dadosIbov.results[0].historicalDataPrice;
+                        
+                        // Pega os dois últimos dias do índice
+                        const ibovHoje = historicoIbov[historicoIbov.length - 1];
+                        const ibovOntem = historicoIbov[historicoIbov.length - 2];
             
-            // Pega os dois últimos dias do índice
-            const ibovHoje = historicoIbov[historicoIbov.length - 1];
-            const ibovOntem = historicoIbov[historicoIbov.length - 2];
-
-            const dataHojeRaw = ibovHoje.date; 
-            dataHojeFormatada = new Date(dataHojeRaw * 1000).toLocaleDateString('pt-BR');
-
-            // Define se o fechamento oficial foi de Alta ou Baixa
-            direcaoIbovespaHoje = ibovHoje.close > ibovOntem.close ? "subiu" : "desceu";
-            direcaoAberturaHoje = ibovHoje.open > ibovOntem.close ? "subiu" : "desceu";
-            console.log(`📊 Ibovespa em ${dataHojeFormatada}: ${direcaoIbovespaHoje} (Fechamento: ${direcaoAberturaHoje})`);
-        }
-    }
-} catch (erroIbov) {
-    console.error("Erro ao recuperar dados do Ibovespa:", erroIbov.message);
-    direcaoIbovespaHoje = "estavel"; 
-}
+                        const dataHojeRaw = ibovHoje.date; 
+                        dataHojeFormatada = new Date(dataHojeRaw * 1000).toLocaleDateString('pt-BR');
+            
+                        // Define se o fechamento oficial foi de Alta ou Baixa
+                        direcaoIbovespaHoje = ibovHoje.close > ibovOntem.close ? "subiu" : "desceu";
+                        direcaoAberturaHoje = ibovHoje.open > ibovOntem.close ? "subiu" : "desceu";
+                        console.log(`📊 Ibovespa em ${dataHojeFormatada}: ${direcaoIbovespaHoje} (Fechamento: ${direcaoAberturaHoje})`);
+                    }
+                }
+            } catch (erroIbov) {
+                console.error("Erro ao recuperar dados do Ibovespa:", erroIbov.message);
+                direcaoIbovespaHoje = "estavel"; 
+            }
 
 
     // Atualiza a tela com o total de matches encontrados
