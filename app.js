@@ -157,9 +157,6 @@ async function executarScanner() {
                                                 totalMatchesPalavras = 0; 
                                                 totalReversoesCandle = 0;
                                                 totalMatchesFonteSecundaria = 0;
-                                                            
-                                                // Armazenamos o timestamp em segundos deste dia para caçar nas ações
-                                                const timestampDoDia = diaDoCalendario.date;
                                                 
                                                 // A data legível para salvar no histórico depois
                                                 const dataDesseDia = new Date(timestampDoDia * 1000).toLocaleDateString('pt-BR');
