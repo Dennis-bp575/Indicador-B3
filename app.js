@@ -304,7 +304,17 @@ async function executarScanner() {
                         botaoAtualizar.innerHTML = `<span>Atualizar Scanner</span>`;
             }
 } // Fechamento definitivo da: async function executarScanner()
-  
+
+if (blocoResultadoAtual) {
+    blocoResultadoAtual.innerHTML = `
+        <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 text-center shadow-lg">
+            <h3 class="text-xs uppercase tracking-wider text-gray-500 font-bold mb-1">Previsão do Guru para Amanhã</h3>
+            <div class="text-3xl font-extrabold text-white mb-2">${totalMatchesPalavras}-${totalMatchesFonteSecundaria}-${totalReversoesCandle}</div>
+            <p class="text-xs text-gray-400">Baseado nos dados consolidados em: <span class="text-emerald-400 font-semibold">${dataDesseDia}</span></p>
+        </div>
+    `;
+}
+
 desenharHistoricoNaTela();
 // ==========================================================
 // FUNÇÃO ALMA EM JAVASCRIPT PURO
