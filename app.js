@@ -290,7 +290,7 @@ async function executarScanner() {
                                                 console.log(`🔮 Novo sinal gerado para ${dataDesseDia} com o placar: ${placarFormatado}`);
                                                
                                     });
-                        } // Fechamento do: if (dadosBrutos.results && Array.isArray...)
+                        }); // Fechamento do: if (dadosBrutos.results && Array.isArray...)
             
             } catch (error) {
                         // Captura qualquer erro na requisição em lote ou no processamento dos dias
