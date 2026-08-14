@@ -79,9 +79,7 @@ async function executarScanner() {
                         // 1. Criamos a estrutura que o resto do código já espera receber
                         const dadosBrutos = { results: [] };
                         // 2. Criamos uma lista combinando os 50 ativos + o Ibovespa no final
-                        const todosOsTickers = [...meusAtivos, "%5EBVSP"];
-                        // 3. Loop rápido para buscar ativo por ativo e alimentar a memória
-                        for (const ticker of todosOsTickers) {
+                        for (const ticker of meusAtivos) {
                                     await esperar(100); // Pausa de segurança de 100ms do plano gratuito
                                     
                                     const url = `https://brapi.dev/api/quote/${ticker}?range=3mo&interval=1d&token=${token}`;
