@@ -116,10 +116,11 @@ async function executarScanner() {
                                                 dataDesseDiaGlobal = dataDesseDia;
                                                 let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
                                                 let registroExistente = historicoSalvo.find(item => item.dataSinal === dataDesseDia);
+
+                                                console.log("Lista de símbolos na memória:", dadosBrutos.results.map(a => a.symbol));
                                                 
                                                 if (registroExistente && registroExistente.resultadoBolsa === "AGUARDANDO...") {
                                                     console.log("chegamos aqui no resultado bolsa")
-                                                    
                                                     const dadosIbov = dadosBrutos.results.find(item => item.symbol === "^BVSP");
                                                     // console.log(item.symbol)
                                                     if (dadosIbov && dadosIbov.historicalDataPrice) {
