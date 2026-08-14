@@ -35,8 +35,6 @@ const TOKENS_FONTE_SECUNDARIA = [
 
 const token = "whN8hFPcawDXwGhjRLAoN7"; 
 
-let resultadosProcessados = [];
-
 const esperar = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 const botaoAtualizar = document.getElementById('btn-atualizar');
@@ -55,7 +53,7 @@ function formatarTickers(listaDeAtivos) {
 // 3. FUNÇÃO PRINCIPAL DO SCANNER
 // ==========================================
 async function executarScanner() {
-    let resultadosProcessados = [];
+
     let totalMatchesHoje = 0;
     let totalMatchesPalavras = 0; 
     let totalReversoesCandle = 0;
@@ -206,16 +204,7 @@ async function executarScanner() {
                                 totalReversoesCandle++;
                             }
 
-            
-                resultadosProcessados.push({
-                    ticker: ticker,
-                    nome: ativo.shortName,
-                    preco: ativo.regularMarketPrice,
-                    palavra: palavraGerada,
-                    match: deuMatch
-                });
-
-                //console.log(`✅ ${ticker} processado. Assinatura: ${palavraGerada} | Match: ${deuMatch}`);
+                                
             }
 
         } catch (error) {
