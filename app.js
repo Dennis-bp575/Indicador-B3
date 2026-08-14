@@ -122,6 +122,7 @@ async function executarScanner() {
                                                     const dadosIbov = dadosBrutos.results.find(item => item.symbol === "%5EBVSP");
                                                     
                                                     if (dadosIbov && dadosIbov.historicalDataPrice) {
+                                                        console.log("chegamos aqui no historicalDataPrice")
                                                         const historicoIbov = dadosIbov.historicalDataPrice;
                                                         
                                                         // Achamos a posição do dia 10 no histórico do Ibov
