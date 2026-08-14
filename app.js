@@ -74,16 +74,27 @@ async function executarScanner() {
             const tickersFormatados = formatarTickers(meusAtivos);
             
             try {
-                        // 2. Montamos a URL passando todos os 50 ativos de uma vez só
-                        const url = `https://brapi.dev/api/quote/${tickersFormatados}?range=3mo&interval=1d&token=${token}`;
-                        
-                        // 3. Fazemos uma única requisição para a API
-                        const response = await fetch(url);
-                        if (!response.ok) {
-                            throw new Error(`HTTP ${response.status} - ${response.statusText}`);
+                               
+                        // 1. Criamos a estrutura que o resto do código já espera receber
+                        const dadosBrutos = { results: [] };
+                        // 2. Criamos uma lista combinando os 50 ativos + o Ibovespa no final
+                        const todosOsTickers = [...meusAtivos, "%5EBVSP"];
+                        // 3. Loop rápido para buscar ativo por ativo e alimentar a memória
+                        for (const ticker of todosOsTickers) {
+                                    await esperar(100); // Pausa de segurança de 100ms do plano gratuito
+                                    
+                                    const url = `https://brapi.dev/api/quote/${ticker}?range=3mo&interval=1d&token=${token}`;
+                                    const response = await fetch(url);
+                                    
+                                    if (response.ok) {
+                                        const jsonAtivo = await response.json();
+                                        // Se o ativo retornou dados válidos, jogamos para o nosso lote na memória
+                                        if (jsonAtivo.results && jsonAtivo.results[0]) {
+                                            dadosBrutos.results.push(jsonAtivo.results[0]);
+                                        }
+                                    } else {
+                                        console.warn(`⚠️ Não foi possível carregar os dados de ${ticker}`);
                         }
-                        
-                        const dadosBrutos = await response.json();
                         
                         // 1. Verificamos se a Brapi realmente devolveu a lista de resultados
                         if (dadosBrutos.results && Array.isArray(dadosBrutos.results)) {
