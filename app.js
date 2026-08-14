@@ -116,13 +116,11 @@ async function executarScanner() {
                                                 dataDesseDiaGlobal = dataDesseDia;
                                                 let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
                                                 let registroExistente = historicoSalvo.find(item => item.dataSinal === dataDesseDia);
-
-                                                console.log("Lista de símbolos na memória:", dadosBrutos.results.map(a => a.symbol));
                                                 
                                                 if (registroExistente && registroExistente.resultadoBolsa === "AGUARDANDO...") {
                                                     console.log("chegamos aqui no resultado bolsa")
-                                                    const dadosIbov = dadosBrutos.results.find(item => item.symbol === "^BVSP");
                                                     
+                                                    const dadosIbov = dadosBrutos.results.find(item => item.symbol === "^BVSP");
                                                     if (dadosIbov && dadosIbov.historicalDataPrice) {
                                                         console.log("chegamos aqui no historicalDataPrice")
                                                         const historicoIbov = dadosIbov.historicalDataPrice;
@@ -142,17 +140,29 @@ async function executarScanner() {
                                                             
                                                             const agora = new Date();
                                                             const horaAtual = agora.getHours();
-                                                            const amanhãÉHoje = dataAmanhaFormatada === agora.toLocaleDateString('pt-BR');
+                                                            const amanhaEHoje = dataAmanhaFormatada === agora.toLocaleDateString('pt-BR');
                                                 
                                                             // ⏱️ TRAVA DAS 17H: Se o dia posterior (dia 11) for HOJE e ainda for antes das 17h:
-                                                            if (amanhãÉHoje && horaAtual < 17) {
+                                                            if (amanhaEHoje && horaAtual < 17) {
                                                                 console.log(`⏳ O palpite de ${dataDesseDia} depende do dia ${dataAmanhaFormatada}, que ainda está rolando.`);
                                                             } else {
                                                                 // Se o dia posterior já fechou (ou é um dia passado da lacuna): CORTA O MARTELO!
                                                                 // O resultado do dia 11 compara o fechamento dele contra o dia 10
                                                                 registroExistente.resultadoBolsa = ibovAmanha.close > ibovHoje.close ? "subiu" : "desceu";
                                                                 registroExistente.aberturaBolsa = ibovAmanha.open > ibovHoje.close ? "alta" : "baixa";
-                                                                
+
+                                                                let possuiDiaSeguinteNoBanco = historicoSalvo.some(item => item.dataSinal === dataAmanhaFormatada);
+                
+                                                                if (!possuiDiaSeguinteNoBanco) {
+                                                                    historicoSalvo.push({
+                                                                        placar: "AGUARDANDO...", // Será calculado quando o loop passar por ele!
+                                                                        dataSinal: dataAmanhaFormatada,
+                                                                        aberturaBolsa: "AGUARDANDO...",
+                                                                        resultadoBolsa: "AGUARDANDO..."
+                                                                    });
+                                                                    console.log(`📅 Criada base em 'AGUARDANDO...' para o dia posterior: ${dataAmanhaFormatada}`);
+                                                                }
+                                                                        
                                                                 localStorage.setItem('historico_B3', JSON.stringify(historicoSalvo));
                                                                 console.log(`✅ Palpite do dia ${dataDesseDia} validado com o resultado do dia ${dataAmanhaFormatada}!`);
                                                             }
