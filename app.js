@@ -189,6 +189,7 @@ async function executarScanner() {
 
                                                             const periodoAlma1 = 9;  
                                                             const periodoAlma2 = 21; 
+                                                            const precosFechamento = historicoCompleto.map(c => c.close);
 
                                                             historicoCompleto.forEach((candle, index) => {
                                                                     candle.alma1 = calcularALMA(precosFechamento, index, periodoAlma1);
