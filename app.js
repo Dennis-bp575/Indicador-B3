@@ -87,13 +87,14 @@ async function executarScanner() {
                                     const response = await fetch(url);
                                     
                                     if (response.ok) {
-                                        const jsonAtivo = await response.json();
-                                        // Se o ativo retornou dados válidos, jogamos para o nosso lote na memória
-                                        if (jsonAtivo.results && jsonAtivo.results[0]) {
-                                            dadosBrutos.results.push(jsonAtivo.results[0]);
-                                        }
+                                                const jsonAtivo = await response.json();
+                                                // Se o ativo retornou dados válidos, jogamos para o nosso lote na memória
+                                                if (jsonAtivo.results && jsonAtivo.results[0]) {
+                                                dadosBrutos.results.push(jsonAtivo.results[0]);
+                                                }
                                     } else {
-                                        console.warn(`⚠️ Não foi possível carregar os dados de ${ticker}`);
+                                                console.warn(`⚠️ Não foi possível carregar os dados de ${ticker}`);
+                                    }
                         }
                         
                         // 1. Verificamos se a Brapi realmente devolveu a lista de resultados
@@ -290,7 +291,7 @@ async function executarScanner() {
                                                 console.log(`🔮 Novo sinal gerado para ${dataDesseDia} com o placar: ${placarFormatado}`);
                                                
                                     });
-                        }); // Fechamento do: if (dadosBrutos.results && Array.isArray...)
+                        ) // Fechamento do: if (dadosBrutos.results && Array.isArray...)
             
             } catch (error) {
                         // Captura qualquer erro na requisição em lote ou no processamento dos dias
