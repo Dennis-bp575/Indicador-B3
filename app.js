@@ -43,11 +43,6 @@ const blocoListaHistorico = document.getElementById('lista-historico');
 let ultimaAtualizacao = null;
 
 desenharHistoricoNaTela();
-
-function formatarTickers(listaDeAtivos) {
-    return listaDeAtivos.join(',');
-}
-
 // ==========================================
 // 3. FUNÇÃO PRINCIPAL DO SCANNER
 // ==========================================
@@ -71,9 +66,6 @@ async function executarScanner() {
                         <span>Analisando 50 ações...</span>
             `;
 
-            // 1. Transformamos o array de 50 ativos em uma string única separada por vírgulas
-            const tickersFormatados = formatarTickers(meusAtivos);
-            
             try {
                                
                         // 1. Criamos a estrutura que o resto do código já espera receber
@@ -98,7 +90,7 @@ async function executarScanner() {
                         
                         // 1. Verificamos se a Brapi realmente devolveu a lista de resultados
                         if (dadosBrutos.results && Array.isArray(dadosBrutos.results)) {
-                                    
+                                    console.log("chegamos aqui")
                                     // Pegamos o histórico do primeiro ativo da lista para usar de calendário
                                     const historicoCalendario = dadosBrutos.results[0].historicalDataPrice;
                                     
@@ -114,7 +106,8 @@ async function executarScanner() {
                                     // 🚀 O LOOP PRINCIPAL DE DIAS (Ajustado)
                                     // ==========================================
                                     diasParaProcessar.forEach((diaDoCalendario) => {
-                                                                                   
+                                                console.log("chegamos aqui") 
+                                                console.log(diaDoCalendario.date)
                                                 // O robô está processando o dia 10 no calendário de lacunas
                                                 const timestampDoDia = diaDoCalendario.date; // Dia 10
                                                 console.log(timestampDoDia);
