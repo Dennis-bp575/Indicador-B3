@@ -213,7 +213,7 @@ async function executarScanner() {
 
                                                             // Verifica match com os tokens matemáticos de 14 letras
                                                             let deuMatch = TOKENS_INDICADORES.includes(palavraGerada);
-                                                            
+                                                            console.log(palavraGerada, totalMatchesPalavras)
                                                             if (deuMatch) {
                                                                         totalMatchesPalavras++;
                                                             }
