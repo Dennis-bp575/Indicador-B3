@@ -87,44 +87,107 @@ async function executarScanner() {
                         
                         // 1. Verificamos se a Brapi realmente devolveu a lista de resultados
                         if (dadosBrutos.results && Array.isArray(dadosBrutos.results)) {
-                                    // 2. Criamos um loop para passar por cada um dos 50 ativos devolvidos
-                                    dadosBrutos.results.forEach(ativo => {
-                                                // 3. Verificamos se o ativo atual do loop tem dados históricos válidos
-                                                if (ativo.historicalDataPrice && ativo.historicalDataPrice.length > 0) {
-                                                            // Agora 'ativo' muda a cada volta do loop (PETR4, VALE3, etc.)
-                                                            const historicoCompleto = ativo.historicalDataPrice;
-                                                            
-                                                            const precosFechamento = historicoCompleto.map(c => c.close);
-                                                            const periodoAlma1 = 9;  
-                                                            const periodoAlma2 = 21; 
+                                    
+                                    // Pegamos o histórico do primeiro ativo da lista para usar de calendário
+                                    const historicoCalendario = dadosBrutos.results[0].historicalDataPrice;
+                                    
+                                    // Encontramos onde paramos no tempo
+                                    const indiceParada = historicoCalendario.findIndex(candle => {
+                                        return new Date(candle.date * 1000).toLocaleDateString('pt-BR') === ultimaAtualizacao;
+                                    });
+                                    
+                                    // Criamos a lista com os dias que faltam processar dali para frente!
+                                    const diasParaProcessar = historicoCalendario.slice(indiceParada + 1);
 
-                                                            historicoCompleto.forEach((candle, index) => {
-                                                                        candle.alma1 = calcularALMA(precosFechamento, index, periodoAlma1);
-                                                                        candle.alma2 = calcularALMA(precosFechamento, index, periodoAlma2);
-                                                            });
-
-                                                            // 1. Descobrimos em qual posição (índice) do histórico está a nossa última atualização
-                                                            const indiceUltimaConversao = historicoCompleto.findIndex(candle => {
-                                                                const dataCandleFormatada = new Date(candle.date * 1000).toLocaleDateString('pt-BR');
-                                                                return dataCandleFormatada === ultimaAtualizacao;
-                                                            });
-                        
-                                                            // 2. Definimos quem são os candles de análise com base nesse índice encontrado
-                                                            let c49, c50, c51;
+                                    // ==========================================
+                                    // 🚀 O LOOP PRINCIPAL DE DIAS (Ajustado)
+                                    // ==========================================
+                                    diasParaProcessar.forEach((diaDoCalendario) => {
+                                                                                   
+                                                // O robô está processando o dia 10 no calendário de lacunas
+                                                const timestampDoDia = diaDoCalendario.date; // Dia 10
+                                                const dataDesseDia = new Date(timestampDoDia * 1000).toLocaleDateString('pt-BR'); // "10/08/2026"
+                                                
+                                                let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
+                                                let registroExistente = historicoSalvo.find(item => item.dataSinal === dataDesseDia);
+                                                
+                                                if (registroExistente && registroExistente.resultadoBolsa === "AGUARDANDO...") {
+                                                    
+                                                    const dadosIbov = dadosBrutos.results.find(item => item.symbol === "%5EBVSP");
+                                                    
+                                                    if (dadosIbov && dadosIbov.historicalDataPrice) {
+                                                        const historicoIbov = dadosIbov.historicalDataPrice;
+                                                        
+                                                        // Achamos a posição do dia 10 no histórico do Ibov
+                                                        const idxIbov = historicoIbov.findIndex(c => c.date === timestampDoDia);
+                                                        
+                                                        // 🚨 A MÁGICA ESTÁ AQUI: O resultado real do palpite está no dia POSTERIOR (idxIbov + 1)
+                                                        const idxDiaSeguinte = idxIbov + 1;
+                                                
+                                                        // Se o dia posterior existe no histórico da Brapi, significa que ele já aconteceu!
+                                                        if (idxDiaSeguinte < historicoIbov.length) {
+                                                            const ibovAmanha = historicoIbov[idxDiaSeguinte]; // O dia 11 real!
+                                                            const ibovHoje = historicoIbov[idxIbov];         // O dia 10 real
+                                                
+                                                            const dataAmanhaFormatada = new Date(ibovAmanha.date * 1000).toLocaleDateString('pt-BR');
                                                             
-                                                            if (indiceUltimaConversao !== -1 && indiceUltimaConversao + 1 < historicoCompleto.length) {
-                                                                // Se achou a data antiga, o 'hoje' passa a ser o próximo dia disponível no histórico para preencher a lacuna!
-                                                                c49 = historicoCompleto[indiceUltimaConversao - 1]; // Anteontem real
-                                                                c50 = historicoCompleto[indiceUltimaConversao];     // Ontem real (última guardada)
-                                                                c51 = historicoCompleto[indiceUltimaConversao + 1]; // Hoje real (a nova lacuna sendo preenchida)
+                                                            const agora = new Date();
+                                                            const horaAtual = agora.getHours();
+                                                            const amanhãÉHoje = dataAmanhaFormatada === agora.toLocaleDateString('pt-BR');
+                                                
+                                                            // ⏱️ TRAVA DAS 17H: Se o dia posterior (dia 11) for HOJE e ainda for antes das 17h:
+                                                            if (amanhãÉHoje && horaAtual < 17) {
+                                                                console.log(`⏳ O palpite de ${dataDesseDia} depende do dia ${dataAmanhaFormatada}, que ainda está rolando.`);
                                                             } else {
-                                                                // Se não achou a data no histórico (ou já está no último dia), usa os 3 últimos da lista por segurança
-                                                                const ultimos3Dias = historicoCompleto.slice(-3);
-                                                                c49 = ultimos3Dias[0];
-                                                                c50 = ultimos3Dias[1];
-                                                                c51 = ultimos3Dias[2];
+                                                                // Se o dia posterior já fechou (ou é um dia passado da lacuna): CORTA O MARTELO!
+                                                                // O resultado do dia 11 compara o fechamento dele contra o dia 10
+                                                                registroExistente.resultadoBolsa = ibovAmanha.close > ibovHoje.close ? "subiu" : "desceu";
+                                                                registroExistente.aberturaBolsa = ibovAmanha.open > ibovHoje.close ? "alta" : "baixa";
+                                                                
+                                                                localStorage.setItem('historico_B3', JSON.stringify(historicoSalvo));
+                                                                console.log(`✅ Palpite do dia ${dataDesseDia} validado com o resultado do dia ${dataAmanhaFormatada}!`);
                                                             }
+                                                        }
+                                                    }
+                                                    return; // Pula o cálculo das ações, pois esse palpite já foi gerado no passado
+                                                }
+
+                                                // Zeramos os contadores para consolidar este dia específico
+                                                totalMatchesHoje = 0;
+                                                totalMatchesPalavras = 0; 
+                                                totalReversoesCandle = 0;
+                                                totalMatchesFonteSecundaria = 0;
                                                             
+                                                // Armazenamos o timestamp em segundos deste dia para caçar nas ações
+                                                const timestampDoDia = diaDoCalendario.date;
+                                                
+                                                // A data legível para salvar no histórico depois
+                                                const dataDesseDia = new Date(timestampDoDia * 1000).toLocaleDateString('pt-BR');
+                                    
+                                                // ==========================================
+                                                // Agora as 50 ações entram para trabalhar:
+                                                // ==========================================
+                                                dadosBrutos.results.forEach(ativo => {
+                                                            // Se for o Ibov, pula (tratamos ele no fechamento do dia)
+                                                            if (ativo.symbol === "%5EBVSP") return; 
+                                                            
+                                                            const historicoCompleto = ativo.historicalDataPrice;
+                                                            if (!historicoCompleto || historicoCompleto.length === 0) return;
+                                    
+                                                            // 1. Procuramos o índice desse dia específico no histórico DESTA ação
+                                                            const idx51 = historicoCompleto.findIndex(c => c.date === timestampDoDia);
+                                                            
+                                                            // Se a ação não tiver pregão nesse dia (ex: IPO recente ou suspensa), pula ela
+                                                            if (idx51 === -1 || idx51 < 2) return;
+                                                            
+                                                            // 2. Mapeamos os índices cronológicos corretos com segurança total!
+                                                            const idx50 = idx51 - 1; // Ontem real da ação
+                                                            const idx49 = idx51 - 2; // Anteontem real da ação
+                                                            
+                                                            const c51 = historicoCompleto[idx51];
+                                                            const c50 = historicoCompleto[idx50];
+                                                            const c49 = historicoCompleto[idx49];
+         
                                                             // 3. Atualizamos a dataSinal com base no candle decidido
                                                             dataSinal = new Date(c51.date * 1000).toLocaleDateString('pt-BR');
                                                             const chavesColunas = ['open', 'high', 'low', 'close', 'volume', 'alma1', 'alma2']; 
@@ -199,79 +262,44 @@ async function executarScanner() {
                                                             if (ehMartelo || ehEngolfo) {
                                                                         totalReversoesCandle++;
                                                             }
-                                                }
+                                                });
+
+                                                // 1. Buscamos o histórico atualizado do localStorage para não atropelar dados
+                                                let historicoAtual = JSON.parse(localStorage.getItem('historico_B3')) || [];
+                                                
+                                                // 2. Montamos o placar somando os seus contadores de palavras e fontes prêmium
+                                                const placarFormatado = `${totalMatchesPalavras}-${totalMatchesFonteSecundaria}-${totalReversoesCandle}`;
+                                                
+                                                // 3. Criamos o novo objeto com a assinatura do seu App Guru
+                                                const novoPalpite = {
+                                                            placar: placarFormatado,
+                                                            dataSinal: dataDesseDia,       // A data em que o sinal foi gerado
+                                                            aberturaBolsa: "AGUARDANDO...", // O amanhã ainda não abriu
+                                                            resultadoBolsa: "AGUARDANDO..." // O amanhã ainda não fechou
+                                                };
+                                                
+                                                // 4. Empurramos o novo palpite para dentro do banco de dados do navegador
+                                                historicoAtual.push(novoPalpite);
+                                                localStorage.setItem('historico_B3', JSON.stringify(historicoAtual));
+                                                
+                                                console.log(`🔮 Novo sinal gerado para ${dataDesseDia} com o placar: ${placarFormatado}`);
+                                               
                                     });
-                        }
+                        } // Fechamento do: if (dadosBrutos.results && Array.isArray...)
             
             } catch (error) {
-                        console.error(`❌ Erro em ${ticker}:`, error.message);
-            }
-
-            try {
-                console.log("Consultando o fechamento oficial do Ibovespa...");
-                     
-                const urlIbov =  `https://brapi.dev/api/quote/${"%5EBVSP"}` +
-                        `?range=3mo&interval=1d&token=${token}`;
-                     
-                const respostaIbov = await fetch(urlIbov);
-                
-                if (respostaIbov.ok) {
-                    const dadosIbov = await respostaIbov.json();
-                    if (dadosIbov.results && dadosIbov.results[0].historicalDataPrice) {
-                        const historicoIbov = dadosIbov.results[0].historicalDataPrice;
+                        // Captura qualquer erro na requisição em lote ou no processamento dos dias
+                        console.error("❌ Erro geral no Scanner:", error.message);
+                        alert("Ocorreu um erro ao rodar o scanner: " + error.message);
                         
-                        // Pega os dois últimos dias do índice
-                        const ibovHoje = historicoIbov[historicoIbov.length - 1];
-                        const ibovOntem = historicoIbov[historicoIbov.length - 2];
-            
-                        const dataHojeRaw = ibovHoje.date; 
-                        dataHojeFormatada = new Date(dataHojeRaw * 1000).toLocaleDateString('pt-BR');
-            
-                        // Define se o fechamento oficial foi de Alta ou Baixa
-                        direcaoIbovespaHoje = ibovHoje.close > ibovOntem.close ? "subiu" : "desceu";
-                        direcaoAberturaHoje = ibovHoje.open > ibovOntem.close ? "subiu" : "desceu";
-                        console.log(`📊 Ibovespa em ${dataHojeFormatada}: ${direcaoIbovespaHoje} (Fechamento: ${direcaoAberturaHoje})`);
-                    }
-                }
-            } catch (erroIbov) {
-                console.error("Erro ao recuperar dados do Ibovespa:", erroIbov.message);
-                direcaoIbovespaHoje = "estavel"; 
+            } finally {
+                        // Esse bloco roda SEMPRE para não deixar o seu botão travado com o "Analisando..."
+                        botaoAtualizar.disabled = false;
+                        botaoAtualizar.innerHTML = `<span>Atualizar Scanner</span>`;
             }
-
-
-    // Atualiza a tela com o total de matches encontrados
-    blocoResultadoAtual.innerHTML = `<span 
-                class="text-emerald-400">${totalMatchesPalavras}-${totalReversoesCandle}-${totalMatchesFonteSecundaria}</span>`;
-
-    // Restaura o botão ao estado original
-    botaoAtualizar.disabled = false;
-    botaoAtualizar.innerHTML = `
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://w3.org">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.253 8H18"></path>
-        </svg>
-        <span>Atualizar Dados da Bolsa</span>
-    `;
-
-    if (!dataSinal) {
-        dataSinal = new Date().toLocaleDateString('pt-BR');
-    }
-    // Executa a rotina do LocalStorage para processar palpites passados e salvar o de hoje
-    processarEGravarLocalStorage(
-                dataSinal, 
-                totalMatchesPalavras, 
-                totalMatchesFonteSecundaria,
-                totalReversoesCandle, 
-                direcaoIbovespaHoje,
-                dataHojeFormatada,   // ⬅️ Passando a data formatada da API
-                direcaoAberturaHoje  // ⬅️ Passando a direção da abertura
-            );
-
-
-    desenharHistoricoNaTela();
-
-    return resultadosProcessados;
-}
-
+} // Fechamento definitivo da: async function executarScanner()
+  
+desenharHistoricoNaTela();
 // ==========================================================
 // FUNÇÃO ALMA EM JAVASCRIPT PURO
 // ==========================================================
@@ -299,93 +327,6 @@ function calcularALMA(precos, indexAtual, tamanhoDesejado) {
     }
 
     return somaPesos === 0 ? 0 : (somaPonderada / somaPesos);
-}
-
-// ==========================================
-// 4. GERENCIADOR DO LOCALSTORAGE
-// ==========================================
-function processarEGravarLocalStorage(
-    dataSinal, 
-    totalMatchesPalavras, 
-    totalMatchesFonteSecundaria,
-    totalReversoesCandle, 
-    direcaoIbovespaHoje, 
-    dataIbov, 
-    direcaoAberturaHoje
-) {
-    // 1. Pega o histórico existente ou cria um array vazio se for a primeira vez
-    let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
-
-    // 2. Função auxiliar interna para converter datas brasileiras (dd/mm/aaaa) para Objeto Date
-    function converterData(stringData) {
-        if (!stringData) return new Date(0);
-        const partes = stringData.split('/');
-        return new Date(Number(partes[2]), Number(partes[1]) - 1, Number(partes[0]));
-    }
-
-    // 3. ATUALIZAÇÃO DO SINAL ANTERIOR (SE HOUVER)
-    // Busca o sinal mais recente que ficou pendente de validação
-    const registroAguardando = [...historicoSalvo].reverse().find(reg => reg.resultadoBolsa === "AGUARDANDO...");
-
-    if (registroAguardando) {
-        const dataDoFechamentoAtual = converterData(dataIbov);
-        const dataDoSinalSalvo = converterData(registroAguardando.dataSinal);
-
-        if (dataDoFechamentoAtual > dataDoSinalSalvo) {
-            // Atualiza os dados reais do mercado que aconteceram no pregão seguinte
-            registroAguardando.resultadoBolsa = direcaoIbovespaHoje === "subiu" ? "▲ subiu" : "▼ desceu";
-            registroAguardando.aberturaBolsa = direcaoAberturaHoje === "subiu" ? "▲ abriu em alta" : "▼ abriu em baixa";
-            registroAguardando.dataRealValidacao = dataIbov; 
-        
-            console.log(`✅ Sinal antigo de ${registroAguardando.dataSinal} atualizado com sucesso!`);
-        } else {
-            console.log(`⏳ O fechamento de ${dataIbov} não é posterior ao sinal de ${registroAguardando.dataSinal}. Mantido em AGUARDANDO...`);
-        }
-    }
-
-    // 4. CRIAÇÃO E GRAVAÇÃO DO NOVO SINAL GERADO HOJE
-    // Verifica se o sinal de hoje já não foi salvo para evitar duplicados na mesma data
-    const sinalJaExiste = historicoSalvo.some(reg => reg.dataSinal === dataSinal);
-
-            // ... dentro da sua função processarEGravarLocalStorage ...
-            
-            // 1. PEGA O HORÁRIO ATUAL DO SISTEMA
-            const agora = new Date();
-            const horaAtual = agora.getHours();
-            const minutoAtual = agora.getMinutes();
-            
-            // Converte tudo para minutos totais desde o início do dia (17h00 = 17 * 60 = 1020 minutos)
-            const minutosTotais = (horaAtual * 60) + minutoAtual;
-            const limiteMinutos = 17 * 60; // 17h00 cravadas
-            
-            // 2. SÓ REALIZA A CRIAÇÃO E SALVAMENTO SE FOR DEPOIS DAS 17H
-            if (minutosTotais >= limiteMinutos) {
-                
-                // Seu bloco que você acabou de arrumar entra aqui:
-                if (!sinalJaExiste) {
-                    const novoSinal = {
-                        dataSinal: dataSinal,
-                        placar: `${totalMatchesPalavras}-${totalMatchesFonteSecundaria}-${totalReversoesCandle}`,
-                        matchesPalavras: totalMatchesPalavras,
-                        matchesFonteSecundaria: totalMatchesFonteSecundaria,
-                        reversoesCandle: totalReversoesCandle,
-                        resultadoBolsa: "AGUARDANDO...",
-                        aberturaBolsa: "AGUARDANDO...",
-                        dataRealValidacao: "AGUARDANDO..."
-                    };
-            
-                    historicoSalvo.push(novoSinal);
-                    console.log(`🎯 Novo sinal de hoje (${dataSinal}) salvo com sucesso.`);
-                }
-            
-                // Grava apenas se passar da hora permitida
-                localStorage.setItem('historico_B3', JSON.stringify(historicoSalvo));
-            
-            } else {
-                // Se rodar antes das 17h, o app roda na tela mas não mexe no histórico do LocalStorage!
-                console.log(`⚠️ Modo de Visualização: O sinal não foi gravado no histórico porque ainda são ${horaAtual}:${minutoAtual.toString().padStart(2, '0')}. Gravação liberada apenas após às 17:00.`);
-            }
-
 }
 
 function desenharHistoricoNaTela() {
