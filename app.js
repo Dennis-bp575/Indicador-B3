@@ -119,8 +119,9 @@ async function executarScanner() {
                                                                                    
                                                 // O robô está processando o dia 10 no calendário de lacunas
                                                 const timestampDoDia = diaDoCalendario.date; // Dia 10
+                                                console.log(timestampDoDia);
                                                 const dataDesseDia = new Date(timestampDoDia * 1000).toLocaleDateString('pt-BR'); // "10/08/2026"
-                                                dataDesseDiaGlobal = dataDesseDia
+                                                dataDesseDiaGlobal = dataDesseDia;
                                                 let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
                                                 let registroExistente = historicoSalvo.find(item => item.dataSinal === dataDesseDia);
                                                 
@@ -214,7 +215,7 @@ async function executarScanner() {
 
                                                             // Verifica match com os tokens matemáticos de 14 letras
                                                             let deuMatch = TOKENS_INDICADORES.includes(palavraGerada);
-                                                            console.log(palavraGerada, totalMatchesPalavras)
+                                                            console.log(palavraGerada, totalMatchesPalavras);
                                                             if (deuMatch) {
                                                                         totalMatchesPalavras++;
                                                             }
