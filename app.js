@@ -33,24 +33,22 @@ const TOKENS_FONTE_SECUNDARIA = [
   "VVVIVVVAAVVAAA"
 ];
 
-
-// Token de autenticação da Brapi (Substitua pelo seu token gratuito gerado no site deles)
 const token = "whN8hFPcawDXwGhjRLAoN7"; 
 
-// Objeto global que vai armazenar o resultado final processado de todas as ações
-// Ele seguirá a lógica da sua antiga 'interface AtivoResultado'
 let resultadosProcessados = [];
-// Função auxiliar para gerar o delay de 100ms que você criou
+
 const esperar = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-// ==========================================
-// 2. CAPTURA DOS ELEMENTOS DA TELA (HTML)
-// ==========================================
 const botaoAtualizar = document.getElementById('btn-atualizar');
 const blocoResultadoAtual = document.getElementById('resultado-atual');
 const blocoListaHistorico = document.getElementById('lista-historico');
+let ultimaAtualizacao = null;
 
 desenharHistoricoNaTela();
+
+function formatarTickers(listaDeAtivos) {
+    return listaDeAtivos.join(',');
+}
 
 
 // ==========================================
@@ -59,15 +57,14 @@ desenharHistoricoNaTela();
 async function executarScanner() {
     let resultadosProcessados = [];
     let totalMatchesHoje = 0;
-    let totalMatchesPalavras = 0; // O primeiro número
-    let totalReversoesCandle = 0; // O segundo número (Martelo OU Engolfo)
+    let totalMatchesPalavras = 0; 
+    let totalReversoesCandle = 0;
     let direcaoIbovespaHoje = "estavel";
     let dataSinal = ""; 
     let dataHojeFormatada; 
     let totalMatchesFonteSecundaria = 0; 
-    let direcaoAberturaHoje = "";  // <-- DECLARADA AQUI NO INÍCIO
-    
-    // Efeito Visual: Transforma o botão em "Carregando..."
+    let direcaoAberturaHoje = "";  
+
     botaoAtualizar.disabled = true;
     botaoAtualizar.innerHTML = `
         <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://w3.org">
@@ -76,78 +73,87 @@ async function executarScanner() {
         <span>Analisando 50 ações...</span>
     `;
 
-    // Loop que varre seus ativos (O seu código original)
-    for (const ticker of meusAtivos) {
-        try {
-            await esperar(100);
-            const url =
-                `https://brapi.dev/api/quote/${ticker}` +
-                `?range=3mo&interval=1d&token=${token}`;
-
-            const response = await fetch(url);
+    // 1. Transformamos o array de 50 ativos em uma string única separada por vírgulas
+            const tickersFormatados = formatarTickers(meusAtivos);
             
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status} - ${response.statusText}`);
-            }
+            try {
+                // 2. Montamos a URL passando todos os 50 ativos de uma vez só
+                const url = `https://brapi.dev/api/quote/${tickersFormatados}?range=3mo&interval=1d&token=${token}`;
+            
+                // 3. Fazemos uma única requisição para a API
+                const response = await fetch(url);
+                if (!response.ok) {
+                            throw new Error(`HTTP ${response.status} - ${response.statusText}`);
+                        }
 
+                        
             const dadosBrutos = await response.json();
             
-            if (dadosBrutos.results && dadosBrutos.results[0] && dadosBrutos.results[0].historicalDataPrice) {
-                const ativo = dadosBrutos.results[0];
-                const historicoCompleto = ativo.historicalDataPrice;
+            // 1. Verificamos se a Brapi realmente devolveu a lista de resultados
+            if (dadosBrutos.results && Array.isArray(dadosBrutos.results)) {
+                // 2. Criamos um loop para passar por cada um dos 50 ativos devolvidos
+                dadosBrutos.results.forEach(ativo => {
+                    // 3. Verificamos se o ativo atual do loop tem dados históricos válidos
+                    if (ativo.historicalDataPrice && ativo.historicalDataPrice.length > 0) {
+                        // Agora 'ativo' muda a cada volta do loop (PETR4, VALE3, etc.)
+                        const historicoCompleto = ativo.historicalDataPrice;
 
-                // 1. Extrai apenas os preços de fechamento para alimentar a ALMA
-                const precosFechamento = historicoCompleto.map(c => c.close);
+                        const precosFechamento = historicoCompleto.map(c => c.close);
+                        const periodoAlma1 = 9;  
+                        const periodoAlma2 = 21; 
 
-                // 2. Calcula as duas ALMAs para cada linha do histórico
-                // AJUSTE AQUI: Mude os números 9 e 21 para os períodos exatos que você usa no Excel
-                const periodoAlma1 = 9;  
-                const periodoAlma2 = 21; 
+                            historicoCompleto.forEach((candle, index) => {
+                                candle.alma1 = calcularALMA(precosFechamento, index, periodoAlma1);
+                                candle.alma2 = calcularALMA(precosFechamento, index, periodoAlma2);
+                            });
 
-                historicoCompleto.forEach((candle, index) => {
-                    candle.alma1 = calcularALMA(precosFechamento, index, periodoAlma1);
-                    candle.alma2 = calcularALMA(precosFechamento, index, periodoAlma2);
-                });
+                           // 1. Descobrimos em qual posição (índice) do histórico está a nossa última atualização
+                        const indiceUltimaConversao = historicoCompleto.findIndex(candle => {
+                            const dataCandleFormatada = new Date(candle.date * 1000).toLocaleDateString('pt-BR');
+                            return dataCandleFormatada === ultimaAtualizacao;
+                        });
+                        
+                        // 2. Definimos quem são os candles de análise com base nesse índice encontrado
+                        let c49, c50, c51;
+                        
+                        if (indiceUltimaConversao !== -1 && indiceUltimaConversao + 1 < historicoCompleto.length) {
+                            // Se achou a data antiga, o 'hoje' passa a ser o próximo dia disponível no histórico para preencher a lacuna!
+                            c49 = historicoCompleto[indiceUltimaConversao - 1]; // Anteontem real
+                            c50 = historicoCompleto[indiceUltimaConversao];     // Ontem real (última guardada)
+                            c51 = historicoCompleto[indiceUltimaConversao + 1]; // Hoje real (a nova lacuna sendo preenchida)
+                        } else {
+                            // Se não achou a data no histórico (ou já está no último dia), usa os 3 últimos da lista por segurança
+                            const ultimos3Dias = historicoCompleto.slice(-3);
+                            c49 = ultimos3Dias[0];
+                            c50 = ultimos3Dias[1];
+                            c51 = ultimos3Dias[2];
+                        }
+                        
+                        // 3. Atualizamos a dataSinal com base no candle decidido
+                        dataSinal = new Date(c51.date * 1000).toLocaleDateString('pt-BR');
+                        const chavesColunas = ['open', 'high', 'low', 'close', 'volume', 'alma1', 'alma2']; 
+                        let palavraGerada = "";
 
-                // 3. Agora sim, captura os últimos 3 dias com as ALMAs calculadas inseridas neles!
-                const ultimos3Dias = historicoCompleto.slice(-3);
-                const c51 = ultimos3Dias[2]; // Linha 51
-                const c50 = ultimos3Dias[1]; // Linha 50
-                const c49 = ultimos3Dias[0]; // Linha 49
+                            // Monta a palavra de 14 letras cruzando dados e médias
+                            for (let i = 0; i < 7; i++) {
+                                const propriedade = chavesColunas[i];
+            
+                                const v51 = Number(c51[propriedade]) || 0;
+                                const v50 = Number(c50[propriedade]) || 0;
+                                const v49 = Number(c49[propriedade]) || 0;
+            
+                                palavraGerada += v51 > v50 ? "A" : v51 < v50 ? "V" : "I";
+                                palavraGerada += v50 > v49 ? "A" : v50 < v49 ? "V" : "I";
+                            }
 
-                // if(!dataSinal) dataSinal = new Date(c51.date * 1000).toLocaleDateString('pt-BR');
-                // Captura a data real do pregão apenas uma vez (na primeira ação válida)
-                if (!dataSinal && c51 && c51.date) { 
-                    dataSinal = new Date(c51.date * 1000).toLocaleDateString('pt-BR');
-                }
-               
+                            // Verifica match com os tokens matemáticos de 14 letras
+                            let deuMatch = TOKENS_INDICADORES.includes(palavraGerada);
+            
+                            if (deuMatch) {
+                                totalMatchesPalavras++;
+                            }
 
-                // Mapeamento exato das 7 colunas (B até H) do seu Excel
-                const chavesColunas = ['open', 'high', 'low', 'close', 'volume', 'alma1', 'alma2']; 
-
-                let palavraGerada = "";
-
-                // Monta a palavra de 14 letras cruzando dados e médias
-                for (let i = 0; i < 7; i++) {
-                    const propriedade = chavesColunas[i];
-
-                    const v51 = Number(c51[propriedade]) || 0;
-                    const v50 = Number(c50[propriedade]) || 0;
-                    const v49 = Number(c49[propriedade]) || 0;
-
-                    palavraGerada += v51 > v50 ? "A" : v51 < v50 ? "V" : "I";
-                    palavraGerada += v50 > v49 ? "A" : v50 < v49 ? "V" : "I";
-                }
-
-                // Verifica match com os tokens matemáticos de 14 letras
-                let deuMatch = TOKENS_INDICADORES.includes(palavraGerada);
-
-                if (deuMatch) {
-                    totalMatchesPalavras++;
-                }
-
-                        // --- SISTEMA NOVO (Abertura B e Fechamento E contra as outras = 14 letras) ---
-                        // Mapeando as variáveis direto das propriedades do seu objeto de dados
+                
                         const B51 = Number(c51["open"]) || 0; // Ajuste o nome da propriedade se for diferente
                         const C51 = Number(c51["high"]) || 0;
                         const D51 = Number(c51["low"]) || 0;
@@ -183,22 +189,22 @@ async function executarScanner() {
                             totalMatchesFonteSecundaria++;
                         }
                       
-
-                // Lógica do Martelo (Candle 51)
-                const corpo51 = Math.abs(c51.close - c51.open);
-                const sombraInf51 = Math.min(c51.open, c51.close) - c51.low;
-                const sombraSup51 = c51.high - Math.max(c51.open, c51.close);
-                const ehMartelo = (sombraInf51 >= 2 * corpo51) && (sombraSup51 <= corpo51 * 0.1);
-
-                // Lógica do Engolfo de Alta (Candle 50 + Candle 51)
-                const candle50Baixa = c50.close < c50.open;
-                const candle51Alta = c51.close > c51.open;
-                const ehEngolfo = candle50Baixa && candle51Alta && (c51.open <= c50.close) && (c51.close > c50.open);
-
-                // Validação 2: Aconteceu Martelo OU Engolfo de Alta?
-                if (ehMartelo || ehEngolfo) {
-                    totalReversoesCandle++;
-                }
+            
+                            // Lógica do Martelo (Candle 51)
+                            const corpo51 = Math.abs(c51.close - c51.open);
+                            const sombraInf51 = Math.min(c51.open, c51.close) - c51.low;
+                            const sombraSup51 = c51.high - Math.max(c51.open, c51.close);
+                            const ehMartelo = (sombraInf51 >= 2 * corpo51) && (sombraSup51 <= corpo51 * 0.1);
+            
+                            // Lógica do Engolfo de Alta (Candle 50 + Candle 51)
+                            const candle50Baixa = c50.close < c50.open;
+                            const candle51Alta = c51.close > c51.open;
+                            const ehEngolfo = candle50Baixa && candle51Alta && (c51.open <= c50.close) && (c51.close > c50.open);
+            
+                            // Validação 2: Aconteceu Martelo OU Engolfo de Alta?
+                            if (ehMartelo || ehEngolfo) {
+                                totalReversoesCandle++;
+                            }
 
             
                 resultadosProcessados.push({
@@ -398,53 +404,60 @@ function processarEGravarLocalStorage(
 
 }
 
-// ==========================================
-// 5. RENDERIZADOR DO HISTÓRICO VISUAL
-// ==========================================
 function desenharHistoricoNaTela() {
     blocoListaHistorico.innerHTML = "";
     let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
    
     // Inverte a ordem para exibir o mais recente no topo
-    historicoSalvo.reverse().forEach(item => {
+    const historicoInvertido = historicoSalvo.reverse();
+
+    // Captura a data do registro mais recente (o primeiro da lista invertida)
+    if (historicoInvertido.length > 0) {
+        ultimaAtualizacao = historicoInvertido[0].dataSinal;
+    } else {
+        ultimaAtualizacao = "Sem registros";
+    }
+
+    // O loop agora roda sobre a lista invertida
+    historicoInvertido.forEach(item => {
         let classeCor = "bg-gray-800 border-gray-700 text-gray-400";
         
-        if (item.resultadoBolsa.includes("subiu") || item.resultadoBolsa) {
+        // Correção do BUG: Removido o '|| item.resultadoBolsa' para que o 'else if' funcione
+        if (item.resultadoBolsa && item.resultadoBolsa.includes("subiu")) {
             classeCor = "bg-emerald-950 bg-opacity-40 border-emerald-800 text-emerald-400";
-        } else if (item.resultadoBolsa.includes("desceu") || item.resultadoBolsa) {
+        } else if (item.resultadoBolsa && item.resultadoBolsa.includes("desceu")) {
             classeCor = "bg-rose-950 bg-opacity-40 border-rose-900 text-rose-400";
         }
 
-        // 1. Mantém a sua lógica para a 'classeCor' (que cuida do Fechamento)
-            // e adiciona esta linha abaixo para definir a cor do badge da Abertura:
-            const classeCorAbertura = item.aberturaBolsa?.includes("alta") 
-                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" 
-                : item.aberturaBolsa?.includes("baixa") 
-                ? "bg-orange-500/10 text-orange-400 border border-orange-500/20" 
-                : "bg-gray-800 text-gray-400"; // Caso esteja "AGUARDANDO..."
-            
-            // 2. A sua constante com o HTML atualizado:
-            const linhaHtml = `
-                <div class="flex items-center justify-between bg-gray-850 border border-gray-800 rounded-xl p-4 shadow-sm">
-                    <div class="flex flex-col">
-                        <span class="font-bold text-white text-base">Matches: ${item.placar}</span>
-                        <span class="text-xs text-gray-500">Data do Sinal: ${item.dataSinal}</span>
+        // Mantém a sua lógica para a cor do badge da Abertura
+        const classeCorAbertura = item.aberturaBolsa?.includes("alta") 
+            ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" 
+            : item.aberturaBolsa?.includes("baixa") 
+            ? "bg-orange-500/10 text-orange-400 border border-orange-500/20" 
+            : "bg-gray-800 text-gray-400"; // Caso esteja "AGUARDANDO..."
+        
+        // A sua constante com o HTML atualizado
+        const linhaHtml = `
+            <div class="flex items-center justify-between bg-gray-850 border border-gray-800 rounded-xl p-4 shadow-sm">
+                <div class="flex flex-col">
+                    <span class="font-bold text-white text-base">Matches: ${item.placar}</span>
+                    <span class="text-xs text-gray-500">Data do Sinal: ${item.dataSinal}</span>
+                </div>
+                
+                <!-- Grupo de Badges à direita -->
+                <div class="flex flex-col sm:flex-row items-end sm:items-center gap-2">
+                    <!-- Novo Badge de Abertura -->
+                    <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCorAbertura}">
+                        Abertura: ${item.aberturaBolsa || "AGUARDANDO..."}
                     </div>
                     
-                    <!-- Grupo de Badges à direita -->
-                    <div class="flex flex-col sm:flex-row items-end sm:items-center gap-2">
-                        <!-- Novo Badge de Abertura -->
-                        <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCorAbertura}">
-                            Abertura: ${item.aberturaBolsa || "AGUARDANDO..."}
-                        </div>
-                        
-                        <!-- Seu Badge Antigo de Fechamento -->
-                        <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCor}">
-                            Fechamento: ${item.resultadoBolsa}
-                        </div>
+                    <!-- Seu Badge Antigo de Fechamento -->
+                    <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCor}">
+                        Fechamento: ${item.resultadoBolsa}
                     </div>
                 </div>
-            `;
+            </div>
+        `;
 
         blocoListaHistorico.insertAdjacentHTML('beforeend', linhaHtml);
     });
