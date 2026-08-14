@@ -186,6 +186,16 @@ async function executarScanner() {
                                                             const c51 = historicoCompleto[idx51];
                                                             const c50 = historicoCompleto[idx50];
                                                             const c49 = historicoCompleto[idx49];
+
+                                                            const periodoAlma1 = 9;  
+                                                            const periodoAlma2 = 21; 
+
+                                                            historicoCompleto.forEach((candle, index) => {
+                                                                    candle.alma1 = calcularALMA(precosFechamento, index, periodoAlma1);
+                                                                    candle.alma2 = calcularALMA(precosFechamento, index, periodoAlma2);
+                                                            });
+
+
          
                                                             // 3. Atualizamos a dataSinal com base no candle decidido
                                                             dataSinal = new Date(c51.date * 1000).toLocaleDateString('pt-BR');
