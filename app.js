@@ -290,9 +290,11 @@ async function executarScanner() {
 
                                                 // 1. Buscamos o histórico atualizado do localStorage para não atropelar dados
                                                 let historicoAtual = JSON.parse(localStorage.getItem('historico_B3')) || [];
-                                                
-                                                // 2. Montamos o placar somando os seus contadores de palavras e fontes prêmium
                                                 const placarFormatado = `${totalMatchesPalavras}-${totalMatchesFonteSecundaria}-${totalReversoesCandle}`;
+
+                                                const agora = new Date();
+                                                const horaAtual = agora.getHours();
+                                                const ehHoje = dataDesseDia === agora.toLocaleDateString('pt-BR');
                                                 
                                                 // 3. Criamos o novo objeto com a assinatura do seu App Guru
                                                 const novoPalpite = {
@@ -304,6 +306,7 @@ async function executarScanner() {
                                                 
                                                 // 4. Empurramos o novo palpite para dentro do banco de dados do navegador
                                                 historicoAtual.push(novoPalpite);
+                                                
                                                 localStorage.setItem('historico_B3', JSON.stringify(historicoAtual));
                                                 
                                                 console.log(`🔮 Novo sinal gerado para ${dataDesseDia} com o placar: ${placarFormatado}`);
