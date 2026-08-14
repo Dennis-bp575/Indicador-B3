@@ -117,7 +117,7 @@ async function executarScanner() {
                                                 let registroExistente = historicoSalvo.find(item => item.dataSinal === dataDesseDia);
                                                 
                                                 if (registroExistente && registroExistente.resultadoBolsa === "AGUARDANDO...") {
-                                                    
+                                                    console.log("chegamos aqui no resultado bolsa")
                                                     const dadosIbov = dadosBrutos.results.find(item => item.symbol === "%5EBVSP");
                                                     
                                                     if (dadosIbov && dadosIbov.historicalDataPrice) {
@@ -217,7 +217,7 @@ async function executarScanner() {
 
                                                             // Verifica match com os tokens matemáticos de 14 letras
                                                             let deuMatch = TOKENS_INDICADORES.includes(palavraGerada);
-                                                            console.log(palavraGerada, totalMatchesPalavras);
+                                                            // console.log(palavraGerada, totalMatchesPalavras);
                                                             if (deuMatch) {
                                                                         totalMatchesPalavras++;
                                                             }
