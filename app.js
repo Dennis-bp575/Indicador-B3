@@ -119,6 +119,7 @@ async function executarScanner() {
                                                 
                                                 if (registroExistente && registroExistente.resultadoBolsa === "AGUARDANDO...") {
                                                     console.log("chegamos aqui no resultado bolsa")
+                                                    console.log(item.symbol)
                                                     const dadosIbov = dadosBrutos.results.find(item => item.symbol === "%5EBVSP");
                                                     
                                                     if (dadosIbov && dadosIbov.historicalDataPrice) {
