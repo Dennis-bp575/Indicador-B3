@@ -61,6 +61,7 @@ async function executarScanner() {
             let dataHojeFormatada; 
             let totalMatchesFonteSecundaria = 0; 
             let direcaoAberturaHoje = "";  
+            let dataDesseDiaGlobal;
             
             botaoAtualizar.disabled = true;
             botaoAtualizar.innerHTML = `
@@ -119,7 +120,7 @@ async function executarScanner() {
                                                 // O robô está processando o dia 10 no calendário de lacunas
                                                 const timestampDoDia = diaDoCalendario.date; // Dia 10
                                                 const dataDesseDia = new Date(timestampDoDia * 1000).toLocaleDateString('pt-BR'); // "10/08/2026"
-                                                
+                                                dataDesseDiaGlobal = dataDesseDia
                                                 let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
                                                 let registroExistente = historicoSalvo.find(item => item.dataSinal === dataDesseDia);
                                                 
@@ -309,7 +310,7 @@ async function executarScanner() {
                     <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 text-center shadow-lg">
                         <h3 class="text-xs uppercase tracking-wider text-gray-500 font-bold mb-1">Previsão do Guru para Amanhã</h3>
                         <div class="text-3xl font-extrabold text-white mb-2">${totalMatchesPalavras}-${totalMatchesFonteSecundaria}-${totalReversoesCandle}</div>
-                        <p class="text-xs text-gray-400">Baseado nos dados consolidados em: <span class="text-emerald-400 font-semibold">${dataDesseDia}</span></p>
+                        <p class="text-xs text-gray-400">Baseado nos dados consolidados em: <span class="text-emerald-400 font-semibold">${dataDesseDiaGlobal}</span></p>
                     </div>
                 `;
             }
