@@ -117,7 +117,7 @@ async function executarScanner() {
                                                 let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
                                                 let registroExistente = historicoSalvo.find(item => item.dataSinal === dataDesseDia);
                                                 
-                                                if (registroExistente && registroExistente.resultadoBolsa === "AGUARDANDO...") {
+                                                if (registroExistente && registroExistente.resultadoBolsa === "AGUARDANDO..." && registroExistente.placar !== "AGUARDANDO...") {
                                                     console.log("chegamos aqui no resultado bolsa")
                                                     
                                                     const dadosIbov = dadosBrutos.results.find(item => item.symbol === "^BVSP");
