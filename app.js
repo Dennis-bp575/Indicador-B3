@@ -100,7 +100,7 @@ async function executarScanner() {
                                     });
                                     
                                     // Criamos a lista com os dias que faltam processar dali para frente!
-                                    const diasParaProcessar = historicoCalendario.slice(indiceParada + 1);
+                                    const diasParaProcessar = historicoCalendario.slice(indiceParada);
 
                                     // ==========================================
                                     // 🚀 O LOOP PRINCIPAL DE DIAS (Ajustado)
