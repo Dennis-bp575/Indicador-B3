@@ -52,11 +52,13 @@ async function executarScanner() {
             let totalMatchesPalavras = 0; 
             let totalReversoesCandle = 0;
             let direcaoIbovespaHoje = "estavel";
-            let dataSinal = ""; 
-            let dataHojeFormatada; 
+            let dataSinal = "";
+            let dataHojeFormatada = new Date().toLocaleDateString('pt-BR');
             let totalMatchesFonteSecundaria = 0; 
             let direcaoAberturaHoje = "";  
             let dataDesseDiaGlobal;
+            let calculaUltimoResult;
+            let const gravaUltimoResult;
             
             botaoAtualizar.disabled = true;
             botaoAtualizar.innerHTML = `
@@ -103,7 +105,7 @@ async function executarScanner() {
                                     // 🚀 O LOOP PRINCIPAL DE DIAS (Ajustado)
                                     // ==========================================
                                     diasParaProcessar.forEach((diaDoCalendario) => {
-                                                const calculaUltimoResult;
+                                                
                                                 // O robô está processando o dia 10 no calendário de lacunas
                                                 const timestampDoDia = diaDoCalendario.date; // Dia 10
                                                 
@@ -136,11 +138,12 @@ async function executarScanner() {
                                                             const agora = new Date();
                                                             const horaAtual = agora.getHours();
                                                             const amanhaEHoje = dataAmanhaFormatada <= agora.toLocaleDateString('pt-BR');
-                                                
+                                                            
                                                             // ⏱️ TRAVA DAS 17H: Se o dia posterior (dia 11) for HOJE e ainda for antes das 17h:
-                                                            if (amanhaEHoje && horaAtual < 17) {
+                                                            if (amanhaEHoje) {
                                                                 console.log(`⏳ O palpite de ${dataDesseDia} depende do dia ${dataAmanhaFormatada}, que ainda está rolando.`);
-                                                                calculaUltimoResult = true
+                                                                calculaUltimoResult = true;
+                                                                gravUltimoResult = horaAtual > 17 || dataAmanhaFormatada < agora.toLocaleDateString('pt-BR');
                                                             } else {
                                                                 // Se o dia posterior já fechou (ou é um dia passado da lacuna): CORTA O MARTELO!
                                                                 // O resultado do dia 11 compara o fechamento dele contra o dia 10
@@ -164,7 +167,7 @@ async function executarScanner() {
                                                             }
                                                         }
                                                     }
-                                                    return; // Pula o cálculo das ações, pois esse palpite já foi gerado no passado
+                                                    if (!calculaUltimoResult) return;
                                                 }
 
                                                 // Zeramos os contadores para consolidar este dia específico
@@ -302,9 +305,9 @@ async function executarScanner() {
                                                 
                                                 // 4. Empurramos o novo palpite para dentro do banco de dados do navegador
                                                 historicoAtual.push(novoPalpite);
-                                                
-                                                localStorage.setItem('historico_B3', JSON.stringify(historicoAtual));
-                                                
+                                                if (gravaUltimoResult) {
+                                                            localStorage.setItem('historico_B3', JSON.stringify(historicoAtual));
+                                                }
                                                 console.log(`🔮 Novo sinal gerado para ${dataDesseDia} com o placar: ${placarFormatado}`);
                                                
                                     });
