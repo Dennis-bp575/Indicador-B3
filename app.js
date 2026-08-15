@@ -130,44 +130,48 @@ async function executarScanner() {
                                                 
                                                         // Se o dia posterior existe no histórico da Brapi, significa que ele já aconteceu!
                                                         if (idxDiaSeguinte < historicoIbov.length) {
-                                                            const ibovAmanha = historicoIbov[idxDiaSeguinte]; // O dia 11 real!
-                                                            const ibovHoje = historicoIbov[idxIbov];         // O dia 10 real
-                                                
-                                                            const dataAmanhaFormatada = new Date(ibovAmanha.date * 1000).toLocaleDateString('pt-BR');
+                                                                        const ibovAmanha = historicoIbov[idxDiaSeguinte]; // O dia 11 real!
+                                                                        const ibovHoje = historicoIbov[idxIbov];         // O dia 10 real
                                                             
-                                                            const agora = new Date();
-                                                            const horaAtual = agora.getHours();
-                                                            const amanhaEHoje = dataAmanhaFormatada === agora.toLocaleDateString('pt-BR');
-                                                            gravUltimoResult = false
-                                                            calculaUltimoResult = false       
-                                                            // ⏱️ TRAVA DAS 17H: Se o dia posterior (dia 11) for HOJE e ainda for antes das 17h:
-                                                            if (amanhaEHoje) {
-                                                                console.log(`⏳ O palpite de ${dataDesseDia} depende do dia ${dataAmanhaFormatada}, que ainda está rolando.`);
+                                                                        const dataAmanhaFormatada = new Date(ibovAmanha.date * 1000).toLocaleDateString('pt-BR');
+                                                                        
+                                                                        const agora = new Date();
+                                                                        const horaAtual = agora.getHours();
+                                                                        const amanhaEHoje = dataAmanhaFormatada === agora.toLocaleDateString('pt-BR');
+                                                                        gravUltimoResult = false
+                                                                        calculaUltimoResult = false       
+                                                                        // ⏱️ TRAVA DAS 17H: Se o dia posterior (dia 11) for HOJE e ainda for antes das 17h:
+                                                                        if (amanhaEHoje) {
+                                                                            console.log(`⏳ O palpite de ${dataDesseDia} depende do dia ${dataAmanhaFormatada}, que ainda está rolando.`);
+                                                                            calculaUltimoResult = true;
+                                                                            gravUltimoResult = horaAtual > 17 || dataAmanhaFormatada < agora.toLocaleDateString('pt-BR');
+                                                                            console.log(gravUltimoResult)
+                                                                        } else {
+                                                                            // Se o dia posterior já fechou (ou é um dia passado da lacuna): CORTA O MARTELO!
+                                                                            // O resultado do dia 11 compara o fechamento dele contra o dia 10
+                                                                            registroExistente.resultadoBolsa = ibovAmanha.close > ibovHoje.close ? "subiu" : "desceu";
+                                                                            registroExistente.aberturaBolsa = ibovAmanha.open > ibovHoje.close ? "alta" : "baixa";
+            
+                                                                            let possuiDiaSeguinteNoBanco = historicoSalvo.some(item => item.dataSinal === dataAmanhaFormatada);
+                            
+                                                                            if (!possuiDiaSeguinteNoBanco) {
+                                                                                historicoSalvo.push({
+                                                                                    placar: "AGUARDANDO...", // Será calculado quando o loop passar por ele!
+                                                                                    dataSinal: dataAmanhaFormatada,
+                                                                                    aberturaBolsa: "AGUARDANDO...",
+                                                                                    resultadoBolsa: "AGUARDANDO..."
+                                                                                });
+                                                                                console.log(`📅 Criada base em 'AGUARDANDO...' para o dia posterior: ${dataAmanhaFormatada}`);
+                                                                            }
+                                                                                 
+                                                                            localStorage.setItem('historico_B3', JSON.stringify(historicoSalvo));
+                                                                            console.log(`✅ Palpite do dia ${dataDesseDia} validado com o resultado do dia ${dataAmanhaFormatada}!`);
+                                                                        }
+                                                        } else {
+                                                                console.log(`AGORA VAI BEASILLLLL`);
                                                                 calculaUltimoResult = true;
                                                                 gravUltimoResult = horaAtual > 17 || dataAmanhaFormatada < agora.toLocaleDateString('pt-BR');
                                                                 console.log(gravUltimoResult)
-                                                            } else {
-                                                                // Se o dia posterior já fechou (ou é um dia passado da lacuna): CORTA O MARTELO!
-                                                                // O resultado do dia 11 compara o fechamento dele contra o dia 10
-                                                                registroExistente.resultadoBolsa = ibovAmanha.close > ibovHoje.close ? "subiu" : "desceu";
-                                                                registroExistente.aberturaBolsa = ibovAmanha.open > ibovHoje.close ? "alta" : "baixa";
-
-                                                                let possuiDiaSeguinteNoBanco = historicoSalvo.some(item => item.dataSinal === dataAmanhaFormatada);
-                
-                                                                if (!possuiDiaSeguinteNoBanco) {
-                                                                    historicoSalvo.push({
-                                                                        placar: "AGUARDANDO...", // Será calculado quando o loop passar por ele!
-                                                                        dataSinal: dataAmanhaFormatada,
-                                                                        aberturaBolsa: "AGUARDANDO...",
-                                                                        resultadoBolsa: "AGUARDANDO..."
-                                                                    });
-                                                                    console.log(`📅 Criada base em 'AGUARDANDO...' para o dia posterior: ${dataAmanhaFormatada}`);
-                                                                }
-                                                                     
-                                                                localStorage.setItem('historico_B3', JSON.stringify(historicoSalvo));
-                                                                console.log(`✅ Palpite do dia ${dataDesseDia} validado com o resultado do dia ${dataAmanhaFormatada}!`);
-                                                            }
-                                                        }
                                                     }
                                                     if (!calculaUltimoResult) return;
                                                 }
