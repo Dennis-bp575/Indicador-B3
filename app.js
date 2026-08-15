@@ -90,10 +90,7 @@ async function executarScanner() {
                         
                         // 1. Verificamos se a Brapi realmente devolveu a lista de resultados
                         if (dadosBrutos.results && Array.isArray(dadosBrutos.results)) {
-                                    console.log("chegamos aqui")
-                                    // Pegamos o histórico do primeiro ativo da lista para usar de calendário
-                                    const historicoCalendario = dadosBrutos.results[0].historicalDataPrice;
-                                    
+                                    const historicoCalendario = dadosBrutos.results[0].historicalDataPrice;                    
                                     // Encontramos onde paramos no tempo
                                     const indiceParada = historicoCalendario.findIndex(candle => {
                                         return new Date(candle.date * 1000).toLocaleDateString('pt-BR') === ultimaAtualizacao;
@@ -106,13 +103,13 @@ async function executarScanner() {
                                     // 🚀 O LOOP PRINCIPAL DE DIAS (Ajustado)
                                     // ==========================================
                                     diasParaProcessar.forEach((diaDoCalendario) => {
-                                                console.log("chegamos aqui") 
-                                                console.log(diaDoCalendario.date)
+                                                //console.log("chegamos aqui") 
+                                                //console.log(diaDoCalendario.date)
                                                 // O robô está processando o dia 10 no calendário de lacunas
                                                 const timestampDoDia = diaDoCalendario.date; // Dia 10
                                                 
                                                 const dataDesseDia = new Date(timestampDoDia * 1000).toLocaleDateString('pt-BR'); // "10/08/2026"
-                                                console.log(dataDesseDia)
+                                                //console.log(dataDesseDia)
                                                 dataDesseDiaGlobal = dataDesseDia;
                                                 let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
                                                 let registroExistente = historicoSalvo.find(item => item.dataSinal === dataDesseDia);
