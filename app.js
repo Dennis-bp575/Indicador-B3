@@ -138,12 +138,14 @@ async function executarScanner() {
                                                             const agora = new Date();
                                                             const horaAtual = agora.getHours();
                                                             const amanhaEHoje = dataAmanhaFormatada <= agora.toLocaleDateString('pt-BR');
-                                                            
+                                                            gravUltimoResult = false
+                                                            calculaUltimoResult = false       
                                                             // ⏱️ TRAVA DAS 17H: Se o dia posterior (dia 11) for HOJE e ainda for antes das 17h:
                                                             if (amanhaEHoje) {
                                                                 console.log(`⏳ O palpite de ${dataDesseDia} depende do dia ${dataAmanhaFormatada}, que ainda está rolando.`);
                                                                 calculaUltimoResult = true;
                                                                 gravUltimoResult = horaAtual > 17 || dataAmanhaFormatada < agora.toLocaleDateString('pt-BR');
+                                                                console.log(gravUltimoResult)
                                                             } else {
                                                                 // Se o dia posterior já fechou (ou é um dia passado da lacuna): CORTA O MARTELO!
                                                                 // O resultado do dia 11 compara o fechamento dele contra o dia 10
