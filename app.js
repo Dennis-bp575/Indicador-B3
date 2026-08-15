@@ -137,7 +137,7 @@ async function executarScanner() {
                                                             
                                                             const agora = new Date();
                                                             const horaAtual = agora.getHours();
-                                                            const amanhaEHoje = dataAmanhaFormatada <= agora.toLocaleDateString('pt-BR');
+                                                            const amanhaEHoje = dataAmanhaFormatada === agora.toLocaleDateString('pt-BR');
                                                             gravUltimoResult = false
                                                             calculaUltimoResult = false       
                                                             // ⏱️ TRAVA DAS 17H: Se o dia posterior (dia 11) for HOJE e ainda for antes das 17h:
