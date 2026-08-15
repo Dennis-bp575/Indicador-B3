@@ -58,7 +58,7 @@ async function executarScanner() {
             let direcaoAberturaHoje = "";  
             let dataDesseDiaGlobal;
             let calculaUltimoResult;
-            let const gravaUltimoResult;
+            let gravaUltimoResult;
             
             botaoAtualizar.disabled = true;
             botaoAtualizar.innerHTML = `
