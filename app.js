@@ -103,8 +103,7 @@ async function executarScanner() {
                                     // 🚀 O LOOP PRINCIPAL DE DIAS (Ajustado)
                                     // ==========================================
                                     diasParaProcessar.forEach((diaDoCalendario) => {
-                                                //console.log("chegamos aqui") 
-                                                //console.log(diaDoCalendario.date)
+                                                const calculaUltimoResult;
                                                 // O robô está processando o dia 10 no calendário de lacunas
                                                 const timestampDoDia = diaDoCalendario.date; // Dia 10
                                                 
@@ -125,7 +124,6 @@ async function executarScanner() {
                                                         // Achamos a posição do dia 10 no histórico do Ibov
                                                         const idxIbov = historicoIbov.findIndex(c => c.date === timestampDoDia);
                                                         
-                                                        // 🚨 A MÁGICA ESTÁ AQUI: O resultado real do palpite está no dia POSTERIOR (idxIbov + 1)
                                                         const idxDiaSeguinte = idxIbov + 1;
                                                 
                                                         // Se o dia posterior existe no histórico da Brapi, significa que ele já aconteceu!
@@ -137,11 +135,12 @@ async function executarScanner() {
                                                             
                                                             const agora = new Date();
                                                             const horaAtual = agora.getHours();
-                                                            const amanhaEHoje = dataAmanhaFormatada === agora.toLocaleDateString('pt-BR');
+                                                            const amanhaEHoje = dataAmanhaFormatada <= agora.toLocaleDateString('pt-BR');
                                                 
                                                             // ⏱️ TRAVA DAS 17H: Se o dia posterior (dia 11) for HOJE e ainda for antes das 17h:
                                                             if (amanhaEHoje && horaAtual < 17) {
                                                                 console.log(`⏳ O palpite de ${dataDesseDia} depende do dia ${dataAmanhaFormatada}, que ainda está rolando.`);
+                                                                calculaUltimoResult = true
                                                             } else {
                                                                 // Se o dia posterior já fechou (ou é um dia passado da lacuna): CORTA O MARTELO!
                                                                 // O resultado do dia 11 compara o fechamento dele contra o dia 10
@@ -159,7 +158,7 @@ async function executarScanner() {
                                                                     });
                                                                     console.log(`📅 Criada base em 'AGUARDANDO...' para o dia posterior: ${dataAmanhaFormatada}`);
                                                                 }
-                                                                        
+                                                                     
                                                                 localStorage.setItem('historico_B3', JSON.stringify(historicoSalvo));
                                                                 console.log(`✅ Palpite do dia ${dataDesseDia} validado com o resultado do dia ${dataAmanhaFormatada}!`);
                                                             }
