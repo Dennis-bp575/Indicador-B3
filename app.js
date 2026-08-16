@@ -100,7 +100,7 @@ async function executarScanner() {
                                     
                                     // Criamos a lista com os dias que faltam processar dali para frente!
                                     const diasParaProcessar = historicoCalendario.slice(indiceParada);
-                                    
+                                    let historicoReatualizado = []; 
                                     diasParaProcessar.forEach((diaDoCalendario) => {
                                                 
                                                 // O robô está processando o dia 10 no calendário de lacunas
@@ -110,7 +110,8 @@ async function executarScanner() {
                                                 //console.log(dataDesseDia)
                                                 dataDesseDiaGlobal = dataDesseDia;
                                                 let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
-                                                let registroExistente = historicoSalvo.find(item => item.dataSinal === dataDesseDia);
+                                                historicoReatualizado = historicoSalvo
+                                                let registroExistente = historicoReatualizado.find(item => item.dataSinal === dataDesseDia);
                                                 
                                                 //if (registroExistente) {
         
@@ -143,7 +144,7 @@ async function executarScanner() {
                                                                             let possuiDiaSeguinteNoBanco = historicoSalvo.some(item => item.dataSinal === dataAmanhaFormatada);
                             
                                                                             if (!possuiDiaSeguinteNoBanco) {
-                                                                                historicoSalvo.push({
+                                                                                historicoReatualizado.push({
                                                                                     placar: "AGUARDANDO...",
                                                                                     dataSinal: dataAmanhaFormatada,
                                                                                     aberturaBolsa: "AGUARDANDO...",
@@ -152,7 +153,7 @@ async function executarScanner() {
                                                                                 console.log(`📅 Criada base em 'AGUARDANDO...' para o dia posterior: ${dataAmanhaFormatada}`);
                                                                             }
                                                                    
-                                                                            localStorage.setItem('historico_B3', JSON.stringify(historicoSalvo));
+                                                                            //localStorage.setItem('historico_B3', JSON.stringify(historicoSalvo));
                                                                             console.log(`✅ Palpite do dia ${dataDesseDia} validado com o resultado do dia ${dataAmanhaFormatada}!`);
                                                                         }
                                                         } else {
@@ -287,29 +288,26 @@ async function executarScanner() {
                                                 });
 
                                                 // 1. Buscamos o histórico atualizado do localStorage para não atropelar dados
-                                                let historicoAtual = JSON.parse(localStorage.getItem('historico_B3')) || [];
+                                                //let historicoAtual = JSON.parse(localStorage.getItem('historico_B3')) || [];
                                                 const placarFormatado = `${totalMatchesPalavras}-${totalMatchesFonteSecundaria}-${totalReversoesCandle}`;
-
+                                                
                                                 const agora = new Date();
                                                 const horaAtual = agora.getHours();
                                                 const ehHoje = dataDesseDia === agora.toLocaleDateString('pt-BR');
                                                 
-                                                const index = historicoAtual.findIndex(c => c.date === timestampDoDia);
-                                                historicoAtual[index] = {
-                                                            ...historicoAtual[index],
+                                                const index = historicoReatualizado.findIndex(c => c.date === timestampDoDia);
+                                                historicoReatualizado[index] = {
+                                                            ...historicoReatualizado[index],
                                                             placar: placarFormatado,
                                                             dataSinal: dataDesseDia,       
                                                 };
                                                 
-                                                const agoraH = new Date();
-                                                const horaAtualH = agoraH.getHours();
-                                                gravUltimoResult = horaAtualH > 17 || dataDesseDia < agoraH.toLocaleDateString('pt-BR');
-                                                console.log(gravUltimoResult, horaAtualH, agoraH.toLocaleDateString('pt-BR'));
-                                                localStorage.setItem('historico_B3', JSON.stringify(historicoAtual));
+                                                
                                                 
                                                 console.log(`🔮 Novo sinal gerado para ${dataDesseDia} com o placar: ${placarFormatado}`);
                                                
                                     });
+                        localStorage.setItem('historico_B3', JSON.stringify(historicoReatualizado));
                         desenharHistoricoNaTela();
                         } // Fechamento do: if (dadosBrutos.results && Array.isArray...)
             
