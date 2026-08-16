@@ -300,13 +300,21 @@ async function executarScanner() {
                                                 const horaAtual = agora.getHours();
                                                 const ehHoje = dataDesseDia === agora.toLocaleDateString('pt-BR');
                                                 
-                                                const index = historicoReatualizado.findIndex(c => c.date === timestampDoDia);
-                                                historicoReatualizado[index] = {
-                                                            ...historicoReatualizado[index],
-                                                            placar: placarFormatado,
-                                                            dataSinal: dataDesseDia,       
-                                                };
+                                                const index = historicoReatualizado.findIndex(c => 
+                                                    String(c.dataSinal).trim() === String(timestampDoDia).trim()
+                                                );
                                                 
+                                                if (index !== -1) {
+                                                    historicoReatualizado[index] = {
+                                                        ...historicoReatualizado[index],
+                                                        placar: placarFormatado,
+                                                        dataSinal: dataDesseDia,       
+                                                    };
+                                                    console.log(`✅ Item encontrado no índice ${index} e atualizado com sucesso!`);
+                                                } else {
+                                                    console.warn(`❌ Mesmo com o trim, a data "${timestampDoDia}" não foi encontrada no histórico.`);
+                                                }
+                                                                                                
                                                 
                                                 
                                                 console.log(`🔮 Novo sinal gerado para ${dataDesseDia} com o placar: ${placarFormatado}`);
