@@ -111,7 +111,10 @@ async function executarScanner() {
                                                 dataDesseDiaGlobal = dataDesseDia;
                                                 let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
                                                 historicoReatualizado = structuredClone(historicoSalvo);
-                                                let registroExistente = historicoReatualizado.find(item => item.dataSinal === dataDesseDia);
+                                                let registroExistente = historicoReatualizado.find(item => 
+                                                    String(item.dataSinal).trim() === String(dataDesseDia).trim()
+                                                );
+
                                                 
                                                 if (registroExistente) {
         
