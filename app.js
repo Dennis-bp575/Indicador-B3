@@ -169,11 +169,12 @@ async function executarScanner() {
                                                                             console.log(`✅ Palpite do dia ${dataDesseDia} validado com o resultado do dia ${dataAmanhaFormatada}!`);
                                                                         }
                                                         } else {
-                                                                console.log(`AGORA VAI BRASILLLLL`);
+                                                                
                                                                 calculaUltimoResult = true;
                                                                 //console.log(gravUltimoResult);
                                                         }
                                                     }
+                                                    console.log(`calcula ult = ${calculaUltimoResult}`);
                                                     if (!calculaUltimoResult) return;
                                                 }
 
