@@ -312,10 +312,16 @@ async function executarScanner() {
                         } // Fechamento do: if (dadosBrutos.results && Array.isArray...)
             
             } catch (error) {
-                       
-                        console.error("❌ Erro", error.message);
-                        alert("Ocorreu um erro: " + error.message);
-                        
+                // 1. Pega a pilha de execução (stack) ou deixa vazio se não existir
+                const stack = error.stack || "";
+                
+                // 2. Extrai a linha que originou o erro usando Regex
+                const linhaErro = stack.split('\n')[1] || "Linha desconhecida";
+            
+                // Log detalhado para o desenvolvedor ver no console (F12)
+                console.error("❌ Erro detectado:", error.message);
+                console.error("📍 Local do erro:", linhaErro.trim());
+
             } finally {
                         // Esse bloco roda SEMPRE para não deixar o seu botão travado com o "Analisando..."
                         botaoAtualizar.disabled = false;
