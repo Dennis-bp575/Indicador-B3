@@ -110,7 +110,7 @@ async function executarScanner() {
                                                 //console.log(dataDesseDia)
                                                 dataDesseDiaGlobal = dataDesseDia;
                                                 let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
-                                                historicoReatualizado = historicoSalvo
+                                                let historicoReatualizado = JSON.parse(JSON.stringify(historicoSalvo));
                                                 let registroExistente = historicoReatualizado.find(item => item.dataSinal === dataDesseDia);
                                                 
                                                 //if (registroExistente) {
