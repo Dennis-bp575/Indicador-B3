@@ -301,7 +301,7 @@ async function executarScanner() {
                                                 const ehHoje = dataDesseDia === agora.toLocaleDateString('pt-BR');
                                                 
                                                 const index = historicoReatualizado.findIndex(c => 
-                                                    String(c.dataSinal).trim() === String(timestampDoDia).trim()
+                                                    String(c.dataSinal).trim() === String(dataDesseDia).trim()
                                                 );
                                                 
                                                 if (index !== -1) {
