@@ -171,7 +171,7 @@ async function executarScanner() {
                                                                 console.log(`AGORA VAI BRASILLLLL`);
                                                                 calculaUltimoResult = true;
                                                                 const agoraH = new Date();
-                                                                const horaAtualH = agora.getHours();
+                                                                const horaAtualH = agoraH.getHours();
                                                                 gravUltimoResult = horaAtualH > 17 || dataAmanhaFormatada < agoraH.toLocaleDateString('pt-BR');
                                                                 console.log(gravUltimoResult);
                                                         }
