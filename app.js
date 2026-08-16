@@ -315,7 +315,7 @@ async function executarScanner() {
                                                 const agoraH = new Date();
                                                 const horaAtualH = agoraH.getHours();
                                                 gravUltimoResult = horaAtualH > 17 || dataAmanhaFormatada < agoraH.toLocaleDateString('pt-BR');
-                                                console.log(gravUltimoResult, horaAtualH, agoraH.toLocaleDateString('pt-BR')
+                                                console.log(gravUltimoResult, horaAtualH, agoraH.toLocaleDateString('pt-BR'));
                                                 if (gravaUltimoResult) {
                                                             localStorage.setItem('historico_B3', JSON.stringify(historicoAtual));
                                                 }
