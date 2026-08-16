@@ -145,7 +145,7 @@ async function executarScanner() {
                                                                             console.log(`⏳ O palpite de ${dataDesseDia} depende do dia ${dataAmanhaFormatada}, que ainda está rolando.`);
                                                                             calculaUltimoResult = true;
                                                                             gravUltimoResult = horaAtual > 17 || dataAmanhaFormatada < agora.toLocaleDateString('pt-BR');
-                                                                            console.log(gravUltimoResult)
+                                                                            console.log(gravUltimoResult);
                                                                         } else {
                                                                             // Se o dia posterior já fechou (ou é um dia passado da lacuna): CORTA O MARTELO!
                                                                             // O resultado do dia 11 compara o fechamento dele contra o dia 10
@@ -171,7 +171,8 @@ async function executarScanner() {
                                                                 console.log(`AGORA VAI BEASILLLLL`);
                                                                 calculaUltimoResult = true;
                                                                 gravUltimoResult = horaAtual > 17 || dataAmanhaFormatada < agora.toLocaleDateString('pt-BR');
-                                                                console.log(gravUltimoResult)
+                                                                console.log(gravUltimoResult);
+                                                        }
                                                     }
                                                     if (!calculaUltimoResult) return;
                                                 }
