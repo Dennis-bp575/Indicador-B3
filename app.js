@@ -110,7 +110,7 @@ async function executarScanner() {
                                                 //console.log(dataDesseDia)
                                                 dataDesseDiaGlobal = dataDesseDia;
                                                 let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
-                                                let historicoReatualizado = JSON.parse(JSON.stringify(historicoSalvo));
+                                                historicoReatualizado = JSON.parse(JSON.stringify(historicoSalvo));
                                                 let registroExistente = historicoReatualizado.find(item => item.dataSinal === dataDesseDia);
                                                 
                                                 //if (registroExistente) {
@@ -312,9 +312,9 @@ async function executarScanner() {
                         } // Fechamento do: if (dadosBrutos.results && Array.isArray...)
             
             } catch (error) {
-                        // Captura qualquer erro na requisição em lote ou no processamento dos dias
-                        console.error("❌ Erro geral no Scanner:", error.message);
-                        alert("Ocorreu um erro ao rodar o scanner: " + error.message);
+                       
+                        console.error("❌ Erro", error.message);
+                        alert("Ocorreu um erro: " + error.message);
                         
             } finally {
                         // Esse bloco roda SEMPRE para não deixar o seu botão travado com o "Analisando..."
