@@ -294,15 +294,13 @@ async function executarScanner() {
                                                 const horaAtual = agora.getHours();
                                                 const ehHoje = dataDesseDia === agora.toLocaleDateString('pt-BR');
                                                 
-                                                // 3. Criamos o novo objeto com a assinatura do seu App Guru
-                                                const novoPalpite = {
+                                                const index = historicoAtual.findIndex(c => c.date === timestampDoDia);
+                                                historicoAtual[index] = {
+                                                            ...historicoSalvo[index],
                                                             placar: placarFormatado,
                                                             dataSinal: dataDesseDia,       
-
                                                 };
                                                 
-                                                // 4. Empurramos o novo palpite para dentro do banco de dados do navegador
-                                                historicoAtual.push(novoPalpite);
                                                 const agoraH = new Date();
                                                 const horaAtualH = agoraH.getHours();
                                                 gravUltimoResult = horaAtualH > 17 || dataDesseDia < agoraH.toLocaleDateString('pt-BR');
