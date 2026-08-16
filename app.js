@@ -158,7 +158,7 @@ async function executarScanner() {
                                                                                 });
                                                                                 console.log(`📅 Criada base em 'AGUARDANDO...' para o dia posterior: ${dataAmanhaFormatada}`);
                                                                             }
-                                                                                 
+                                                                            calculaUltimoResult = true;
                                                                             localStorage.setItem('historico_B3', JSON.stringify(historicoSalvo));
                                                                             console.log(`✅ Palpite do dia ${dataDesseDia} validado com o resultado do dia ${dataAmanhaFormatada}!`);
                                                                         }
