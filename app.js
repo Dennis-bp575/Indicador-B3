@@ -113,7 +113,7 @@ async function executarScanner() {
                                                 historicoReatualizado = JSON.parse(JSON.stringify(historicoSalvo));
                                                 let registroExistente = historicoReatualizado.find(item => item.dataSinal === dataDesseDia);
                                                 
-                                                //if (registroExistente) {
+                                                if (registroExistente) {
         
                                                     const dadosIbov = dadosBrutos.results.find(item => item.symbol === "^BVSP");
                                                     if (dadosIbov && dadosIbov.historicalDataPrice) {
@@ -162,7 +162,7 @@ async function executarScanner() {
                                                                 //console.log(gravUltimoResult);
                                                         }
                                                     }
-                                                    
+                                                }   
                                     });
 
                                     diasParaProcessar.forEach((diaDoCalendario) => {
