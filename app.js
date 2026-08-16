@@ -128,7 +128,9 @@ async function executarScanner() {
                                                         
                                                         const idxDiaSeguinte = idxIbov + 1;
                                                 
-                                                        // Se o dia posterior existe no histórico da Brapi, significa que ele já aconteceu!
+                                                        gravUltimoResult = false
+                                                        calculaUltimoResult = false       
+                                                        
                                                         if (idxDiaSeguinte < historicoIbov.length) {
                                                                         const ibovAmanha = historicoIbov[idxDiaSeguinte]; // O dia 11 real!
                                                                         const ibovHoje = historicoIbov[idxIbov];         // O dia 10 real
@@ -138,8 +140,7 @@ async function executarScanner() {
                                                                         const agora = new Date();
                                                                         const horaAtual = agora.getHours();
                                                                         const amanhaEHoje = dataAmanhaFormatada === agora.toLocaleDateString('pt-BR');
-                                                                        gravUltimoResult = false
-                                                                        calculaUltimoResult = false       
+                                                                        
                                                                         // ⏱️ TRAVA DAS 17H: Se o dia posterior (dia 11) for HOJE e ainda for antes das 17h:
                                                                         if (amanhaEHoje) {
                                                                             console.log(`⏳ O palpite de ${dataDesseDia} depende do dia ${dataAmanhaFormatada}, que ainda está rolando.`);
@@ -170,9 +171,6 @@ async function executarScanner() {
                                                         } else {
                                                                 console.log(`AGORA VAI BRASILLLLL`);
                                                                 calculaUltimoResult = true;
-                                                                const agoraH = new Date();
-                                                                const horaAtualH = agoraH.getHours();
-                                                                gravUltimoResult = horaAtualH > 17 || dataAmanhaFormatada < agoraH.toLocaleDateString('pt-BR');
                                                                 console.log(gravUltimoResult);
                                                         }
                                                     }
@@ -314,6 +312,9 @@ async function executarScanner() {
                                                 
                                                 // 4. Empurramos o novo palpite para dentro do banco de dados do navegador
                                                 historicoAtual.push(novoPalpite);
+                                                const agoraH = new Date();
+                                                const horaAtualH = agoraH.getHours();
+                                                gravUltimoResult = horaAtualH > 17 || dataAmanhaFormatada < agoraH.toLocaleDateString('pt-BR');
                                                 if (gravaUltimoResult) {
                                                             localStorage.setItem('historico_B3', JSON.stringify(historicoAtual));
                                                 }
