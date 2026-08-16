@@ -155,11 +155,11 @@ async function executarScanner() {
                                                                                     aberturaBolsa: "AGUARDANDO...",
                                                                                     resultadoBolsa: "AGUARDANDO..."
                                                                                 });
-                                                                                console.log(`📅 Criada base em 'AGUARDANDO...' para o dia posterior: ${dataAmanhaFormatada}`);
+                                                                                //console.log(`📅 Criada base em 'AGUARDANDO...' para o dia posterior: ${dataAmanhaFormatada}`);
                                                                             }
                                                                    
                                                                             //localStorage.setItem('historico_B3', JSON.stringify(historicoSalvo));
-                                                                            console.log(`✅ Palpite do dia ${dataDesseDia} validado com o resultado do dia ${dataAmanhaFormatada}!`);
+                                                                            //console.log(`✅ Palpite do dia ${dataDesseDia} validado com o resultado do dia ${dataAmanhaFormatada}!`);
                                                                         }
                                                         } else {
                                                                 
@@ -310,17 +310,17 @@ async function executarScanner() {
                                                         placar: placarFormatado,
                                                         dataSinal: dataDesseDia,       
                                                     };
-                                                    console.log(`✅ Item encontrado no índice ${index} e atualizado com sucesso!`);
+                                                   // console.log(`✅ Item encontrado no índice ${index} e atualizado com sucesso!`);
                                                 } else {
-                                                    console.warn(`❌ Mesmo com o trim, a data "${timestampDoDia}" não foi encontrada no histórico.`);
+                                                  //  console.warn(`❌ Mesmo com o trim, a data "${timestampDoDia}" não foi encontrada no histórico.`);
                                                 }
                                                                                                 
                                                 
                                                 
-                                                console.log(`🔮 Novo sinal gerado para ${dataDesseDia} com o placar: ${placarFormatado}`);
+                                              //  console.log(`🔮 Novo sinal gerado para ${dataDesseDia} com o placar: ${placarFormatado}`);
                                                
                                     });
-                                    console.log("Chegamos aqui?")
+                                  //  console.log("Chegamos aqui?")
                                     
                                     
                                     
