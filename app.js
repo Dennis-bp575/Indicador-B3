@@ -110,7 +110,7 @@ async function executarScanner() {
                                                 //console.log(dataDesseDia)
                                                 dataDesseDiaGlobal = dataDesseDia;
                                                 let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
-                                                historicoReatualizado = JSON.parse(JSON.stringify(historicoSalvo));
+                                                historicoReatualizado = structuredClone(historicoSalvo);
                                                 let registroExistente = historicoReatualizado.find(item => item.dataSinal === dataDesseDia);
                                                 
                                                 if (registroExistente) {
@@ -307,8 +307,12 @@ async function executarScanner() {
                                                 console.log(`🔮 Novo sinal gerado para ${dataDesseDia} com o placar: ${placarFormatado}`);
                                                
                                     });
-                        localStorage.setItem('historico_B3', JSON.stringify(historicoReatualizado));
-                        desenharHistoricoNaTela();
+                                    console.log("Chegamos aqui?")
+                                    
+                                    
+                                    
+                                    localStorage.setItem('historico_B3', JSON.stringify(historicoReatualizado));
+                                    desenharHistoricoNaTela();
                         } // Fechamento do: if (dadosBrutos.results && Array.isArray...)
             
             } catch (error) {
