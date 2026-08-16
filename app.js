@@ -310,6 +310,7 @@ async function executarScanner() {
                                                 console.log(`🔮 Novo sinal gerado para ${dataDesseDia} com o placar: ${placarFormatado}`);
                                                
                                     });
+                        desenharHistoricoNaTela();
                         } // Fechamento do: if (dadosBrutos.results && Array.isArray...)
             
             } catch (error) {
@@ -367,6 +368,7 @@ function calcularALMA(precos, indexAtual, tamanhoDesejado) {
 }
 
 function desenharHistoricoNaTela() {
+            console.log("vamos desenhar pfv?")
     blocoListaHistorico.innerHTML = "";
     let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
    
