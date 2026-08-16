@@ -151,7 +151,7 @@ async function executarScanner() {
                             
                                                                             if (!possuiDiaSeguinteNoBanco) {
                                                                                 historicoSalvo.push({
-                                                                                    placar: "AGUARDANDO...", // Será calculado quando o loop passar por ele!
+                                                                                    // placar: "AGUARDANDO...",
                                                                                     dataSinal: dataAmanhaFormatada,
                                                                                     aberturaBolsa: "AGUARDANDO...",
                                                                                     resultadoBolsa: "AGUARDANDO..."
