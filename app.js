@@ -296,7 +296,7 @@ async function executarScanner() {
                                                 
                                                 const index = historicoAtual.findIndex(c => c.date === timestampDoDia);
                                                 historicoAtual[index] = {
-                                                            ...historicoSalvo[index],
+                                                            ...historicoAtual[index],
                                                             placar: placarFormatado,
                                                             dataSinal: dataDesseDia,       
                                                 };
