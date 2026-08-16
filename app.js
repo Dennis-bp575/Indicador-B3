@@ -168,9 +168,11 @@ async function executarScanner() {
                                                                             console.log(`✅ Palpite do dia ${dataDesseDia} validado com o resultado do dia ${dataAmanhaFormatada}!`);
                                                                         }
                                                         } else {
-                                                                console.log(`AGORA VAI BEASILLLLL`);
+                                                                console.log(`AGORA VAI BRASILLLLL`);
                                                                 calculaUltimoResult = true;
-                                                                gravUltimoResult = horaAtual > 17 || dataAmanhaFormatada < agora.toLocaleDateString('pt-BR');
+                                                                const agoraH = new Date();
+                                                                const horaAtualH = agora.getHours();
+                                                                gravUltimoResult = horaAtualH > 17 || dataAmanhaFormatada < agoraH.toLocaleDateString('pt-BR');
                                                                 console.log(gravUltimoResult);
                                                         }
                                                     }
