@@ -100,10 +100,7 @@ async function executarScanner() {
                                     
                                     // Criamos a lista com os dias que faltam processar dali para frente!
                                     const diasParaProcessar = historicoCalendario.slice(indiceParada);
-
-                                    // ==========================================
-                                    // 🚀 O LOOP PRINCIPAL DE DIAS (Ajustado)
-                                    // ==========================================
+                                    
                                     diasParaProcessar.forEach((diaDoCalendario) => {
                                                 
                                                 // O robô está processando o dia 10 no calendário de lacunas
@@ -115,21 +112,18 @@ async function executarScanner() {
                                                 let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
                                                 let registroExistente = historicoSalvo.find(item => item.dataSinal === dataDesseDia);
                                                 
-                                                if (registroExistente && registroExistente.resultadoBolsa === "AGUARDANDO...") {
-                                                    console.log("chegamos aqui no resultado bolsa")
-                                                    
+                                                //if (registroExistente) {
+        
                                                     const dadosIbov = dadosBrutos.results.find(item => item.symbol === "^BVSP");
                                                     if (dadosIbov && dadosIbov.historicalDataPrice) {
-                                                        console.log("chegamos aqui no historicalDataPrice")
                                                         const historicoIbov = dadosIbov.historicalDataPrice;
-                                                        
-                                                        // Achamos a posição do dia 10 no histórico do Ibov
+                                                        // Achamos a posição do dia anterior no histórico do Ibov
                                                         const idxIbov = historicoIbov.findIndex(c => c.date === timestampDoDia);
                                                         
                                                         const idxDiaSeguinte = idxIbov + 1;
                                                 
-                                                        gravUltimoResult = false
-                                                        calculaUltimoResult = false       
+                                                        //gravUltimoResult = false
+                                                        //calculaUltimoResult = false       
                                                         
                                                         if (idxDiaSeguinte < historicoIbov.length) {
                                                                         const ibovAmanha = historicoIbov[idxDiaSeguinte]; // O dia 11 real!
@@ -141,7 +135,6 @@ async function executarScanner() {
                                                                         const horaAtual = agora.getHours();
                                                                         const amanhaEHoje = dataAmanhaFormatada === agora.toLocaleDateString('pt-BR');
                                                                         
-                                                                        // ⏱️ TRAVA DAS 17H: Se o dia posterior (dia 11) for HOJE e ainda for antes das 17h:
                                                                         if (!amanhaEHoje) {
 
                                                                             registroExistente.resultadoBolsa = ibovAmanha.close > ibovHoje.close ? "subiu" : "desceu";
@@ -151,14 +144,14 @@ async function executarScanner() {
                             
                                                                             if (!possuiDiaSeguinteNoBanco) {
                                                                                 historicoSalvo.push({
-                                                                                    // placar: "AGUARDANDO...",
+                                                                                    placar: "AGUARDANDO...",
                                                                                     dataSinal: dataAmanhaFormatada,
                                                                                     aberturaBolsa: "AGUARDANDO...",
                                                                                     resultadoBolsa: "AGUARDANDO..."
                                                                                 });
                                                                                 console.log(`📅 Criada base em 'AGUARDANDO...' para o dia posterior: ${dataAmanhaFormatada}`);
                                                                             }
-                                                                            calculaUltimoResult = true;
+                                                                   
                                                                             localStorage.setItem('historico_B3', JSON.stringify(historicoSalvo));
                                                                             console.log(`✅ Palpite do dia ${dataDesseDia} validado com o resultado do dia ${dataAmanhaFormatada}!`);
                                                                         }
@@ -168,10 +161,14 @@ async function executarScanner() {
                                                                 //console.log(gravUltimoResult);
                                                         }
                                                     }
-                                                    console.log(`calcula ult = ${calculaUltimoResult}`);
-                                                    if (!calculaUltimoResult) return;
-                                                }
+                                                    
+                                    });
 
+                                    diasParaProcessar.forEach((diaDoCalendario) => {
+                                    
+                                                const timestampDoDia = diaDoCalendario.date; // Dia 10
+                                                
+                                                const dataDesseDia = new Date(timestampDoDia * 1000).toLocaleDateString('pt-BR');
                                                 // Zeramos os contadores para consolidar este dia específico
                                                 totalMatchesHoje = 0;
                                                 totalMatchesPalavras = 0; 
@@ -183,7 +180,7 @@ async function executarScanner() {
                                                 // ==========================================
                                                 dadosBrutos.results.forEach(ativo => {
                                                             // Se for o Ibov, pula (tratamos ele no fechamento do dia)
-                                                            if (ativo.symbol === "%5EBVSP") return; 
+                                                            if (ativo.symbol === "^BVSP") return; 
                                                             
                                                             const historicoCompleto = ativo.historicalDataPrice;
                                                             if (!historicoCompleto || historicoCompleto.length === 0) return;
@@ -300,20 +297,18 @@ async function executarScanner() {
                                                 // 3. Criamos o novo objeto com a assinatura do seu App Guru
                                                 const novoPalpite = {
                                                             placar: placarFormatado,
-                                                            dataSinal: dataDesseDia,       // A data em que o sinal foi gerado
-                                                            aberturaBolsa: "AGUARDANDO...", // O amanhã ainda não abriu
-                                                            resultadoBolsa: "AGUARDANDO..." // O amanhã ainda não fechou
+                                                            dataSinal: dataDesseDia,       
+
                                                 };
                                                 
                                                 // 4. Empurramos o novo palpite para dentro do banco de dados do navegador
                                                 historicoAtual.push(novoPalpite);
                                                 const agoraH = new Date();
                                                 const horaAtualH = agoraH.getHours();
-                                                gravUltimoResult = horaAtualH > 17 || dataAmanhaFormatada < agoraH.toLocaleDateString('pt-BR');
+                                                gravUltimoResult = horaAtualH > 17 || dataDesseDia < agoraH.toLocaleDateString('pt-BR');
                                                 console.log(gravUltimoResult, horaAtualH, agoraH.toLocaleDateString('pt-BR'));
-                                                if (gravaUltimoResult) {
-                                                            localStorage.setItem('historico_B3', JSON.stringify(historicoAtual));
-                                                }
+                                                localStorage.setItem('historico_B3', JSON.stringify(historicoAtual));
+                                                
                                                 console.log(`🔮 Novo sinal gerado para ${dataDesseDia} com o placar: ${placarFormatado}`);
                                                
                                     });
