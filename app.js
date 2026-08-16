@@ -112,8 +112,7 @@ async function executarScanner() {
                                                 const dataDesseDia = new Date(timestampDoDia * 1000).toLocaleDateString('pt-BR'); // "10/08/2026"
                                                 //console.log(dataDesseDia)
                                                 dataDesseDiaGlobal = dataDesseDia;
-                                                let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
-                                                historicoReatualizado = structuredClone(historicoSalvo);
+                                                
                                                 let registroExistente = historicoReatualizado.find(item => 
                                                     String(item.dataSinal).trim() === String(dataDesseDia).trim()
                                                 );
