@@ -417,12 +417,17 @@ function desenharHistoricoNaTela() {
             : item.aberturaBolsa?.includes("baixa") 
             ? "bg-orange-500/10 text-orange-400 border border-orange-500/20" 
             : "bg-gray-800 text-gray-400"; // Caso esteja "AGUARDANDO..."
-        
+
+            const placar = item.placar; // "7-11-6"
+            const numeros = placar.split('-').map(Number);
+            const total = numeros.reduce((soma, n) => soma + n, 0);
+            const resultado = `${numeros.join('+')}=${total}`;
+
         // A sua constante com o HTML atualizado
         const linhaHtml = `
             <div class="flex items-center justify-between bg-gray-850 border border-gray-800 rounded-xl p-4 shadow-sm">
                 <div class="flex flex-col">
-                    <span class="font-bold text-white text-base">Matches: ${item.placar}</span>
+                    <span class="font-bold text-white text-base">Matches: ${resultado}</span>
                     <span class="text-xs text-gray-500">Data do Sinal: ${item.dataSinal}</span>
                 </div>
                 
