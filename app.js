@@ -470,7 +470,7 @@ function desenharHistoricoNaTela() {
         let etiquetaSinal = "[⚪ MERCADO NEUTRO]";
         let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
 
-        if (tokenExaustao > t2 && somaTendencia >= 25 && t3 > t2) {
+        if (tokenExaustao > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 48) {
             etiquetaSinal = "[🟢 COMPRA SAUDÁVEL]";
             classeCorEtiqueta = "text-emerald-400"; // Destaca em verde
         } 
