@@ -470,11 +470,16 @@ function desenharHistoricoNaTela() {
         let etiquetaSinal = "[⚪ MERCADO NEUTRO]";
         let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
 
-        if (tokenExaustao <= 2 && (somaTendencia >= 30 && somaTendencia <= 48)) {
+        if (tokenExaustao > t2 && somaTendencia >= 25 && t3 > t2) {
             etiquetaSinal = "[🟢 COMPRA SAUDÁVEL]";
             classeCorEtiqueta = "text-emerald-400"; // Destaca em verde
         } 
-        else if (tokenExaustao <= 2 && somaTendencia > 54) {
+        if (tokenExaustao <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
+            etiquetaSinal = "[🟢 COMPRA SAUDÁVEL]";
+            classeCorEtiqueta = "text-emerald-400"; // Destaca em verde
+        } 
+                
+        if (tokenExaustao <= 2 && somaTendencia > 49) {
             etiquetaSinal = "[⚠️ EXCESSO DE TOPO]";
             classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
         }
@@ -485,7 +490,7 @@ function desenharHistoricoNaTela() {
                 <div class="flex flex-col">
                     <div class="flex items-center gap-2">
                         <span class="text-xs font-black ${classeCorEtiqueta}">${etiquetaSinal}</span>
-                        <span class="font-bold text-white text-base">Matches: ${resultado}</span>
+                        <span class="font-bold text-white text-base">${resultado}</span>
                     </div>
                     <span class="text-xs text-gray-500 mt-1">Data do Sinal: ${item.dataSinal}</span>
                 </div>
