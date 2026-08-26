@@ -425,7 +425,7 @@ function calcularALMA(precos, indexAtual, tamanhoDesejado) {
 }
 
 function desenharHistoricoNaTela() {
-            console.log("vamos desenhar pfv?")
+            
     blocoListaHistorico.innerHTML = "";
     let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
    
@@ -457,19 +457,37 @@ function desenharHistoricoNaTela() {
             ? "bg-orange-500/10 text-orange-400 border border-orange-500/20" 
             : "bg-gray-800 text-gray-400"; // Caso esteja "AGUARDANDO..."
 
-            const placar = item.placar; // Exemplo: "7-11-6"
-            const numeros = placar.split('-').map(Number);
-            const tokenExaustao = numeros[0]; 
-            const somaTendencia = numeros[1] + numeros[2]; 
-            const resultado = `${tokenExaustao} e ${numeros[1]}+${numeros[2]}=${somaTendencia}`;
+        // Processamento matemático dos tokens mapeados na escala de Peso 3
+        const placar = item.placar; // Exemplo: "2-35-6"
+        const numeros = placar.split('-').map(Number);
+        const tokenExaustao = numeros[0]; 
+        const t2 = numeros[1];
+        const t3 = numeros[2];
+        const somaTendencia = t2 + t3; 
+        const resultado = `${tokenExaustao} e ${t2}+${t3}=${somaTendencia}`;
 
+        // 🧠 Lógica Dinâmica das Etiquetas de Previsão
+        let etiquetaSinal = "[⚪ MERCADO NEUTRO]";
+        let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
 
-        // A sua constante com o HTML atualizado
+        if (tokenExaustao <= 2 && (somaTendencia >= 30 && somaTendencia <= 48)) {
+            etiquetaSinal = "[🟢 COMPRA SAUDÁVEL]";
+            classeCorEtiqueta = "text-emerald-400"; // Destaca em verde
+        } 
+        else if (tokenExaustao <= 2 && somaTendencia > 54) {
+            etiquetaSinal = "[⚠️ EXCESSO DE TOPO]";
+            classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
+        }
+
+        // A sua constante com o HTML atualizado contendo os Avisos Inteligentes
         const linhaHtml = `
             <div class="flex items-center justify-between bg-gray-850 border border-gray-800 rounded-xl p-4 shadow-sm">
                 <div class="flex flex-col">
-                    <span class="font-bold text-white text-base">Matches: ${resultado}</span>
-                    <span class="text-xs text-gray-500">Data do Sinal: ${item.dataSinal}</span>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-black ${classeCorEtiqueta}">${etiquetaSinal}</span>
+                        <span class="font-bold text-white text-base">Matches: ${resultado}</span>
+                    </div>
+                    <span class="text-xs text-gray-500 mt-1">Data do Sinal: ${item.dataSinal}</span>
                 </div>
                 
                 <!-- Grupo de Badges à direita -->
@@ -490,6 +508,7 @@ function desenharHistoricoNaTela() {
         blocoListaHistorico.insertAdjacentHTML('beforeend', linhaHtml);
     });
 }
+
 
 botaoAtualizar.addEventListener('click', executarScanner);
 
