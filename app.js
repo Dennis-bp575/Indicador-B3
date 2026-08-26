@@ -295,24 +295,37 @@ async function executarScanner() {
                                                                     totalMatchesFonteSecundaria += pesoDoAtivo;                                                               
                                                             }           
                                                             
-                                                            // Lógica do Martelo (Candle 51)
+                                                            // Lógica do Martelo Adaptada (Dando margem para o ruído do mercado)
                                                             const corpo51 = Math.abs(c51.close - c51.open);
                                                             const sombraInf51 = Math.min(c51.open, c51.close) - c51.low;
                                                             const sombraSup51 = c51.high - Math.max(c51.open, c51.close);
-                                                            const ehMartelo = (sombraInf51 >= 2 * corpo51) && (sombraSup51 <= corpo51 * 0.1);
                                                             
-                                                            // Lógica do Engolfo de Alta (Candle 50 + Candle 51)
+                                                            // Ajuste: Sombra inferior pelo menos 2x o corpo, e permitimos uma sombra superior de até 25% do corpo (em vez de 10%)
+                                                            const ehMartelo = (sombraInf51 >= 2 * corpo51) && (sombraSup51 <= corpo51 * 0.25) && (corpo51 > 0);
+                                                            
+                                                            // Lógica do Engolfo de Alta Adaptada (Ignorando micro-gaps de leilão)
                                                             const candle50Baixa = c50.close < c50.open;
                                                             const candle51Alta = c51.close > c51.open;
-                                                            const ehEngolfo = candle50Baixa && candle51Alta && (c51.open <= c50.close) && (c51.close > c50.open);
-
-                                                            // Validação 2: Aconteceu Martelo OU Engolfo de Alta?
-                                                            if (ehMartelo || ehEngolfo) {
-                                                                        const nomeAtivo = ativo.symbol; 
-                                                                        const indice = meusAtivos.indexOf(nomeAtivo);
-                                                                        const pesoDoAtivo = pesosAtivos[indice];
-                                                                        totalReversoesCandle += pesoDoAtivo; 
+                                                            // Ajuste: O corpo do candle 51 precisa engolir pelo menos 90% do corpo do candle 50, tolerando pequenas variações de abertura
+                                                            const ehEngolfo = candle50Baixa && candle51Alta && (c51.close >= c50.open * 0.99) && (c51.open <= c50.close * 1.01);
+                                                            
+                                                            // NEW 🌟: Padrão Extra 1 - Piercing Line (Perfuração - quase um engolfo, muito comum na B3)
+                                                            const ehPiercing = candle50Baixa && candle51Alta && (c51.open < c50.close) && (c51.close > (c50.open + c50.close) / 2);
+                                                            
+                                                            // NEW 🌟: Padrão Extra 2 - Marubozu de Alta (Candle de força bruta comprador)
+                                                            const ehMarubozu = candle51Alta && (corpo51 >= (c51.high - c51.low) * 0.85);
+                                                            
+                                                            // Validação Atualizada: Se acontecer QUALQUER uma das reversões clássicas de fundo
+                                                            if (ehMartelo || ehEngolfo || ehPiercing || ehMarubozu) {
+                                                                const nomeAtivo = ativo.symbol; 
+                                                                const indice = meusAtivos.indexOf(nomeAtivo);
+                                                                
+                                                                if (indice !== -1) {
+                                                                    const pesoDoAtivo = pesosAtivos[indice];
+                                                                    totalReversoesCandle += pesoDoAtivo; 
+                                                                }
                                                             }
+
                                                 });
 
                                                 // 1. Buscamos o histórico atualizado do localStorage para não atropelar dados
