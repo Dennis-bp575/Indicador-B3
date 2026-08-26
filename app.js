@@ -483,6 +483,10 @@ function desenharHistoricoNaTela() {
             etiquetaSinal = "[⚠️ EXCESSO DE TOPO]";
             classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
         }
+        if (somaTendencia < 10) {
+            etiquetaSinal = "[⚠️ INDICATIVO DE VENDA]";
+            classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
+        }
 
         // A sua constante com o HTML atualizado contendo os Avisos Inteligentes
         const linhaHtml = `
