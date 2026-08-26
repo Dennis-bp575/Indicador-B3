@@ -14,6 +14,19 @@ const meusAtivos = ["B3SA3", "PETR4", "CSAN3", "ITSA4", "ITUB4",
             "BEEF3", "POMO4", "CMIG4", "PRIO3", "MBRF3",
             "CPFE3", "ENEV3", "WEGE3", "ALOS3", "%5EBVSP"]; 
 
+const pesosAtivos = [
+                2, 3, 2, 2, 3, // B3SA3 (2), PETR4 (3), CSAN3 (2), ITSA4 (2), ITUB4 (3)
+                1, 2, 1, 2, 1, // COGN3 (1), BBDC4 (2), CVCB3 (1), VIVT3 (2), CMIN3 (1)
+                1, 2, 1, 2, 3, // MGLU3 (1), CSMG3 (2), NATU3 (1), ABEV3 (2), BBAS3 (3)
+                3, 2, 3, 1, 2, // BBSE3 (3), CPLE3 (2), VALE3 (3), MOTV3 (1), GOAU4 (2)
+                2, 1, 2, 2, 1, // SBSP3 (2), CSNA3 (1), LREN3 (2), ASAI3 (2), VAMO3 (1)
+                2, 2, 2, 1, 2, // DIRR3 (2), GGBR4 (2), EQTL3 (2), RAPT4 (1), CYRE3 (2)
+                1, 1, 3, 1, 1, // AXIA3 (1), MRVE3 (1), RENT3 (3), USIM5 (1), CEAB3 (1)
+                3, 2, 3, 1, 3, // EGIE3 (3), BPAC11 (2), RADL3 (3), BRKM5 (1), PETR3 (3)
+                1, 1, 2, 2, 1, // BEEF3 (1), POMO4 (1), CMIG4 (2), PRIO3 (2), MBRF3 (1)
+                2, 1, 3, 2, 0  // CPFE3 (2), ENEV3 (1), WEGE3 (3), ALOS3 (2), %5EBVSP (0)
+              ];
+
 // VARIÁVEL FIXA COM AS 24 PALAVRAS DE INDICAÇÃO (PADRÕES SEQUENCIAIS)
 const TOKENS_INDICADORES = [ 
             "AAAAAAAVVAAAAA", "AAAAVAVAVAAAAA", "AVAVAVAAVVVVVV", "AVAVAVAVAVVVAA",
@@ -103,10 +116,10 @@ async function executarScanner() {
                                     
                                     diasParaProcessar.forEach((diaDoCalendario) => {
                                                 
-                                                // O robô está processando o dia 10 no calendário de lacunas
-                                                const timestampDoDia = diaDoCalendario.date; // Dia 10
                                                 
-                                                const dataDesseDia = new Date(timestampDoDia * 1000).toLocaleDateString('pt-BR'); // "10/08/2026"
+                                                const timestampDoDia = diaDoCalendario.date;
+                                                
+                                                const dataDesseDia = new Date(timestampDoDia * 1000).toLocaleDateString('pt-BR');
                                                 //console.log(dataDesseDia)
                                                 dataDesseDiaGlobal = dataDesseDia;
                                                 
@@ -234,8 +247,13 @@ async function executarScanner() {
                                                             let deuMatch = TOKENS_INDICADORES.includes(palavraGerada);
                                                             // console.log(palavraGerada, totalMatchesPalavras);
                                                             if (deuMatch) {
-                                                                        totalMatchesPalavras++;
+                                                                const nomeAtivo = ativo.symbol; 
+                                                                const indice = meusAtivos.indexOf(nomeAtivo);
+                                                                const pesoDoAtivo = pesosAtivos[indice];                                      
+                                                                totalMatchesPalavras += pesoDoAtivo;
                                                             }
+                                                                                                                                    
+                                                            
 
                                                             const B51 = Number(c51["open"]) || 0; // Ajuste o nome da propriedade se for diferente
                                                             const C51 = Number(c51["high"]) || 0;
@@ -269,7 +287,10 @@ async function executarScanner() {
                                                             
                                                             // Verifica match com os novos tokens e conta na variável separada
                                                             if (TOKENS_FONTE_SECUNDARIA.includes(novaPalavraGerada)) {
-                                                                totalMatchesFonteSecundaria++;
+                                                                    const nomeAtivo = ativo.symbol; 
+                                                                    const indice = meusAtivos.indexOf(nomeAtivo);
+                                                                    const pesoDoAtivo = pesosAtivos[indice];    
+                                                                    totalMatchesFonteSecundaria += pesoDoAtivo;                                                               
                                                             }           
                                                             
                                                             // Lógica do Martelo (Candle 51)
@@ -285,7 +306,10 @@ async function executarScanner() {
 
                                                             // Validação 2: Aconteceu Martelo OU Engolfo de Alta?
                                                             if (ehMartelo || ehEngolfo) {
-                                                                        totalReversoesCandle++;
+                                                                        const nomeAtivo = ativo.symbol; 
+                                                                        const indice = meusAtivos.indexOf(nomeAtivo);
+                                                                        const pesoDoAtivo = pesosAtivos[indice];
+                                                                        totalReversoesCandle += pesoDoAtivo; 
                                                             }
                                                 });
 
@@ -451,4 +475,5 @@ function desenharHistoricoNaTela() {
 }
 
 botaoAtualizar.addEventListener('click', executarScanner);
+
 
