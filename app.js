@@ -15,17 +15,18 @@ const meusAtivos = ["B3SA3", "PETR4", "CSAN3", "ITSA4", "ITUB4",
             "CPFE3", "ENEV3", "WEGE3", "ALOS3", "%5EBVSP"]; 
 
 const pesosAtivos = [
-                2, 3, 2, 2, 3, // B3SA3 (2), PETR4 (3), CSAN3 (2), ITSA4 (2), ITUB4 (3)
-                1, 2, 1, 2, 1, // COGN3 (1), BBDC4 (2), CVCB3 (1), VIVT3 (2), CMIN3 (1)
-                1, 2, 1, 2, 3, // MGLU3 (1), CSMG3 (2), NATU3 (1), ABEV3 (2), BBAS3 (3)
-                3, 2, 3, 1, 2, // BBSE3 (3), CPLE3 (2), VALE3 (3), MOTV3 (1), GOAU4 (2)
-                2, 1, 2, 2, 1, // SBSP3 (2), CSNA3 (1), LREN3 (2), ASAI3 (2), VAMO3 (1)
-                2, 2, 2, 1, 2, // DIRR3 (2), GGBR4 (2), EQTL3 (2), RAPT4 (1), CYRE3 (2)
-                1, 1, 3, 1, 1, // AXIA3 (1), MRVE3 (1), RENT3 (3), USIM5 (1), CEAB3 (1)
-                3, 2, 3, 1, 3, // EGIE3 (3), BPAC11 (2), RADL3 (3), BRKM5 (1), PETR3 (3)
-                1, 1, 2, 2, 1, // BEEF3 (1), POMO4 (1), CMIG4 (2), PRIO3 (2), MBRF3 (1)
-                2, 1, 3, 2, 0  // CPFE3 (2), ENEV3 (1), WEGE3 (3), ALOS3 (2), %5EBVSP (0)
-              ];
+              3, 2, 2, 4, 5, // B3SA3 (3), PETR4 (2), CSAN3 (2), ITSA4 (4), ITUB4 (5)
+              1, 3, 1, 4, 2, // COGN3 (1), BBDC4 (3), CVCB3 (1), VIVT3 (4), CMIN3 (2)
+              1, 4, 1, 3, 5, // MGLU3 (1), CSMG3 (4), NATU3 (1), ABEV3 (3), BBAS3 (5)
+              4, 4, 2, 1, 2, // BBSE3 (4), CPLE3 (4), VALE3 (2), MOTV3 (1), GOAU4 (2)
+              4, 2, 3, 3, 1, // SBSP3 (4), CSNA3 (2), LREN3 (3), ASAI3 (3), VAMO3 (1)
+              3, 2, 4, 1, 3, // DIRR3 (3), GGBR4 (2), EQTL3 (4), RAPT4 (1), CYRE3 (3)
+              1, 1, 3, 1, 2, // AXIA3 (1), MRVE3 (1), RENT3 (3), USIM5 (1), CEAB3 (2)
+              5, 3, 3, 1, 2, // EGIE3 (5), BPAC11 (3), RADL3 (3), BRKM5 (1), PETR3 (2)
+              2, 2, 4, 3, 1, // BEEF3 (2), POMO4 (2), CMIG4 (4), PRIO3 (3), MBRF3 (1)
+              5, 2, 5, 3, 0  // CPFE3 (5), ENEV3 (2), WEGE3 (5), ALOS3 (3), %5EBVSP (0)
+            ];
+
 
 // VARIÁVEL FIXA COM AS 24 PALAVRAS DE INDICAÇÃO (PADRÕES SEQUENCIAIS)
 const TOKENS_INDICADORES = [ 
