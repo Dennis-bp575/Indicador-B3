@@ -10,38 +10,24 @@
 <body class="bg-gray-900 text-gray-100 font-sans min-h-screen p-4 md:p-8">
 
     <div class="max-w-xl mx-auto space-y-6">
-        
-        <!-- CABEÇALHO DO APP -->
-        <header class="text-center py-4 border-b border-gray-800">
-            <h1 class="text-2xl font-bold text-emerald-400">📊 Scanner de Reversão</h1>
-            <p class="text-sm text-gray-400 mt-1">Monitorando 50 ações em tempo real</p>
-        </header>
-
-        <!-- CARD PRINCIPAL: RESULTADO ATUAL (OTIMIZADO PARA MOBILE) -->
-        <div class="bg-gray-850 bg-opacity-50 border border-gray-800 rounded-2xl p-6 text-center shadow-xl backdrop-blur-sm">
-            <p class="text-gray-400 text-sm uppercase tracking-wider font-semibold">Previsão Estatística</p>
-            <p class="text-xs text-gray-500 mt-0.5">Sinais detectados no fechamento</p>
-            
+        <!-- CARD PRINCIPAL: RESULTADO ATUAL (MANTIDO E REDUZIDO EM 20%) -->
+        <div class="bg-gray-850 bg-opacity-50 border border-gray-800 rounded-2xl p-4 text-center shadow-xl backdrop-blur-sm">
             <!-- Rótulo Principal -->
-            <div class="text-white font-extrabold mt-4 text-base">
+            <div class="text-white font-extrabold text-sm">
                 Resultado atual:
             </div>
             
-            <!-- Números grandes centralizados e isolados abaixo (ID para o JS injetar) -->
-            <div id="resultado-atual" class="text-5xl font-extrabold text-emerald-400 tracking-tight mt-1">
+            <!-- Números grandes (Reduzido de text-5xl para text-4xl ~20% menor) -->
+            <div id="resultado-atual" class="text-4xl font-extrabold text-emerald-400 tracking-tight mt-1">
                 0-0-0
             </div>
         </div>
-
-
-        <!-- BOTÃO DE ATUALIZAÇÃO MANUAL -->
-        <div class="px-1">
-            <button id="btn-atualizar" class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-gray-900 font-bold py-4 px-6 rounded-2xl shadow-lg transform active:scale-[0.98] transition-all focus:outline-none focus:ring-2 focus:ring-emerald-400">
-                <!-- Ícone de recarregar (SVG) -->
-                <svg class="w-5 h-5 animate-spin-slow" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://w3.org">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.253 8H18"></path>
-                </svg>
-                <span>Atualizar Dados da Bolsa</span>
+        
+        <!-- BOTÃO DE ATUALIZAÇÃO MAIS ESTREITO E JUSTIFICADO -->
+        <div class="px-1 mt-3 flex justify-center">
+            <!-- py-2 deixa o botão mais estreito verticalmente, e max-w-xs limita a largura horizontal -->
+            <button id="btn-atualizar" class="w-full max-w-xs flex items-center justify-center bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-gray-900 font-bold py-2 px-4 rounded-xl shadow-lg transform active:scale-[0.98] transition-all focus:outline-none focus:ring-2 focus:ring-emerald-400 text-sm">
+                <span>Atualizar</span>
             </button>
         </div>
 
