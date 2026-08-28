@@ -164,8 +164,8 @@ async function executarScanner() {
                                                                                 historicoReatualizado.push({
                                                                                     placar: "AGUARDANDO...",
                                                                                     dataSinal: dataAmanhaFormatada,
-                                                                                    aberturaBolsa: "AGUARDANDO...",
-                                                                                    resultadoBolsa: "AGUARDANDO..."
+                                                                                    aberturaBolsa: "...",
+                                                                                    resultadoBolsa: "..."
                                                                                 });
                                                                                 //console.log(`📅 Criada base em 'AGUARDANDO...' para o dia posterior: ${dataAmanhaFormatada}`);
                                                                             }
