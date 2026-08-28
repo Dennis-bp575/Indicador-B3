@@ -501,11 +501,11 @@ function desenharHistoricoNaTela() {
         const resultado = `${tokenExaustao} e ${t2}+${t3}=${somaTendencia}`;
 
         // 🧠 Lógica Dinâmica das Etiquetas de Previsão
-        let etiquetaSinal = "[⚪ MERCADO NEUTRO]";
+        let etiquetaSinal = "[⚪NEUTRO]";
         let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
 
         if (tokenExaustao > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
-            etiquetaSinal = "[🟢 COMPRA⚠️ Atenção na abertura]";
+            etiquetaSinal = "[🟢COMPRA⚠️Open]";
             classeCorEtiqueta = "text-emerald-400"; // Destaca em verde
         } 
         if (tokenExaustao <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
@@ -515,11 +515,11 @@ function desenharHistoricoNaTela() {
         }
                 
         if (tokenExaustao <= 2 && somaTendencia > 49) {
-            etiquetaSinal = "[⚠️ EXCESSO DE TOPO]";
+            etiquetaSinal = "[⚠️TOPANDO]";
             classeCorEtiqueta = "text-orange-600"; // Destaca em rosa/vermelho
         }
         if (somaTendencia < 10) {
-            etiquetaSinal = "[ 🚨  INDICATIVO DE VENDA]";
+            etiquetaSinal = "[🚨VENDER🚨]";
             classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
         }
 
@@ -540,16 +540,17 @@ function desenharHistoricoNaTela() {
                 <div class="flex flex-col sm:flex-row items-end sm:items-center gap-2">
                     <!-- Novo Badge de Abertura -->
                     <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCorAbertura}">
-                        Abertura: ${item.aberturaBolsa || "AGUARDANDO..."}
+                        Open: ${item.aberturaBolsa || "..."}
                     </div>
                     
                     <!-- Seu Badge Antigo de Fechamento -->
                     <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCor}">
-                        Fechamento: ${item.resultadoBolsa}
+                        Close: ${item.resultadoBolsa}
                     </div>
                 </div>
             </div>
         `;
+
 
         blocoListaHistorico.insertAdjacentHTML('beforeend', linhaHtml);
     });
