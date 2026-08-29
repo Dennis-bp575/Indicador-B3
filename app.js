@@ -491,11 +491,6 @@ function desenharHistoricoNaTela() {
 const historicoCronologico = [...historicoSalvo];
 
 // 2. Captura a data do registro mais recente de forma segura (que está no FIM da ordem cronológica)
-if (historicoCronologico.length > 0) {
-    ultimaAtualizacao = historicoCronologico[historicoCronologico.length - 1].dataSinal;
-} else {
-    ultimaAtualizacao = "Sem registros";
-}
 
 // 🧠 Variável de controle de estado tradicional (Avança do passado para o presente)
 let estadoAtual = "SEM POSIÇÃO"; 
@@ -571,7 +566,11 @@ historicoCronologico.forEach(item => {
 
 // 5. 🚀 AGORA SIM! Com todos os estados calculados perfeitamente, invertemos para a exibição na tela
 const historicoInvertido = historicoCronologico.reverse();
-
+ if (historicoInvertido.length > 0) {
+        ultimaAtualizacao = historicoInvertido[0].dataSinal;
+    } else {
+        ultimaAtualizacao = "Sem registros";
+    }
 // 6. Seu loop de renderização na tela (Agora usando os dados calculados na ordem certa)
 historicoInvertido.forEach(item => {
 
