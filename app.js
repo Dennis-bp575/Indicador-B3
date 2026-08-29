@@ -130,8 +130,7 @@ async function executarScanner() {
                                     //historicoReatualizado = structuredClone(historicoSalvo);
 
                                     let historicoReatualizado = structuredClone(Array.isArray(historicoSalvo) ? historicoSalvo : [historicoSalvo]);
-                                    console.log(historicoReatualizado);
-                                    return;
+                                    
                                     diasParaProcessar.forEach((diaDoCalendario) => {
                                                 
                                                 const timestampDoDia = diaDoCalendario.date;                                              
@@ -141,11 +140,12 @@ async function executarScanner() {
                                                 
                                                 let registroExistente = historicoReatualizado.find(item => 
                                                             item && String(item.dataSinal).trim() === String(dataDesseDia).trim()
+                                                                                                   console.log(dataDesseDia)
                                                 );
 
                                                 
                                                 if (registroExistente) {
-        
+                                                         console.log(registroExistente)
                                                     const dadosIbov = dadosBrutos.results.find(item => item.symbol === "IBOV");
                                                             
                                                     if (dadosIbov && dadosIbov.historicalDataPrice) {
