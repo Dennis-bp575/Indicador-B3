@@ -139,8 +139,8 @@ async function executarScanner() {
                                                 dataDesseDiaGlobal = dataDesseDia;
                                                 
                                                 let registroExistente = historicoReatualizado.find(item => 
-                                                            item && String(item.dataSinal).trim() === String(dataDesseDia).trim()
-                                                                                                   console.log(dataDesseDia)
+                                                            item && String(item.dataSinal).trim() === String(dataDesseDia).trim();
+                                                            console.log(dataDesseDia);
                                                 );
 
                                                 
