@@ -139,13 +139,13 @@ async function executarScanner() {
                                                 dataDesseDiaGlobal = dataDesseDia;
                                                 
                                                 let registroExistente = historicoReatualizado.find(item => 
-                                                            item && String(item.dataSinal).trim() === String(dataDesseDia).trim();
-                                                            console.log(dataDesseDia);
+                                                            String(item.dataSinal).trim() === String(dataDesseDia).trim()
+                                                            
                                                 );
-
+                                                console.log(registroExistente);
                                                 
                                                 if (registroExistente) {
-                                                         console.log(registroExistente)
+                                                         console.log(registroExistente);
                                                     const dadosIbov = dadosBrutos.results.find(item => item.symbol === "IBOV");
                                                             
                                                     if (dadosIbov && dadosIbov.historicalDataPrice) {
