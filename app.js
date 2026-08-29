@@ -545,86 +545,98 @@ function desenharHistoricoNaTela() {
         ultimaAtualizacao = "Sem registros";
     }
 
-            // 🧠 Variável de controle de estado (começa como neutro fora do loop)
-            let estadoAtual = "NEUTRO"; 
-            
-            historicoInvertido.forEach(item => {
-                let classeCor = "bg-gray-800 border-gray-700 text-gray-400";
-                
-                if (item.resultadoBolsa && item.resultadoBolsa.includes("subiu")) {
-                    classeCor = "bg-emerald-950 bg-opacity-40 border-emerald-800 text-emerald-400";
-                } else if (item.resultadoBolsa && item.resultadoBolsa.includes("desceu")) {
-                    classeCor = "bg-rose-950 bg-opacity-40 border-rose-900 text-rose-400";
-                }
-            
-                const classeCorAbertura = item.aberturaBolsa?.includes("alta") 
-                    ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" 
-                    : item.aberturaBolsa?.includes("baixa") 
-                    ? "bg-orange-500/10 text-orange-400 border border-orange-500/20" 
-                    : "bg-gray-800 text-gray-400"; 
-            
-                // Processamento matemático dos tokens
-                const placar = item.placar; 
-                const numeros = placar.split('-').map(Number);
-                const tokenExaustao = numeros[0]; 
-                const t2 = numeros[1];
-                const t3 = numeros[2];
-                const somaTendencia = t2 + t3; 
-                const resultado = `${tokenExaustao} e ${t2}+${t3}=${somaTendencia}`;
-            
-                // 1. Identifica o gatilho matemático puramente teórico da linha atual
-                let gatilhoLinha = "NEUTRO";
-                
-                if (tokenExaustao > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
-                    gatilhoLinha = "COMPRA_OPEN";
-                } else if (tokenExaustao <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
-                    gatilhoLinha = "COMPRA";
-                } else if (tokenExaustao <= 2 && somaTendencia > 49) {
-                    gatilhoLinha = "TOPANDO";
-                } else if (somaTendencia < 10) {
-                    gatilhoLinha = "VENDER";
-                }
-            
-                // 2. 🧠 Máquina de Estados: Atualiza o 'estadoAtual' com base no gatilho e histórico
-                if (gatilhoLinha === "COMPRA" || gatilhoLinha === "COMPRA_OPEN") {
-                    // Se já estávamos comprados ou em compra, não repete "COMPRAR", vira "COMPRADO"
-                    if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
-                        estadoAtual = "COMPRADO";
-                    } else {
-                        estadoAtual = "COMPRAR"; // Primeiro sinal de compra
-                    }
-                } else if (gatilhoLinha === "TOPANDO") {
-                    estadoAtual = "VENDER TOPADO";
-                } else if (gatilhoLinha === "VENDER") {
-                    estadoAtual = "VENDER";
-                } else if (gatilhoLinha === "NEUTRO") {
-                    // Se a linha é neutra, mas vínhamos de uma COMPRA ou COMPRADO, mantemos o estado carregado
-                    if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
-                        estadoAtual = "COMPRADO";
-                    } else {
-                        estadoAtual = "NEUTRO";
-                    }
-                }
-            
-                // 3. Define as etiquetas visuais finais baseadas no estado processado
-                let etiquetaSinal = "[⚪NEUTRO]";
-                let classeCorEtiqueta = "text-gray-400";
-            
-                if (estadoAtual === "COMPRAR") {
-                    etiquetaSinal = gatilhoLinha === "COMPRA_OPEN" ? "[🟢COMPRA⚠️Open]" : "[🟢COMPRA]";
-                    classeCorEtiqueta = "text-emerald-400";
-                } else if (estadoAtual === "COMPRADO") {
-                    etiquetaSinal = "[🟢COMPRADO]";
-                    classeCorEtiqueta = "text-emerald-500 font-semibold"; // Tom ligeiramente diferente para indicar custódia
-                } else if (estadoAtual === "VENDER TOPADO") {
-                    etiquetaSinal = "[⚠️VENDER TOPADO]";
-                    classeCorEtiqueta = "text-orange-600";
-                } else if (estadoAtual === "VENDER") {
-                    etiquetaSinal = "[🚨VENDER🚨]";
-                    classeCorEtiqueta = "text-rose-400";
-                }
+// 🧠 Variável de controle de estado para fluxo invertido (do mais recente para o mais antigo)
+let estadoAtual = "SEM POSIÇÃO"; 
 
-    // Daqui para baixo continua o código HTML da sua linha (ex: template string)...
+historicoInvertido.forEach(item => {
+    let classeCor = "bg-gray-800 border-gray-700 text-gray-400";
+    
+    if (item.resultadoBolsa && item.resultadoBolsa.includes("subiu")) {
+        classeCor = "bg-emerald-950 bg-opacity-40 border-emerald-800 text-emerald-400";
+    } else if (item.resultadoBolsa && item.resultadoBolsa.includes("desceu")) {
+        classeCor = "bg-rose-950 bg-opacity-40 border-rose-900 text-rose-400";
+    }
+
+    const classeCorAbertura = item.aberturaBolsa?.includes("alta") 
+        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" 
+        : item.aberturaBolsa?.includes("baixa") 
+        ? "bg-orange-500/10 text-orange-400 border border-orange-500/20" 
+        : "bg-gray-800 text-gray-400"; 
+
+    // Processamento matemático dos tokens
+    const placar = item.placar; 
+    const numeros = placar.split('-').map(Number);
+    const tokenExaustao = numeros[0]; 
+    const t2 = numeros[1];
+    const t3 = numeros[2];
+    const somaTendencia = t2 + t3; 
+    const resultado = `${tokenExaustao} e ${t2}+${t3}=${somaTendencia}`;
+
+    // 1. Identifica o gatilho matemático puramente teórico da linha atual
+    let gatilhoLinha = "NEUTRO";
+    
+    if (tokenExaustao > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
+        gatilhoLinha = "COMPRA_OPEN";
+    } else if (tokenExaustao <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
+        gatilhoLinha = "COMPRA";
+    } else if (tokenExaustao <= 2 && somaTendencia > 49) {
+        gatilhoLinha = "TOPANDO";
+    } else if (somaTendencia < 10) {
+        gatilhoLinha = "VENDER";
+    }
+
+    // 2. 🧠 Máquina de Estados para Linhas Invertidas (do Presente para o Passado)
+    if (gatilhoLinha === "COMPRA" || gatilhoLinha === "COMPRA_OPEN") {
+        // Como o topo é o presente, o primeiro "COMPRA" que ele acha de cima para baixo é o dia que disparou o sinal.
+        // As linhas de baixo (que são os dias anteriores) passam a ser o período que você já estava "COMPRADO".
+        if (estadoAtual === "COMPRAR") {
+            estadoAtual = "COMPRADO";
+        } else if (estadoAtual !== "COMPRADO") {
+            estadoAtual = "COMPRAR"; // Marca o início visual do sinal mais recente
+        }
+    } else if (gatilhoLinha === "TOPANDO") {
+        // Se vínhamos de um estado de COMPRADO/COMPRAR do presente, significa que no passado esse dia foi a venda
+        if (estadoAtual === "COMPRADO" || estadoAtual === "COMPRAR" || estadoAtual === "SEM POSIÇÃO") {
+            estadoAtual = "VENDER TOPADO";
+        } else {
+            estadoAtual = "SEM POSIÇÃO"; // Evita que apareça VENDER duas vezes seguidas
+        }
+    } else if (gatilhoLinha === "VENDER") {
+        if (estadoAtual === "COMPRADO" || estadoAtual === "COMPRAR" || estadoAtual === "SEM POSIÇÃO") {
+            estadoAtual = "VENDER";
+        } else {
+            estadoAtual = "SEM POSIÇÃO"; // Limpa a linha imediatamente anterior para não repetir o alerta
+        }
+    } else if (gatilhoLinha === "NEUTRO") {
+        // Se a linha matemática é neutra, ela herda o estado de COMPRADO (mantém posição) 
+        // ou continua sem posição se vínhamos de uma venda.
+        if (estadoAtual === "COMPRADO" || estadoAtual === "COMPRAR") {
+            estadoAtual = "COMPRADO";
+        } else {
+            estadoAtual = "SEM POSIÇÃO";
+        }
+    }
+
+    // 3. Define as etiquetas visualanente corretas baseadas no estado processado
+    let etiquetaSinal = "[⚪SEM POSIÇÃO]";
+    let classeCorEtiqueta = "text-gray-400";
+
+    if (estadoAtual === "COMPRAR") {
+        etiquetaSinal = gatilhoLinha === "COMPRA_OPEN" ? "[🟢COMPRA⚠️Open]" : "[🟢COMPRA]";
+        classeCorEtiqueta = "text-emerald-400 font-bold";
+    } else if (estadoAtual === "COMPRADO") {
+        etiquetaSinal = "[🟢COMPRADO]";
+        classeCorEtiqueta = "text-emerald-500 bg-emerald-500/5 px-1.5 py-0.5 rounded"; // Um visual limpo de custódia
+    } else if (estadoAtual === "VENDER TOPADO") {
+        etiquetaSinal = "[⚠️VENDER TOPADO]";
+        classeCorEtiqueta = "text-orange-500 font-semibold";
+    } else if (estadoAtual === "VENDER") {
+        etiquetaSinal = "[🚨VENDER🚨]";
+        classeCorEtiqueta = "text-rose-400 font-bold";
+    } else if (estadoAtual === "SEM POSIÇÃO") {
+        etiquetaSinal = "[⚪SEM POSIÇÃO]";
+        classeCorEtiqueta = "text-gray-500 italic";
+    }
 
 
         tocarBeep();
