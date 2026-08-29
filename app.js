@@ -223,6 +223,7 @@ async function executarScanner() {
                                                             if (ativo.symbol === "IBOV") return; 
                                                             
                                                             const historicoCompleto = ativo.historicalDataPrice;
+                                                            historicoCompleto.sort((a, b) => a.date - b.date);
                                                             if (!historicoCompleto || historicoCompleto.length === 0) return;
                                                             
                                                             // 1. Procuramos o índice desse dia específico no histórico DESTA ação
