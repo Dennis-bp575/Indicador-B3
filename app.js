@@ -104,6 +104,8 @@ async function executarScanner() {
                         
                         // 1. Verificamos se a Brapi realmente devolveu a lista de resultados
                         if (dadosBrutos.results && Array.isArray(dadosBrutos.results)) {
+                                    console.log("carregou dados brutos");
+                                    return; 
                                     const historicoCalendario = dadosBrutos.results[0].historicalDataPrice;                    
                                     // Encontramos onde paramos no tempo
                                     const indiceParada = historicoCalendario.findIndex(candle => {
