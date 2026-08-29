@@ -162,19 +162,19 @@ async function executarScanner() {
                                                         //calculaUltimoResult = false       
                                                         //console.log(idxDiaSeguinte, historicoIbov.length);
                                                         if (idxDiaSeguinte < historicoIbov.length) {
-                                                        console.log("ok");
+                                                        //console.log("ok");
                                                                         const ibovAmanha = historicoIbov[idxDiaSeguinte]; // O dia 11 real!
                                                                         const ibovHoje = historicoIbov[idxIbov];         // O dia 10 real
                                                             
                                                                         const dataAmanhaFormatada = new Date(ibovAmanha.date * 1000).toLocaleDateString('pt-BR');
-                                                                        console.log(dataAmanhaFormatada);
+                                                                        //console.log(dataAmanhaFormatada);
 
                                                                         const agora = new Date();
                                                                         const horaAtual = agora.getHours();
                                                                         const amanhaEHoje = dataAmanhaFormatada === agora.toLocaleDateString('pt-BR');
                                                                         console.log(amanhaEHoje);
                                                                         if (!amanhaEHoje) {
-                                                                        console.log("amanhã n é hoje");
+                                                                        //console.log("amanhã n é hoje");
 
                                                                             registroExistente.resultadoBolsa = ibovAmanha.close > ibovHoje.close ? "subiu" : "desceu";
                                                                             registroExistente.aberturaBolsa = ibovAmanha.open > ibovHoje.close ? "alta" : "baixa";
@@ -191,7 +191,7 @@ async function executarScanner() {
                                                                                 //console.log(`📅 Criada base em 'AGUARDANDO...' para o dia posterior: ${dataAmanhaFormatada}`);
                                                                             }
                                                                    
-                                                                            localStorage.setItem('historico_B3', JSON.stringify(historicoReatualizado));
+                                                                            //localStorage.setItem('historico_B3', JSON.stringify(historicoReatualizado));
                                                                             //console.log(`✅ Palpite do dia ${dataDesseDia} validado com o resultado do dia ${dataAmanhaFormatada}!`);
                                                                         }
                                                         } else {
@@ -383,7 +383,7 @@ async function executarScanner() {
                                     
                                     
                                     
-                                    //localStorage.setItem('historico_B3', JSON.stringify(historicoReatualizado));
+                                    localStorage.setItem('historico_B3', JSON.stringify(historicoReatualizado));
                                     desenharHistoricoNaTela();
                         } // Fechamento do: if (dadosBrutos.results && Array.isArray...)
             
