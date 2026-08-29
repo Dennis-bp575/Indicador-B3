@@ -125,6 +125,8 @@ async function executarScanner() {
                                    
                                     // Criamos a lista com os dias que faltam processar dali para frente!
                                     const diasParaProcessar = historicoCalendario.slice(indiceParada);
+                                    console.log(diasParaProcessar)
+                                    return;
                                     //let historicoReatualizado;
                                     let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
                                     //historicoReatualizado = structuredClone(historicoSalvo);
@@ -174,8 +176,7 @@ async function executarScanner() {
                                                                             registroExistente.aberturaBolsa = ibovAmanha.open > ibovHoje.close ? "alta" : "baixa";
             
                                                                             let possuiDiaSeguinteNoBanco = historicoSalvo.some(item => item.dataSinal === dataAmanhaFormatada);
-                                                                            console.log(dataAmanhaFormatada);
-                                                                                    return;
+                                                                            
                                                                             if (!possuiDiaSeguinteNoBanco) {
                                                                                 historicoReatualizado.push({
                                                                                     placar: "AGUARDANDO...",
