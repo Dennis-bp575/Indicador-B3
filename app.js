@@ -132,12 +132,7 @@ async function executarScanner() {
                                     let historicoReatualizado = structuredClone(Array.isArray(historicoSalvo) ? historicoSalvo : [historicoSalvo]);
 
                                     diasParaProcessar.forEach((diaDoCalendario) => {
-                                               
-                                                // O .find() só funciona se historicoReatualizado for estritamente um Array
-                                                
-                                                console.log(historicoReatualizado);
-                                                return;
-                                                
+                                           
                                                 const timestampDoDia = diaDoCalendario.date;                                              
                                                 const dataDesseDia = new Date(timestampDoDia * 1000).toLocaleDateString('pt-BR');
                                                 //console.log(dataDesseDia)
