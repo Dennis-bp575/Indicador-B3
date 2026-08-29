@@ -187,7 +187,9 @@ async function executarScanner() {
                                     let historicoReatualizado = structuredClone(Array.isArray(historicoSalvo) ? historicoSalvo : [historicoSalvo]);
 
                                     diasParaProcessar.forEach((diaDoCalendario) => {
-                                           
+                                                       console.log(diasParaProcessar);
+                                                return;
+                                                
                                                 const timestampDoDia = diaDoCalendario.date;                                              
                                                 const dataDesseDia = new Date(timestampDoDia * 1000).toLocaleDateString('pt-BR');
                                                 //console.log(dataDesseDia)
