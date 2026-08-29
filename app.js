@@ -128,6 +128,8 @@ async function executarScanner() {
                                     let historicoReatualizado;
                                     let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
                                     historicoReatualizado = structuredClone(historicoSalvo);
+                                    console.log(historicoReatualizado);
+                                    return;
                                     
                                     diasParaProcessar.forEach((diaDoCalendario) => {
                                                 
