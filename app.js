@@ -110,6 +110,8 @@ async function executarScanner() {
                                     // Encontramos onde paramos no tempo
                                     const indiceParada = historicoCalendario.findIndex(candle => {
                                         return new Date(candle.date * 1000).toLocaleDateString('pt-BR') === ultimaAtualizacao;
+                                                console.log("ok");
+                                                return;
                                     });
                                     console.log(ultimaAtualizacao);
                                     return; 
