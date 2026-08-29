@@ -559,6 +559,7 @@ historicoCronologico.forEach(item => {
     const t2 = numeros[1];
     const t3 = numeros[2];
     const somaTendencia = t2 + t3; 
+    const resultado = `${tokenExaustao} e ${t2}+${t3}=${somaTendencia}`;
 
     // Identifica o gatilho matemático puro da linha
     let gatilhoLinha = "NEUTRO";
