@@ -124,9 +124,9 @@ async function executarScanner() {
                                 
                                     // Criamos a lista com os dias que faltam processar dali para frente!
                                     const diasParaProcessar = historicoCalendario.slice(indiceParada);
-                                    console.log(diasParaProcessar);
-                                    console.log(historicoCalendario);
-                                    console.log(ultimaAtualizacao);
+                                    //console.log(diasParaProcessar);
+                                    //console.log(historicoCalendario);
+                                    //console.log(ultimaAtualizacao);
                                     //let historicoReatualizado;
                                     let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
                                     //historicoReatualizado = structuredClone(historicoSalvo);
@@ -152,6 +152,7 @@ async function executarScanner() {
                                                             
                                                     if (dadosIbov && dadosIbov.historicalDataPrice) {
                                                         const historicoIbov = dadosIbov.historicalDataPrice;
+                                                        historicoIbov.sort((a, b) => a.date - b.date);
                                                         // Achamos a posição do dia anterior no histórico do Ibov
                                                         const idxIbov = historicoIbov.findIndex(c => c.date === timestampDoDia);
                                                         
@@ -159,7 +160,7 @@ async function executarScanner() {
                                                 
                                                         //gravUltimoResult = false
                                                         //calculaUltimoResult = false       
-                                                        console.log(idxDiaSeguinte, historicoIbov.length);
+                                                        //console.log(idxDiaSeguinte, historicoIbov.length);
                                                         if (idxDiaSeguinte < historicoIbov.length) {
                                                         console.log("ok");
                                                                         const ibovAmanha = historicoIbov[idxDiaSeguinte]; // O dia 11 real!
