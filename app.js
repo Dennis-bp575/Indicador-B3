@@ -71,7 +71,7 @@ async function executarScanner() {
             let dataDesseDiaGlobal;
             let calculaUltimoResult;
             let gravaUltimoResult;
-            desenharHistoricoNaTela();
+        
             
             botaoAtualizar.disabled = true;
             botaoAtualizar.innerHTML = `
@@ -111,8 +111,8 @@ async function executarScanner() {
                                     const indiceParada = historicoCalendario.findIndex(candle => {
                                         return new Date(candle.date * 1000).toLocaleDateString('pt-BR') === ultimaAtualizacao;
                                     });
-                                    console.log(historicoCalendario);
-                                    
+                                    console.log(ultimaAtualizacao);
+                                    return; 
                                     // Criamos a lista com os dias que faltam processar dali para frente!
                                     const diasParaProcessar = historicoCalendario.slice(indiceParada);
                                     let historicoReatualizado;
