@@ -108,9 +108,23 @@ async function executarScanner() {
                                     
                                     const historicoCalendario = dadosBrutos.results[0].historicalDataPrice;                    
                                     // Encontramos onde paramos no tempo
-                                    const indiceParada = historicoCalendario.findIndex(candle => {
-                                        return new Date(candle.date * 1000).toLocaleDateString('pt-BR') === ultimaAtualizacao;    
+                                   const indiceParada = historicoCalendario.findIndex(candle => {
+                                                // 1. Cria a data em UTC/Local de forma segura
+                                                const dataObj = new Date(candle.date * 1000);
+                                                
+                                                // 2. Extrai os componentes de forma numérica e força o formato DD/MM/AAAA manualmente
+                                                const dia = String(dataObj.getDate()).padStart(2, '0');
+                                                const mes = String(dataObj.getMonth() + 1).padStart(2, '0'); // Janeiro é 0
+                                                const ano = dataObj.getFullYear();
+                                                
+                                                const dataFormatadaSegura = `${dia}/${mes}/${ano}`;
+                                                
+                                                // 3. Compara as strings limpas
+                                                return dataFormatadaSegura === ultimaAtualizacao;    
                                     });
+                                    console.log(indiceParada)
+                                    return;
+
                                    
                                     // Criamos a lista com os dias que faltam processar dali para frente!
                                     const diasParaProcessar = historicoCalendario.slice(indiceParada);
