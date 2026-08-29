@@ -83,44 +83,23 @@ async function executarScanner() {
 
             try {
                                
-                            let dadosBrutos = { results: [] };
-                        
-                            const urlLocal = "./dados_ativos.json";
-                            const response = await fetch(urlLocal);
-                            
-                            if (!response.ok) {
-                                console.error("❌ Erro crítico: Arquivo dados_ativos.json não localizado.");
-                                return; // Sai do script de forma segura
-                            }
-                        
-                            const jsonConsolidado = await response.json();
-                            
-                            if (jsonConsolidado && jsonConsolidado.results) {
-                                // Dicionário de mapeamento de Nomes Longos Oficiais da BrAPI (para manter compatibilidade)
-                                const nomesLongos = {
-                                    "B3SA3": "B3 SA - Brasil, Bolsa, Balcao", "PETR4": "Petroleo Brasileiro SA Pfd",
-                                    "CSAN3": "Cosan S.A.", "ITSA4": "Itausa SA Non-Cum Perp Pfd Registered Shs",
-                                    "ITUB4": "Itau Unibanco Holding SA Pfd", "COGN3": "Cogna Educacao S.A.",
-                                    "BBDC4": "Banco Bradesco SA Pfd", "CVCB3": "CVC Brasil Operadora e Agencia de Viagens SA",
-                                    "VIVT3": "Telefonica Brasil S.A.", "CMIN3": "CSN Mineracao SA",
-                                    "MGLU3": "Magazine Luiza S.A.", "CSMG3": "Companhia de Saneamento de Minas Gerais",
-                                    "NATU3": "Natura Cosmeticos SA", "ABEV3": "Ambev SA", "BBAS3": "Banco do Brasil S.A.",
-                                    "BBSE3": "BB Seguridade Participacoes SA", "CPLE3": "Companhia Paranaense de Energia",
-                                    "VALE3": "Vale S.A.", "MOTV3": "Motiva Infraestrutura de Mobilidade SA",
-                                    "GOAU4": "Metalurgica Gerdau SA Pfd", "SBSP3": "Companhia de Saneamento Basico do Estado de Sao Paulo SABESP",
-                                    "CSNA3": "Companhia Siderurgica Nacional", "LREN3": "Lojas Renner S.A.",
-                                    "ASAI3": "Sendas Distribuidora SA", "VAMO3": "Vamos Locacao de Caminhoes, Maquinas e Equipamentos SA",
-                                    "DIRR3": "Direcional Engenharia S.A.", "GGBR4": "Gerdau S.A. Pfd", "EQTL3": "Equatorial S.A.",
-                                    "RAPT4": "Randoncorp S.A.", "CYRE3": "Cyrela Brazil Realty SA Empreendimentos e Participacoes",
-                                    "AXIA3": "AXIA Energia SA", "MRVE3": "MRV Engenharia e Participacoes S.A.",
-                                    "RENT3": "Localiza Rent A Car SA", "USIM5": "Usinas Siderurgicas de Minas Gerais SA-Usiminas Pfd A",
-                                    "CEAB3": "C&A Modas SA", "EGIE3": "ENGIE Brasil Energia S.A.",
-                                    "BPAC11": "Banco BTG Pactual SA Units Cons of 1 Sh + 2 Pfd Shs A", "RADL3": "Raia Drogasil S.A.",
-                                    "BRKM5": "Braskem S.A. Pfd A", "PETR3": "Petroleo Brasileiro SA", "BEEF3": "Minerva S.A.",
-                                    "POMO4": "Marcopolo SA Pfd", "CMIG4": "Companhia Energetica de Minas Gerais SA Pfd",
-                                    "PRIO3": "Prio SA", "MBRF3": "MBRF Global Foods Company S.A.", "CPFE3": "CPFL Energia S.A.",
-                                    "ENEV3": "Eneva S.A.", "WEGE3": "WEG SA", "ALOS3": "Allos S.A.", "IBOV": "IBOVESPA"
-                                };
+                                    const response = await fetch('./historicos.json');
+                                    const arquivo = await response.json();
+                                    
+                                    const dadosBrutos = { results: [] };
+                                    
+                                    for (const ticker of meusAtivos) {
+                                    
+                                        const ativo = arquivo.results.find(
+                                            item => item.symbol === ticker
+                                        );
+                                    
+                                        if (ativo) {
+                                            dadosBrutos.results.push(ativo);
+                                        } else {
+                                            console.warn(`⚠️ Não foi possível carregar os dados de ${ticker}`);
+                                        }
+                                    }
                         
                                 // 2. Mapeia e enriquece a lista do seu JSON local gerado no Sheets
                                 dadosBrutos.results = jsonConsolidado.results.map(ativo => {
