@@ -144,6 +144,7 @@ async function executarScanner() {
                                                         //calculaUltimoResult = false       
                                                         
                                                         if (idxDiaSeguinte < historicoIbov.length) {
+                                                                    
                                                                         const ibovAmanha = historicoIbov[idxDiaSeguinte]; // O dia 11 real!
                                                                         const ibovHoje = historicoIbov[idxIbov];         // O dia 10 real
                                                             
@@ -154,6 +155,7 @@ async function executarScanner() {
                                                                         const amanhaEHoje = dataAmanhaFormatada === agora.toLocaleDateString('pt-BR');
                                                                         
                                                                         if (!amanhaEHoje) {
+                                                                        console.log("amanhã é hoje");
 
                                                                             registroExistente.resultadoBolsa = ibovAmanha.close > ibovHoje.close ? "subiu" : "desceu";
                                                                             registroExistente.aberturaBolsa = ibovAmanha.open > ibovHoje.close ? "alta" : "baixa";
