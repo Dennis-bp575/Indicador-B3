@@ -71,6 +71,7 @@ async function executarScanner() {
             let dataDesseDiaGlobal;
             let calculaUltimoResult;
             let gravaUltimoResult;
+            desenharHistoricoNaTela();
             
             botaoAtualizar.disabled = true;
             botaoAtualizar.innerHTML = `
