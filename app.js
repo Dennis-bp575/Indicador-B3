@@ -202,7 +202,7 @@ async function executarScanner() {
                                     });
 
                                     diasParaProcessar.forEach((diaDoCalendario) => {
-                                    
+                                                console.log(diasParaProcessar);
                                                 const timestampDoDia = diaDoCalendario.date; // Dia 10
                                                 
                                                 const dataDesseDia = new Date(timestampDoDia * 1000).toLocaleDateString('pt-BR');
