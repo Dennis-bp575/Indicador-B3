@@ -482,7 +482,8 @@ function desenharHistoricoNaTela() {
             
     blocoListaHistorico.innerHTML = "";
     let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
-   
+   console.log(historicoSalvo);
+            return;
     // Inverte a ordem para exibir o mais recente no topo
     const historicoInvertido = historicoSalvo.reverse();
 
