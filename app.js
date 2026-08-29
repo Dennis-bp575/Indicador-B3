@@ -127,8 +127,8 @@ async function executarScanner() {
                                     let tickerOriginal = ativo.symbol ? ativo.symbol.trim().toUpperCase() : "";
                                     
                                     // Correção crucial: Se o ticker for IBOV, altera para o formato de busca da BrAPI (^BVSP)
-                                    //let tickerCorreto = (tickerOriginal === "IBOV") ? "^BVSP" : tickerOriginal;
-                                    //let nomeCurto = (tickerOriginal === "IBOV") ? "IBOVESPA" : tickerOriginal;
+                                    let tickerCorreto = tickerOriginal;
+                                    let nomeCurto = tickerOriginal;
                                     
                                     // Ordena o histórico de datas de forma ascendente (do dia mais antigo para o mais recente)
                                     let historicoOrdenado = [];
