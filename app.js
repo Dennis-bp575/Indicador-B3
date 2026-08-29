@@ -164,11 +164,12 @@ async function executarScanner() {
                                                                         const ibovHoje = historicoIbov[idxIbov];         // O dia 10 real
                                                             
                                                                         const dataAmanhaFormatada = new Date(ibovAmanha.date * 1000).toLocaleDateString('pt-BR');
-                                                                        
+                                                                        console.log(dataAmanhaFormatada);
+
                                                                         const agora = new Date();
                                                                         const horaAtual = agora.getHours();
                                                                         const amanhaEHoje = dataAmanhaFormatada === agora.toLocaleDateString('pt-BR');
-                                                                        console.log(`"amanhã é hoje"` & amanhaEHoje);
+                                                                        console.log(amanhaEHoje);
                                                                         if (!amanhaEHoje) {
                                                                         console.log("amanhã é hoje");
 
