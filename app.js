@@ -258,9 +258,7 @@ async function executarScanner() {
                                                                         const v51 = Number(c51[propriedade]) || 0;
                                                                         const v50 = Number(c50[propriedade]) || 0;
                                                                         const v49 = Number(c49[propriedade]) || 0;
-                                                                        console.log(ativo.symbol);
-                                                                        console.log(v51,v50,v49);
-                                                                        return;
+                                                                        
                                                                         palavraGerada += v51 > v50 ? "A" : v51 < v50 ? "V" : "I";
                                                                         palavraGerada += v50 > v49 ? "A" : v50 < v49 ? "V" : "I";
                                                             }
