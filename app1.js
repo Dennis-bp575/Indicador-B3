@@ -12,7 +12,7 @@ const meusAtivos = ["B3SA3", "PETR4", "CSAN3", "ITSA4", "ITUB4",
             "AXIA3", "MRVE3", "RENT3", "USIM5", "CEAB3",
             "EGIE3", "BPAC11", "RADL3", "BRKM5", "PETR3", 
             "BEEF3", "POMO4", "CMIG4", "PRIO3", "MBRF3",
-            "CPFE3", "ENEV3", "WEGE3", "ALOS3", "%5EBVSP"]; 
+            "CPFE3", "ENEV3", "WEGE3", "ALOS3", "IBOV"]; 
 
 const pesosAtivos = [
   2, 3, 2, 2, 3, // B3SA3 (2), PETR4 (3), CSAN3 (2), ITSA4 (2), ITUB4 (3)
@@ -83,26 +83,80 @@ async function executarScanner() {
 
             try {
                                
-                        // 1. Criamos a estrutura que o resto do código já espera receber
-                        let dadosBrutos = { results: [] };
+                            let dadosBrutos = { results: [] };
                         
-                        // 2. Fazemos um único fetch direto para o arquivo unificado no seu GitHub
-                        // ATENÇÃO: Substitua 'SEU_USUARIO' e 'SEU_REPOSITORIO' pelos seus dados reais do GitHub
-                        const urlGithub = "./dados_ativos.json";
-                        const response = await fetch(urlGithub);
+                            const urlLocal = "./dados_ativos.json";
+                            const response = await fetch(urlLocal);
+                            
+                            if (!response.ok) {
+                                console.error("❌ Erro crítico: Arquivo dados_ativos.json não localizado.");
+                                return; // Sai do script de forma segura
+                            }
                         
-                        if (response.ok) {
-                                    const jsonConsolidado = await response.json();
+                            const jsonConsolidado = await response.json();
+                            
+                            if (jsonConsolidado && jsonConsolidado.results) {
+                                // Dicionário de mapeamento de Nomes Longos Oficiais da BrAPI (para manter compatibilidade)
+                                const nomesLongos = {
+                                    "B3SA3": "B3 SA - Brasil, Bolsa, Balcao", "PETR4": "Petroleo Brasileiro SA Pfd",
+                                    "CSAN3": "Cosan S.A.", "ITSA4": "Itausa SA Non-Cum Perp Pfd Registered Shs",
+                                    "ITUB4": "Itau Unibanco Holding SA Pfd", "COGN3": "Cogna Educacao S.A.",
+                                    "BBDC4": "Banco Bradesco SA Pfd", "CVCB3": "CVC Brasil Operadora e Agencia de Viagens SA",
+                                    "VIVT3": "Telefonica Brasil S.A.", "CMIN3": "CSN Mineracao SA",
+                                    "MGLU3": "Magazine Luiza S.A.", "CSMG3": "Companhia de Saneamento de Minas Gerais",
+                                    "NATU3": "Natura Cosmeticos SA", "ABEV3": "Ambev SA", "BBAS3": "Banco do Brasil S.A.",
+                                    "BBSE3": "BB Seguridade Participacoes SA", "CPLE3": "Companhia Paranaense de Energia",
+                                    "VALE3": "Vale S.A.", "MOTV3": "Motiva Infraestrutura de Mobilidade SA",
+                                    "GOAU4": "Metalurgica Gerdau SA Pfd", "SBSP3": "Companhia de Saneamento Basico do Estado de Sao Paulo SABESP",
+                                    "CSNA3": "Companhia Siderurgica Nacional", "LREN3": "Lojas Renner S.A.",
+                                    "ASAI3": "Sendas Distribuidora SA", "VAMO3": "Vamos Locacao de Caminhoes, Maquinas e Equipamentos SA",
+                                    "DIRR3": "Direcional Engenharia S.A.", "GGBR4": "Gerdau S.A. Pfd", "EQTL3": "Equatorial S.A.",
+                                    "RAPT4": "Randoncorp S.A.", "CYRE3": "Cyrela Brazil Realty SA Empreendimentos e Participacoes",
+                                    "AXIA3": "AXIA Energia SA", "MRVE3": "MRV Engenharia e Participacoes S.A.",
+                                    "RENT3": "Localiza Rent A Car SA", "USIM5": "Usinas Siderurgicas de Minas Gerais SA-Usiminas Pfd A",
+                                    "CEAB3": "C&A Modas SA", "EGIE3": "ENGIE Brasil Energia S.A.",
+                                    "BPAC11": "Banco BTG Pactual SA Units Cons of 1 Sh + 2 Pfd Shs A", "RADL3": "Raia Drogasil S.A.",
+                                    "BRKM5": "Braskem S.A. Pfd A", "PETR3": "Petroleo Brasileiro SA", "BEEF3": "Minerva S.A.",
+                                    "POMO4": "Marcopolo SA Pfd", "CMIG4": "Companhia Energetica de Minas Gerais SA Pfd",
+                                    "PRIO3": "Prio SA", "MBRF3": "MBRF Global Foods Company S.A.", "CPFE3": "CPFL Energia S.A.",
+                                    "ENEV3": "Eneva S.A.", "WEGE3": "WEG SA", "ALOS3": "Allos S.A.", "IBOV": "IBOVESPA"
+                                };
+                        
+                                // 2. Mapeia e enriquece a lista do seu JSON local gerado no Sheets
+                                dadosBrutos.results = jsonConsolidado.results.map(ativo => {
+                                    let tickerOriginal = ativo.symbol ? ativo.symbol.trim().toUpperCase() : "";
                                     
-                                    // Se o JSON do GitHub for válido, ele substitui os dados brutos instantaneamente
-                                    if (jsonConsolidado && jsonConsolidado.results) {
-                                                dadosBrutos = jsonConsolidado;
-                                                console.log("🚀 Dados de todos os ativos carregados do GitHub com sucesso!");
+                                    // Correção crucial: Se o ticker for IBOV, altera para o formato de busca da BrAPI (^BVSP)
+                                    //let tickerCorreto = (tickerOriginal === "IBOV") ? "^BVSP" : tickerOriginal;
+                                    //let nomeCurto = (tickerOriginal === "IBOV") ? "IBOVESPA" : tickerOriginal;
+                                    
+                                    // Ordena o histórico de datas de forma ascendente (do dia mais antigo para o mais recente)
+                                    let historicoOrdenado = [];
+                                    if (ativo.historicalDataPrice) {
+                                        historicoOrdenado = ativo.historicalDataPrice.sort((a, b) => a.date - b.date);
                                     }
-                        } else {
-                                    console.error("❌ Falha crítica ao carregar o arquivo dados_ativos.json do GitHub.");
-                        }
                         
+                                    // Descobre o preço de fechamento mais recente para injetar na propriedade de mercado real
+                                    let ultimoFechamento = 0;
+                                    if (historicoOrdenado.length > 0) {
+                                        ultimoFechamento = historicoOrdenado[historicoOrdenado.length - 1].close;
+                                    }
+                        
+                                    // Retorna o objeto estritamente envelopado com as propriedades originais capturadas pelo console da BrAPI
+                                    return {
+                                        "symbol": tickerCorreto,
+                                        "shortName": nomeCurto,
+                                        "longName": nomesLongos[tickerOriginal] || (tickerCorreto + " S.A."),
+                                        "currency": "BRL",
+                                        "regularMarketPrice": ultimoFechamento, // Seu código de sinais usava esse campo para buscar o valor de hoje!
+                                        "historicalDataPrice": historicoOrdenado,
+                                        "usedInterval": "1d",
+                                        "usedRange": "3mo"
+                                    };
+                                });
+                        
+                                console.log("🚀 Objeto dadosBrutos reconstruído perfeitamente no padrão BrAPI com 50 ativos!");
+                            }
                         // 1. Verificamos se a Brapi realmente devolveu a lista de resultados
                         if (dadosBrutos.results && Array.isArray(dadosBrutos.results)) {
                                     
