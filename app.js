@@ -389,25 +389,25 @@ async function executarScanner() {
                 const resultado = `${totalReversoesCandle} e ${t2}+${t3}=${somaTendencia}`;
 
                 // 🧠 Lógica Dinâmica das Etiquetas de Previsão
-                let etiquetaSinal = "[⚪ MERCADO NEUTRO]";
+                let etiquetaSinal = "[⚪NEUTRO]";
                 let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
 
                 if (totalReversoesCandle > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
-                    etiquetaSinal = "[🟢 Mantém ⚠️ Atenção na abertura]";
+                    etiquetaSinal = "[🟢Mantém⚠️]";
                     classeCorEtiqueta = "text-emerald-400"; // Destaca em verde
                 } 
                 if (totalReversoesCandle <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
                     // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
-                    etiquetaSinal = "[🟢 Mantém]";
+                    etiquetaSinal = "[🟢Mantém]";
                     classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
                 }
                         
                 if (totalReversoesCandle <= 2 && somaTendencia > 49) {
-                    etiquetaSinal = "[⚠️ EXCESSO DE TOPO]";
+                    etiquetaSinal = "[⚠️TOPO]";
                     classeCorEtiqueta = "text-orange-600"; // Destaca em rosa/vermelho
                 }
                 if (somaTendencia < 10) {
-                    etiquetaSinal = "[🛑 INDICATIVO DE VENDA]";
+                    etiquetaSinal = "[🚨VENDER🚨]";
                     classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
                 }
 
@@ -510,7 +510,7 @@ function desenharHistoricoNaTela() {
         } 
         if (tokenExaustao <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
-            etiquetaSinal = "[🟢 COMPRA] ";
+            etiquetaSinal = "[🟢COMPRA] ";
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
         }
                 
