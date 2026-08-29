@@ -262,7 +262,7 @@ async function executarScanner() {
                                                                         palavraGerada += v51 > v50 ? "A" : v51 < v50 ? "V" : "I";
                                                                         palavraGerada += v50 > v49 ? "A" : v50 < v49 ? "V" : "I";
                                                             }
-                                                           console.log(dataSinal, palavraGerada, ativo.symbol, Number(c51[4]), Number(c51[5]), Number(c50[4]), Number(c50[5]), Number(c49[4]), Number(c49[5]));
+                                                           console.log(dataSinal, palavraGerada, ativo.symbol, Number(c51["alma1"]), Number(c51["alma2"]), Number(c50["alma1"]), Number(c50["alma2"]), Number(c49["alma1"]), Number(c49["alma2"]));
                                                                
                                                             // Verifica match com os tokens matemáticos de 14 letras
                                                             let deuMatch = TOKENS_INDICADORES.includes(palavraGerada);
