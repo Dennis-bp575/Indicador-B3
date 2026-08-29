@@ -101,7 +101,8 @@ async function executarScanner() {
                                                 console.warn(`⚠️ Não foi possível carregar os dados de ${ticker}`);
                                     }
                         }
-                        
+                        console.log(dadosBrutos.results);
+                        return;
                         // 1. Verificamos se a Brapi realmente devolveu a lista de resultados
                         if (dadosBrutos.results && Array.isArray(dadosBrutos.results)) {
                                     const historicoCalendario = dadosBrutos.results[0].historicalDataPrice;                    
