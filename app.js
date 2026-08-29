@@ -559,7 +559,7 @@ historicoCronologico.forEach(item => {
     const t2 = numeros[1];
     const t3 = numeros[2];
     const somaTendencia = t2 + t3; 
-    resultado = `${tokenExaustao} e ${t2}+${t3}=${somaTendencia}`;
+    
 
     // Identifica o gatilho matemático puro da linha
     let gatilhoLinha = "NEUTRO";
@@ -624,6 +624,16 @@ const historicoInvertido = historicoCronologico.reverse();
 
 // 6. Seu loop de renderização na tela (Agora usando os dados calculados na ordem certa)
 historicoInvertido.forEach(item => {
+
+    const placar = item.placar; 
+    const numeros = placar.split('-').map(Number);
+    const tokenExaustao = numeros[0]; 
+    const t2 = numeros[1];
+    const t3 = numeros[2];
+    const somaTendencia = t2 + t3; 
+    resultado = `${tokenExaustao} e ${t2}+${t3}=${somaTendencia}`;
+
+
     let classeCor = "bg-gray-800 border-gray-700 text-gray-400";
     if (item.resultadoBolsa && item.resultadoBolsa.includes("subiu")) {
         classeCor = "bg-emerald-950 bg-opacity-40 border-emerald-800 text-emerald-400";
