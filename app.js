@@ -296,6 +296,9 @@ async function executarScanner() {
                                                             historicoCompleto.forEach((candle, index) => {
                                                                     candle.alma1 = calcularALMA(precosFechamento, index, periodoAlma1);
                                                                     candle.alma2 = calcularALMA(precosFechamento, index, periodoAlma2);
+                                                                        console.log(candle.alma1);
+                                                                        console.log(candle.alma2);
+                                                                        return;
                                                             });
 
 
