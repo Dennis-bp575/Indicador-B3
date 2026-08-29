@@ -187,22 +187,22 @@ async function executarScanner() {
                                     let historicoReatualizado = structuredClone(Array.isArray(historicoSalvo) ? historicoSalvo : [historicoSalvo]);
 
                                     diasParaProcessar.forEach((diaDoCalendario) => {
-                                                       console.log(diasParaProcessar);
-                                                return;
                                                 
                                                 const timestampDoDia = diaDoCalendario.date;                                              
                                                 const dataDesseDia = new Date(timestampDoDia * 1000).toLocaleDateString('pt-BR');
                                                 //console.log(dataDesseDia)
                                                 dataDesseDiaGlobal = dataDesseDia;
-                                                
+                                                console.log(dataDesseDia);
                                                 let registroExistente = historicoReatualizado.find(item => 
                                                             item && String(item.dataSinal).trim() === String(dataDesseDia).trim()
                                                 );
 
-                                                
+                                                console.log(registroExistente);
                                                 if (registroExistente) {
         
-                                                    const dadosIbov = dadosBrutos.results.find(item => item.symbol === "^BVSP");
+                                                    const dadosIbov = dadosBrutos.results.find(item => item.symbol === "IBOV");
+                                                            console.log(dadosIbov);
+                                                            return;
                                                     if (dadosIbov && dadosIbov.historicalDataPrice) {
                                                         const historicoIbov = dadosIbov.historicalDataPrice;
                                                         // Achamos a posição do dia anterior no histórico do Ibov
@@ -252,6 +252,7 @@ async function executarScanner() {
                                                         }
                                                     }
                                                 }   
+                                                return;
                                     });
 
                                     diasParaProcessar.forEach((diaDoCalendario) => {
