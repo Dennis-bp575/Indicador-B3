@@ -83,7 +83,7 @@ async function executarScanner() {
 
             try {
                                     
-                                    const response = await fetch('./historicos.json');
+                                    const response = await fetch('./dados_ativos.json');
                                     const arquivo = await response.json();
                                     
                                     const dadosBrutos = { results: [] };
