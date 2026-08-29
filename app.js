@@ -288,8 +288,7 @@ async function executarScanner() {
                                                             const c51 = historicoCompleto[idx51];
                                                             const c50 = historicoCompleto[idx50];
                                                             const c49 = historicoCompleto[idx49];
-                                                            console.log(c51);
-                                                            return;
+                                                            
                                                             const periodoAlma1 = 9;  
                                                             const periodoAlma2 = 21; 
                                                             const precosFechamento = historicoCompleto.map(c => c.close);
