@@ -142,10 +142,10 @@ async function executarScanner() {
                                                             String(item.dataSinal).trim() === String(dataDesseDia).trim()
                                                             
                                                 );
-                                                console.log(registroExistente);
+                                                
                                                 
                                                 if (registroExistente) {
-                                                         console.log(registroExistente);
+                                                        
                                                     const dadosIbov = dadosBrutos.results.find(item => item.symbol === "IBOV");
                                                             
                                                     if (dadosIbov && dadosIbov.historicalDataPrice) {
@@ -157,9 +157,9 @@ async function executarScanner() {
                                                 
                                                         //gravUltimoResult = false
                                                         //calculaUltimoResult = false       
-                                                        
+                                                        console.log(idxDiaSeguinte, historicoIbov.length);
                                                         if (idxDiaSeguinte < historicoIbov.length) {
-                                                                    
+                                                        console.log("ok");
                                                                         const ibovAmanha = historicoIbov[idxDiaSeguinte]; // O dia 11 real!
                                                                         const ibovHoje = historicoIbov[idxIbov];         // O dia 10 real
                                                             
@@ -168,7 +168,7 @@ async function executarScanner() {
                                                                         const agora = new Date();
                                                                         const horaAtual = agora.getHours();
                                                                         const amanhaEHoje = dataAmanhaFormatada === agora.toLocaleDateString('pt-BR');
-                                                                        
+                                                                        console.log(`"amanhã é hoje"` & amanhaEHoje);
                                                                         if (!amanhaEHoje) {
                                                                         console.log("amanhã é hoje");
 
