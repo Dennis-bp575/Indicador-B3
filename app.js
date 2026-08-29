@@ -124,7 +124,7 @@ async function executarScanner() {
                                 
                                     // Criamos a lista com os dias que faltam processar dali para frente!
                                     const diasParaProcessar = historicoCalendario.slice(indiceParada);
-                                    
+                                    console.log(diasParaProcessar);
                                     //let historicoReatualizado;
                                     let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
                                     //historicoReatualizado = structuredClone(historicoSalvo);
