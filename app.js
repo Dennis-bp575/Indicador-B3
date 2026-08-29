@@ -267,8 +267,6 @@ async function executarScanner() {
                                                             let deuMatch = TOKENS_INDICADORES.includes(palavraGerada);
                                                             // console.log(palavraGerada, totalMatchesPalavras);
                                                             if (deuMatch) {
-                                                                        console.log("deu match");
-                                                                        return;
                                                                 const nomeAtivo = ativo.symbol; 
                                                                 const indice = meusAtivos.indexOf(nomeAtivo);
                                                                 const pesoDoAtivo = pesosAtivos[indice];                                      
