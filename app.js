@@ -121,8 +121,7 @@ async function executarScanner() {
                                                 // 3. Compara as strings limpas
                                                 return dataFormatadaSegura === ultimaAtualizacao;    
                                     });
-                                   console.log(indiceParada);
-                                    return;
+                                
                                     // Criamos a lista com os dias que faltam processar dali para frente!
                                     const diasParaProcessar = historicoCalendario.slice(indiceParada);
                                     
@@ -131,7 +130,8 @@ async function executarScanner() {
                                     //historicoReatualizado = structuredClone(historicoSalvo);
 
                                     let historicoReatualizado = structuredClone(Array.isArray(historicoSalvo) ? historicoSalvo : [historicoSalvo]);
-
+                                    console.log(historicoReatualizado);
+                                    return;
                                     diasParaProcessar.forEach((diaDoCalendario) => {
                                                 
                                                 const timestampDoDia = diaDoCalendario.date;                                              
