@@ -104,20 +104,21 @@ async function executarScanner() {
                         
                         // 1. Verificamos se a Brapi realmente devolveu a lista de resultados
                         if (dadosBrutos.results && Array.isArray(dadosBrutos.results)) {
-                                    console.log("carregou dados brutos");
-                                    return; 
+                                    
                                     const historicoCalendario = dadosBrutos.results[0].historicalDataPrice;                    
                                     // Encontramos onde paramos no tempo
                                     const indiceParada = historicoCalendario.findIndex(candle => {
                                         return new Date(candle.date * 1000).toLocaleDateString('pt-BR') === ultimaAtualizacao;
                                     });
+                                    console.log(historicoCalendario);
                                     
                                     // Criamos a lista com os dias que faltam processar dali para frente!
                                     const diasParaProcessar = historicoCalendario.slice(indiceParada);
                                     let historicoReatualizado;
                                     let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
                                     historicoReatualizado = structuredClone(historicoSalvo);
-                                    
+                                    console.log(historicoReatualizado);
+                                    return; 
                                     diasParaProcessar.forEach((diaDoCalendario) => {
                                                 
                                                 
