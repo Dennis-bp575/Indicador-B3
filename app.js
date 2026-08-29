@@ -219,7 +219,8 @@ async function executarScanner() {
                                                             
                                                             const historicoCompleto = ativo.historicalDataPrice;
                                                             if (!historicoCompleto || historicoCompleto.length === 0) return;
-                                    
+                                                            console.log(historicoCompleto);
+                                                            return;
                                                             // 1. Procuramos o índice desse dia específico no histórico DESTA ação
                                                             const idx51 = historicoCompleto.findIndex(c => c.date === timestampDoDia);
                                                             
