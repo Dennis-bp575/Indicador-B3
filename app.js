@@ -83,23 +83,23 @@ async function executarScanner() {
             try {
                                
                         // 1. Criamos a estrutura que o resto do código já espera receber
-                        const dadosBrutos = { results: [] };
-                        // 2. Criamos uma lista combinando os 50 ativos + o Ibovespa no final
-                        for (const ticker of meusAtivos) {
-                                    await esperar(100); // Pausa de segurança de 100ms do plano gratuito
+                        let dadosBrutos = { results: [] };
+                        
+                        // 2. Fazemos um único fetch direto para o arquivo unificado no seu GitHub
+                        // ATENÇÃO: Substitua 'SEU_USUARIO' e 'SEU_REPOSITORIO' pelos seus dados reais do GitHub
+                        const urlGithub = "https://githubusercontent.com";
+                        const response = await fetch(urlGithub);
+                        
+                        if (response.ok) {
+                                    const jsonConsolidado = await response.json();
                                     
-                                    const url = `https://brapi.dev/api/quote/${ticker}?range=3mo&interval=1d&token=${token}`;
-                                    const response = await fetch(url);
-                                    
-                                    if (response.ok) {
-                                                const jsonAtivo = await response.json();
-                                                // Se o ativo retornou dados válidos, jogamos para o nosso lote na memória
-                                                if (jsonAtivo.results && jsonAtivo.results[0]) {
-                                                dadosBrutos.results.push(jsonAtivo.results[0]);
-                                                }
-                                    } else {
-                                                console.warn(`⚠️ Não foi possível carregar os dados de ${ticker}`);
+                                    // Se o JSON do GitHub for válido, ele substitui os dados brutos instantaneamente
+                                    if (jsonConsolidado && jsonConsolidado.results) {
+                                                dadosBrutos = jsonConsolidado;
+                                                console.log("🚀 Dados de todos os ativos carregados do GitHub com sucesso!");
                                     }
+                        } else {
+                                    console.error("❌ Falha crítica ao carregar o arquivo dados_ativos.json do GitHub.");
                         }
                         
                         // 1. Verificamos se a Brapi realmente devolveu a lista de resultados
