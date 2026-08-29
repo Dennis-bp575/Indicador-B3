@@ -173,13 +173,13 @@ async function executarScanner() {
                                                                         const amanhaEHoje = dataAmanhaFormatada === agora.toLocaleDateString('pt-BR');
                                                                         console.log(amanhaEHoje);
                                                                         if (!amanhaEHoje) {
-                                                                        console.log("amanhã é hoje");
+                                                                        console.log("amanhã n é hoje");
 
                                                                             registroExistente.resultadoBolsa = ibovAmanha.close > ibovHoje.close ? "subiu" : "desceu";
                                                                             registroExistente.aberturaBolsa = ibovAmanha.open > ibovHoje.close ? "alta" : "baixa";
             
                                                                             let possuiDiaSeguinteNoBanco = historicoSalvo.some(item => item.dataSinal === dataAmanhaFormatada);
-                                                                            
+                                                                            console.log(possuiDiaSeguinteNoBanco)
                                                                             if (!possuiDiaSeguinteNoBanco) {
                                                                                 historicoReatualizado.push({
                                                                                     placar: "AGUARDANDO...",
