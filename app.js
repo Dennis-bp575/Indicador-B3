@@ -536,33 +536,22 @@ function desenharHistoricoNaTela() {
     let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
   
     // Inverte a ordem para exibir o mais recente no topo
-    const historicoInvertido = historicoSalvo.reverse();
+// 1. NÃO inverta o array ainda! Mantenha a ordem cronológica (passado -> presente)
+// Criamos apenas uma cópia rasa para não afetar o array original caso precise dele
+const historicoCronologico = [...historicoSalvo];
 
-    // Captura a data do registro mais recente (o primeiro da lista invertida)
-    if (historicoInvertido.length > 0) {
-        ultimaAtualizacao = historicoInvertido[0].dataSinal;
-    } else {
-        ultimaAtualizacao = "Sem registros";
-    }
+// 2. Captura a data do registro mais recente de forma segura (que está no FIM da ordem cronológica)
+if (historicoCronologico.length > 0) {
+    ultimaAtualizacao = historicoCronologico[historicoCronologico.length - 1].dataSinal;
+} else {
+    ultimaAtualizacao = "Sem registros";
+}
 
-// 🧠 Variável de controle de estado para fluxo invertido (do mais recente para o mais antigo)
+// 🧠 Variável de controle de estado tradicional (Avança do passado para o presente)
 let estadoAtual = "SEM POSIÇÃO"; 
 
-historicoInvertido.forEach(item => {
-    let classeCor = "bg-gray-800 border-gray-700 text-gray-400";
-    
-    if (item.resultadoBolsa && item.resultadoBolsa.includes("subiu")) {
-        classeCor = "bg-emerald-950 bg-opacity-40 border-emerald-800 text-emerald-400";
-    } else if (item.resultadoBolsa && item.resultadoBolsa.includes("desceu")) {
-        classeCor = "bg-rose-950 bg-opacity-40 border-rose-900 text-rose-400";
-    }
-
-    const classeCorAbertura = item.aberturaBolsa?.includes("alta") 
-        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" 
-        : item.aberturaBolsa?.includes("baixa") 
-        ? "bg-orange-500/10 text-orange-400 border border-orange-500/20" 
-        : "bg-gray-800 text-gray-400"; 
-
+// 3. Processamos os estados na ordem em que o mercado aconteceu de verdade
+historicoCronologico.forEach(item => {
     // Processamento matemático dos tokens
     const placar = item.placar; 
     const numeros = placar.split('-').map(Number);
@@ -570,11 +559,9 @@ historicoInvertido.forEach(item => {
     const t2 = numeros[1];
     const t3 = numeros[2];
     const somaTendencia = t2 + t3; 
-    const resultado = `${tokenExaustao} e ${t2}+${t3}=${somaTendencia}`;
 
-    // 1. Identifica o gatilho matemático puramente teórico da linha atual
+    // Identifica o gatilho matemático puro da linha
     let gatilhoLinha = "NEUTRO";
-    
     if (tokenExaustao > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
         gatilhoLinha = "COMPRA_OPEN";
     } else if (tokenExaustao <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
@@ -585,58 +572,76 @@ historicoInvertido.forEach(item => {
         gatilhoLinha = "VENDER";
     }
 
-    // 2. 🧠 Máquina de Estados para Linhas Invertidas (do Presente para o Passado)
+    // 🧠 Máquina de Estados Tradicional (Lendo o passado em direção ao presente)
     if (gatilhoLinha === "COMPRA" || gatilhoLinha === "COMPRA_OPEN") {
-        // Como o topo é o presente, o primeiro "COMPRA" que ele acha de cima para baixo é o dia que disparou o sinal.
-        // As linhas de baixo (que são os dias anteriores) passam a ser o período que você já estava "COMPRADO".
-        if (estadoAtual === "COMPRAR") {
-            estadoAtual = "COMPRADO";
-        } else if (estadoAtual !== "COMPRADO") {
-            estadoAtual = "COMPRAR"; // Marca o início visual do sinal mais recente
+        if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
+            estadoAtual = "COMPRADO"; // Continua mantendo a posição comprada
+        } else {
+            estadoAtual = "COMPRAR"; // Primeiro dia que deu o sinal de compra
         }
     } else if (gatilhoLinha === "TOPANDO") {
-        // Se vínhamos de um estado de COMPRADO/COMPRAR do presente, significa que no passado esse dia foi a venda
-        if (estadoAtual === "COMPRADO" || estadoAtual === "COMPRAR" || estadoAtual === "SEM POSIÇÃO") {
-            estadoAtual = "VENDER TOPADO";
+        if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
+            estadoAtual = "VENDER TOPADO"; // Dispara a venda se estava posicionado
         } else {
-            estadoAtual = "SEM POSIÇÃO"; // Evita que apareça VENDER duas vezes seguidas
+            estadoAtual = "SEM POSIÇÃO"; // Se já não tinha nada, ignora e não duplica a venda
         }
     } else if (gatilhoLinha === "VENDER") {
-        if (estadoAtual === "COMPRADO" || estadoAtual === "COMPRAR" || estadoAtual === "SEM POSIÇÃO") {
-            estadoAtual = "VENDER";
+        if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
+            estadoAtual = "VENDER"; // Dispara o stop/venda real se estava posicionado
         } else {
-            estadoAtual = "SEM POSIÇÃO"; // Limpa a linha imediatamente anterior para não repetir o alerta
+            estadoAtual = "SEM POSIÇÃO"; // Ignora para não aparecer duas vendas seguidas
         }
     } else if (gatilhoLinha === "NEUTRO") {
-        // Se a linha matemática é neutra, ela herda o estado de COMPRADO (mantém posição) 
-        // ou continua sem posição se vínhamos de uma venda.
-        if (estadoAtual === "COMPRADO" || estadoAtual === "COMPRAR") {
-            estadoAtual = "COMPRADO";
+        if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
+            estadoAtual = "COMPRADO"; // Se o mercado acalmou e você comprou antes, continua comprado
         } else {
-            estadoAtual = "SEM POSIÇÃO";
+            estadoAtual = "SEM POSIÇÃO"; // Se vendeu antes, continua zerado
         }
     }
 
-    // 3. Define as etiquetas visualanente corretas baseadas no estado processado
-    let etiquetaSinal = "[⚪SEM POSIÇÃO]";
-    let classeCorEtiqueta = "text-gray-400";
+    // 4. Anexamos as strings de estilo e texto direto no objeto para usarmos depois
+    item.visualSinal = "[⚪SEM POSIÇÃO]";
+    item.visualCorEtiqueta = "text-gray-500 italic";
 
     if (estadoAtual === "COMPRAR") {
-        etiquetaSinal = gatilhoLinha === "COMPRA_OPEN" ? "[🟢COMPRA⚠️Open]" : "[🟢COMPRA]";
-        classeCorEtiqueta = "text-emerald-400 font-bold";
+        item.visualSinal = gatilhoLinha === "COMPRA_OPEN" ? "[🟢COMPRA⚠️Open]" : "[🟢COMPRA]";
+        item.visualCorEtiqueta = "text-emerald-400 font-bold";
     } else if (estadoAtual === "COMPRADO") {
-        etiquetaSinal = "[🟢COMPRADO]";
-        classeCorEtiqueta = "text-emerald-500 bg-emerald-500/5 px-1.5 py-0.5 rounded"; // Um visual limpo de custódia
+        item.visualSinal = "[🟢COMPRADO]";
+        item.visualCorEtiqueta = "text-emerald-500 bg-emerald-500/5 px-1.5 py-0.5 rounded";
     } else if (estadoAtual === "VENDER TOPADO") {
-        etiquetaSinal = "[⚠️VENDER TOPADO]";
-        classeCorEtiqueta = "text-orange-500 font-semibold";
+        item.visualSinal = "[⚠️VENDER TOPADO]";
+        item.visualCorEtiqueta = "text-orange-500 font-semibold";
     } else if (estadoAtual === "VENDER") {
-        etiquetaSinal = "[🚨VENDER🚨]";
-        classeCorEtiqueta = "text-rose-400 font-bold";
-    } else if (estadoAtual === "SEM POSIÇÃO") {
-        etiquetaSinal = "[⚪SEM POSIÇÃO]";
-        classeCorEtiqueta = "text-gray-500 italic";
+        item.visualSinal = "[🚨VENDER🚨]";
+        item.visualCorEtiqueta = "text-rose-400 font-bold";
     }
+});
+
+// 5. 🚀 AGORA SIM! Com todos os estados calculados perfeitamente, invertemos para a exibição na tela
+const historicoInvertido = historicoCronologico.reverse();
+
+// 6. Seu loop de renderização na tela (Agora usando os dados calculados na ordem certa)
+historicoInvertido.forEach(item => {
+    let classeCor = "bg-gray-800 border-gray-700 text-gray-400";
+    if (item.resultadoBolsa && item.resultadoBolsa.includes("subiu")) {
+        classeCor = "bg-emerald-950 bg-opacity-40 border-emerald-800 text-emerald-400";
+    } else if (item.resultadoBolsa && item.resultadoBolsa.includes("desceu")) {
+        classeCor = "bg-rose-950 bg-opacity-40 border-rose-900 text-rose-400";
+    }
+
+    const classeCorAbertura = item.aberturaBolsa?.includes("alta") 
+        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" 
+        : item.aberturaBolsa?.includes("baixa") 
+        ? "bg-orange-500/10 text-orange-400 border border-orange-500/20" 
+        : "bg-gray-800 text-gray-400";
+
+    // Puxa os dados que nossa máquina calculou perfeitamente lá em cima
+    const etiquetaSinal = item.visualSinal;
+    const classeCorEtiqueta = item.visualCorEtiqueta;
+
+    // Continue gerando o HTML do seu card/linha usando as variáveis 'etiquetaSinal' e 'classeCorEtiqueta'...
+
 
 
         tocarBeep();
