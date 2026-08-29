@@ -87,7 +87,7 @@ async function executarScanner() {
                         
                         // 2. Fazemos um único fetch direto para o arquivo unificado no seu GitHub
                         // ATENÇÃO: Substitua 'SEU_USUARIO' e 'SEU_REPOSITORIO' pelos seus dados reais do GitHub
-                        const urlGithub = "https://githubusercontent.com";
+                        const urlGithub = "https://github.io";
                         const response = await fetch(urlGithub);
                         
                         if (response.ok) {
