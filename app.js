@@ -383,7 +383,7 @@ async function executarScanner() {
                                     
                                     
                                     
-                                    localStorage.setItem('historico_B3', JSON.stringify(historicoReatualizado));
+                                    //localStorage.setItem('historico_B3', JSON.stringify(historicoReatualizado));
                                     desenharHistoricoNaTela();
                         } // Fechamento do: if (dadosBrutos.results && Array.isArray...)
             
