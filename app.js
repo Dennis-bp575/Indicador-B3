@@ -82,7 +82,7 @@ async function executarScanner() {
             `;
 
             try {
-                               
+                                    
                                     const response = await fetch('./historicos.json');
                                     const arquivo = await response.json();
                                     
@@ -101,41 +101,7 @@ async function executarScanner() {
                                         }
                                     }
                         
-                                // 2. Mapeia e enriquece a lista do seu JSON local gerado no Sheets
-                                dadosBrutos.results = jsonConsolidado.results.map(ativo => {
-                                    let tickerOriginal = ativo.symbol ? ativo.symbol.trim().toUpperCase() : "";
-                                    
-                                    // Correção crucial: Se o ticker for IBOV, altera para o formato de busca da BrAPI (^BVSP)
-                                    let tickerCorreto = tickerOriginal;
-                                    let nomeCurto = tickerOriginal;
-                                    
-                                    // Ordena o histórico de datas de forma ascendente (do dia mais antigo para o mais recente)
-                                    let historicoOrdenado = [];
-                                    if (ativo.historicalDataPrice) {
-                                        historicoOrdenado = ativo.historicalDataPrice.sort((a, b) => a.date - b.date);
-                                    }
-                        
-                                    // Descobre o preço de fechamento mais recente para injetar na propriedade de mercado real
-                                    let ultimoFechamento = 0;
-                                    if (historicoOrdenado.length > 0) {
-                                        ultimoFechamento = historicoOrdenado[historicoOrdenado.length - 1].close;
-                                    }
-                        
-                                    // Retorna o objeto estritamente envelopado com as propriedades originais capturadas pelo console da BrAPI
-                                    return {
-                                        "symbol": tickerCorreto,
-                                        "shortName": nomeCurto,
-                                        "longName": nomesLongos[tickerOriginal] || (tickerCorreto + " S.A."),
-                                        "currency": "BRL",
-                                        "regularMarketPrice": ultimoFechamento, // Seu código de sinais usava esse campo para buscar o valor de hoje!
-                                        "historicalDataPrice": historicoOrdenado,
-                                        "usedInterval": "1d",
-                                        "usedRange": "3mo"
-                                    };
-                                });
-                        
-                                console.log("🚀 Objeto dadosBrutos reconstruído perfeitamente no padrão BrAPI com 50 ativos!");
-                            }
+
                         // 1. Verificamos se a Brapi realmente devolveu a lista de resultados
                         if (dadosBrutos.results && Array.isArray(dadosBrutos.results)) {
                                     
