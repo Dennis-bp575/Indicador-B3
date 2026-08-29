@@ -270,7 +270,7 @@ async function executarScanner() {
                                                 // ==========================================
                                                 dadosBrutos.results.forEach(ativo => {
                                                             // Se for o Ibov, pula (tratamos ele no fechamento do dia)
-                                                            if (ativo.symbol === "^BVSP") return; 
+                                                            if (ativo.symbol === "IBOV") return; 
                                                             
                                                             const historicoCompleto = ativo.historicalDataPrice;
                                                             if (!historicoCompleto || historicoCompleto.length === 0) return;
@@ -321,6 +321,8 @@ async function executarScanner() {
                                                             let deuMatch = TOKENS_INDICADORES.includes(palavraGerada);
                                                             // console.log(palavraGerada, totalMatchesPalavras);
                                                             if (deuMatch) {
+                                                                        console.log("deu match");
+                                                                        return;
                                                                 const nomeAtivo = ativo.symbol; 
                                                                 const indice = meusAtivos.indexOf(nomeAtivo);
                                                                 const pesoDoAtivo = pesosAtivos[indice];                                      
