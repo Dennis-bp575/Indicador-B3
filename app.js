@@ -288,7 +288,8 @@ async function executarScanner() {
                                                             const c51 = historicoCompleto[idx51];
                                                             const c50 = historicoCompleto[idx50];
                                                             const c49 = historicoCompleto[idx49];
-
+                                                            console.log(c51);
+                                                            return;
                                                             const periodoAlma1 = 9;  
                                                             const periodoAlma2 = 21; 
                                                             const precosFechamento = historicoCompleto.map(c => c.close);
@@ -317,9 +318,7 @@ async function executarScanner() {
                                                                         palavraGerada += v51 > v50 ? "A" : v51 < v50 ? "V" : "I";
                                                                         palavraGerada += v50 > v49 ? "A" : v50 < v49 ? "V" : "I";
                                                             }
-                                                            console.log(palavraGerada);
-                                                            console.log(chavesColunas);
-                                                            return;
+                                                            
                                                             // Verifica match com os tokens matemáticos de 14 letras
                                                             let deuMatch = TOKENS_INDICADORES.includes(palavraGerada);
                                                             // console.log(palavraGerada, totalMatchesPalavras);
