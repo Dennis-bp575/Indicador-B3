@@ -109,12 +109,9 @@ async function executarScanner() {
                                     const historicoCalendario = dadosBrutos.results[0].historicalDataPrice;                    
                                     // Encontramos onde paramos no tempo
                                     const indiceParada = historicoCalendario.findIndex(candle => {
-                                        return new Date(candle.date * 1000).toLocaleDateString('pt-BR') === ultimaAtualizacao;
-                                                console.log("ok");
-                                                return;
+                                        return new Date(candle.date * 1000).toLocaleDateString('pt-BR') === ultimaAtualizacao;    
                                     });
-                                    console.log(ultimaAtualizacao);
-                                    return; 
+                                   
                                     // Criamos a lista com os dias que faltam processar dali para frente!
                                     const diasParaProcessar = historicoCalendario.slice(indiceParada);
                                     let historicoReatualizado;
