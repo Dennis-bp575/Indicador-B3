@@ -219,8 +219,7 @@ async function executarScanner() {
                                                             
                                                             const historicoCompleto = ativo.historicalDataPrice;
                                                             if (!historicoCompleto || historicoCompleto.length === 0) return;
-                                                            console.log(historicoCompleto);
-                                                            return;
+                                                            
                                                             // 1. Procuramos o índice desse dia específico no histórico DESTA ação
                                                             const idx51 = historicoCompleto.findIndex(c => c.date === timestampDoDia);
                                                             
@@ -263,7 +262,8 @@ async function executarScanner() {
                                                                         palavraGerada += v51 > v50 ? "A" : v51 < v50 ? "V" : "I";
                                                                         palavraGerada += v50 > v49 ? "A" : v50 < v49 ? "V" : "I";
                                                             }
-                                                           
+                                                           console.log(palavraGerada)
+                                                                       
                                                             // Verifica match com os tokens matemáticos de 14 letras
                                                             let deuMatch = TOKENS_INDICADORES.includes(palavraGerada);
                                                             // console.log(palavraGerada, totalMatchesPalavras);
