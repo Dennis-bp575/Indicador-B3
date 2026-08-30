@@ -543,11 +543,11 @@ historicoCronologico.forEach(item => {
     let gatilhoLinha = "NEUTRO";
     if (tokenExaustao > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
         gatilhoLinha = "COMPRA_OPEN";
-    } else if (tokenExaustao <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
+    } else if (tokenExaustao <= 1 && (somaTendencia >= 38 && somaTendencia <= 48)) {
         gatilhoLinha = "COMPRA";
     } else if (tokenExaustao <= 2 && somaTendencia > 49) {
         gatilhoLinha = "TOPANDO";
-    } else if (somaTendencia < 13) {
+    } else if (somaTendencia < 10) {
         gatilhoLinha = "VENDER";
     }
 
