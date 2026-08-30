@@ -104,8 +104,42 @@ async function executarScanner() {
 
                         // 1. Verificamos se a Brapi realmente devolveu a lista de resultados
                         if (dadosBrutos.results && Array.isArray(dadosBrutos.results)) {
+
+                                    // 1. Criar o Set com os feriados de 2026 (a partir de 02/02/2026)
+                                    // Utilizamos um Set() porque a busca nele tem performance O(1), ideal para 25k linhas.
+                                    const feriados2026 = new Set([
+                                      "2026-02-16", // Carnaval
+                                      "2026-02-17", // Carnaval
+                                      "2026-04-03", // Sexta-feira Santa
+                                      "2026-04-21", // Tiradentes
+                                      "2026-05-01", // Dia do Trabalho
+                                      "2026-06-04", // Corpus Christi
+                                    ]);
                                     
-                                    const historicoCalendario = dadosBrutos.results[0].historicalDataPrice;                    
+                                    // 2. Função auxiliar para converter o Timestamp Unix (em segundos) para 'AAAA-MM-DD'
+                                    function converterTimestampParaData(timestamp) {
+                                      // Multiplica por 1000 porque o JavaScript usa milissegundos
+                                      const data = new Date(timestamp * 1000); 
+                                      
+                                      // Retorna no formato ISO (AAAA-MM-DD) baseado no fuso horário UTC da API
+                                      return data.toISOString().split('T')[0];
+                                    }
+                                    
+                                    // 3. Filtrar os dados brutos deletando os feriados
+                                    dadosBrutos.results = dadosBrutos.results.map(ativo => {
+                                      return {
+                                        ...ativo,
+                                        historicalDataPrice: ativo.historicalDataPrice.filter(item => {
+                                          const dataFormatada = converterTimestampParaData(item.date);
+                                          return !feriados2026.has(dataFormatada);
+                                        })
+                                      };
+                                    });
+                                    
+                                    // Pronto! A variável 'dadosLimpos' agora contém todo o seu histórico sem os feriados.
+                                    console.log(dadosLimpos);
+
+                                   const historicoCalendario = dadosBrutos.results[0].historicalDataPrice;                    
                                     // Encontramos onde paramos no tempo
                                    const indiceParada = historicoCalendario.findIndex(candle => {
                                                 // 1. Cria a data em UTC/Local de forma segura
