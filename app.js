@@ -136,9 +136,6 @@ async function executarScanner() {
                                       };
                                     });
                                     
-                                    // Pronto! A variável 'dadosLimpos' agora contém todo o seu histórico sem os feriados.
-                                    console.log(dadosLimpos);
-
                                    const historicoCalendario = dadosBrutos.results[0].historicalDataPrice;                    
                                     // Encontramos onde paramos no tempo
                                    const indiceParada = historicoCalendario.findIndex(candle => {
