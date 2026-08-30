@@ -3,16 +3,18 @@
 // ==========================================
 
 // Substitui a lista de 50 planilhas. Adicione os tickers das suas 50 ações aqui.
-const meusAtivos = ["B3SA3", "PETR4", "CSAN3", "ITSA4", "ITUB4",
-            "COGN3", "BBDC4", "CVCB3", "VIVT3", "CMIN3",  
-            "MGLU3", "CSMG3", "NATU3", "ABEV3", "BBAS3",
-            "BBSE3", "CPLE3", "VALE3", "MOTV3", "GOAU4",
-            "SBSP3", "CSNA3", "LREN3", "ASAI3", "VAMO3",
-            "DIRR3", "GGBR4", "EQTL3", "RAPT4", "CYRE3",
-            "AXIA3", "MRVE3", "RENT3", "USIM5", "CEAB3",
-            "EGIE3", "BPAC11", "RADL3", "BRKM5", "PETR3", 
-            "BEEF3", "POMO4", "CMIG4", "PRIO3", "MBRF3",
-            "CPFE3", "ENEV3", "WEGE3", "ALOS3", "IBOV"]; 
+
+const meusAtivos = [
+  "PRIO3", "VBBR3", "PETR4", "CMIN3", "BRKM5", "PETR3", "USIM5", "UGPA3", 
+  "BBDC3", "RAIZ4", "BRAV3", "AURE3", "SANB11", "TAEE11", "B3SA3", "CSAN3", 
+  "ITSA4", "ITUB4", "COGN3", "BBDC4", "CVCB3", "VIVT3", "MGLU3", "CSMG3", 
+  "NATU3", "ABEV3", "BBAS3", "BBSE3", "CPLE3", "VALE3", "MOTV3", "GOAU4", 
+  "SBSP3", "CSNA3", "LREN3", "ASAI3", "VAMO3", "DIRR3", "GGBR4", "EQTL3", 
+  "RAPT4", "CYRE3", "AXIA3", "MRVE3", "RENT3", "CEAB3", "EGIE3", "BPAC11", 
+  "RADL3", "BEEF3", "POMO4", "CMIG4", "MBRF3", "CPFE3", "ENEV3", "WEGE3", 
+  "ALOS3", "5E%IBOV" // Tratado no final da lista
+];
+
 
 const pesosAtivos = [
   2, 3, 2, 2, 3, // B3SA3 (2), PETR4 (3), CSAN3 (2), ITSA4 (2), ITUB4 (3)
@@ -108,12 +110,18 @@ async function executarScanner() {
                                     // 1. Criar o Set com os feriados de 2026 (a partir de 02/02/2026)
                                     // Utilizamos um Set() porque a busca nele tem performance O(1), ideal para 25k linhas.
                                     const feriados2026 = new Set([
+                                      "2025-11-20",
+                                      "2025-24-12",
+                                      "2025-25-12",
+                                      "2025-31-12", 
+                                      "2026-01-01",
                                       "2026-02-16", // Carnaval
                                       "2026-02-17", // Carnaval
                                       "2026-04-03", // Sexta-feira Santa
                                       "2026-04-21", // Tiradentes
                                       "2026-05-01", // Dia do Trabalho
                                       "2026-06-04", // Corpus Christi
+                                                
                                     ]);
                                     
                                     // 2. Função auxiliar para converter o Timestamp Unix (em segundos) para 'AAAA-MM-DD'
