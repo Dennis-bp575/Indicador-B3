@@ -12,7 +12,7 @@ const meusAtivos = [
   "SBSP3", "CSNA3", "LREN3", "ASAI3", "VAMO3", "DIRR3", "GGBR4", "EQTL3", 
   "RAPT4", "CYRE3", "AXIA3", "MRVE3", "RENT3", "CEAB3", "EGIE3", "BPAC11", 
   "RADL3", "BEEF3", "POMO4", "CMIG4", "MBRF3", "CPFE3", "ENEV3", "WEGE3", 
-  "ALOS3", "5E%IBOV" // Tratado no final da lista
+  "ALOS3", "IBOV" // Tratado no final da lista
 ];
 
 
