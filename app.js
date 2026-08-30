@@ -15,18 +15,15 @@ const meusAtivos = [
   "ALOS3", "IBOV" // Tratado no final da lista
 ];
 
-
 const pesosAtivos = [
-  2, 3, 2, 2, 3, // B3SA3 (2), PETR4 (3), CSAN3 (2), ITSA4 (2), ITUB4 (3)
-  1, 2, 1, 2, 1, // COGN3 (1), BBDC4 (2), CVCB3 (1), VIVT3 (2), CMIN3 (1)
-  1, 2, 1, 2, 3, // MGLU3 (1), CSMG3 (2), NATU3 (1), ABEV3 (2), BBAS3 (3)
-  3, 2, 3, 1, 2, // BBSE3 (3), CPLE3 (2), VALE3 (3), MOTV3 (1), GOAU4 (2)
-  2, 1, 2, 2, 1, // SBSP3 (2), CSNA3 (1), LREN3 (2), ASAI3 (2), VAMO3 (1)
-  2, 2, 2, 1, 2, // DIRR3 (2), GGBR4 (2), EQTL3 (2), RAPT4 (1), CYRE3 (2)
-  1, 1, 3, 1, 1, // AXIA3 (1), MRVE3 (1), RENT3 (3), USIM5 (1), CEAB3 (1)
-  3, 2, 3, 1, 3, // EGIE3 (3), BPAC11 (2), RADL3 (3), BRKM5 (1), PETR3 (3)
-  1, 1, 2, 2, 1, // BEEF3 (1), POMO4 (1), CMIG4 (2), PRIO3 (2), MBRF3 (1)
-  2, 1, 3, 2, 0  // CPFE3 (2), ENEV3 (1), WEGE3 (3), ALOS3 (2), %5EBVSP (0)
+  2, 1, 3, 1, 1, 3, 1, 1, // PRIO3 (2), VBBR3 (1*), PETR4 (3), CMIN3 (1), BRKM5 (1), PETR3 (3), USIM5 (1), UGPA3 (1*)
+  1, 1, 1, 1, 1, 1, 2, 2, // BBDC3 (1*), RAIZ4 (1*), BRAV3 (1*), AURE3 (1*), SANB11 (1*), TAEE11 (1*), B3SA3 (2), CSAN3 (2)
+  2, 3, 1, 2, 1, 2, 1, 2, // ITSA4 (2), ITUB4 (3), COGN3 (1), BBDC4 (2), CVCB3 (1), VIVT3 (2), MGLU3 (1), CSMG3 (2)
+  1, 2, 3, 3, 2, 3, 1, 2, // NATU3 (1), ABEV3 (2), BBAS3 (3), BBSE3 (3), CPLE3 (2), VALE3 (3), MOTV3 (1), GOAU4 (2)
+  2, 1, 2, 2, 1, 2, 2, 2, // SBSP3 (2), CSNA3 (1), LREN3 (2), ASAI3 (2), VAMO3 (1), DIRR3 (2), GGBR4 (2), EQTL3 (2)
+  1, 2, 1, 1, 3, 1, 3, 2, // RAPT4 (1), CYRE3 (2), AXIA3 (1), MRVE3 (1), RENT3 (3), CEAB3 (1), EGIE3 (3), BPAC11 (2)
+  3, 1, 1, 2, 1, 2, 1, 3, // RADL3 (3), BEEF3 (1), POMO4 (1), CMIG4 (2), MBRF3 (1), CPFE3 (2), ENEV3 (1), WEGE3 (3)
+  2, 0                    // ALOS3 (2), 5E%IBOV (0)
 ];
 
 
