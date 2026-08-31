@@ -142,7 +142,7 @@ async function executarScanner() {
                                     });
                                     
                                    const historicoCalendario = dadosBrutos.results[0].historicalDataPrice;                    
-                                    // Encontramos onde paramos no tempo
+                                   let aFormatada = "nada"
                                    const indiceParada = historicoCalendario.findIndex(candle => {
                                                 // 1. Cria a data em UTC/Local de forma segura
                                                 const dataObj = new Date(candle.date * 1000);
@@ -153,11 +153,11 @@ async function executarScanner() {
                                                 const ano = dataObj.getFullYear();
                                                 
                                                 const dataFormatadaSegura = `${dia}/${mes}/${ano}`;
-                                                
+                                                aFormatada = dataFormatadaSegura
                                                 // 3. Compara as strings limpas
                                                 return dataFormatadaSegura === ultimaAtualizacao;    
                                     });
-                                
+                                    console.log(aFormatada, ultimaAtualizacao);
                                     // Criamos a lista com os dias que faltam processar dali para frente!
                                     const diasParaProcessar = historicoCalendario.slice(indiceParada);
                                     //console.log(diasParaProcessar);
@@ -208,7 +208,7 @@ async function executarScanner() {
                                                                         const agora = new Date();
                                                                         const horaAtual = agora.getHours();
                                                                         const amanhaEHoje = dataAmanhaFormatada === agora.toLocaleDateString('pt-BR');
-                                                                        console.log(amanhaEHoje);
+                                                                        // console.log(amanhaEHoje);
                                                                         if (!amanhaEHoje) {
                                                                         //console.log("amanhã n é hoje");
 
@@ -216,7 +216,7 @@ async function executarScanner() {
                                                                             registroExistente.aberturaBolsa = ibovAmanha.open > ibovHoje.close ? "alta" : "baixa";
             
                                                                             let possuiDiaSeguinteNoBanco = historicoSalvo.some(item => item.dataSinal === dataAmanhaFormatada);
-                                                                            console.log(possuiDiaSeguinteNoBanco)
+                                                                            // console.log(possuiDiaSeguinteNoBanco)
                                                                             if (!possuiDiaSeguinteNoBanco) {
                                                                                 historicoReatualizado.push({
                                                                                     placar: "AGUARDANDO...",
@@ -241,7 +241,7 @@ async function executarScanner() {
                                     });
 
                                     diasParaProcessar.forEach((diaDoCalendario) => {
-                                                console.log(diasParaProcessar);
+                                                // console.log(diasParaProcessar);
                                                 const timestampDoDia = diaDoCalendario.date; // Dia 10
                                                 
                                                 const dataDesseDia = new Date(timestampDoDia * 1000).toLocaleDateString('pt-BR');
