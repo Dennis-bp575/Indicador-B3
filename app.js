@@ -193,7 +193,8 @@ async function executarScanner() {
                                                         const idxIbov = historicoIbov.findIndex(c => c.date === timestampDoDia);
                                                         
                                                         const idxDiaSeguinte = idxIbov + 1;
-                                                        const dataAmanha = new Date(ibovAmanha.date * 1000).toLocaleDateString('pt-BR');
+                                                        
+                                                        const dataAmanha = new Date(timestampDoDia * 1000).toLocaleDateString('pt-BR');
                                                         console.log(idxDiaSeguinte, idxIbov, dataAmanha, historicoIbov.length)
                                                         if (idxDiaSeguinte > historicoIbov.length) {
                                                         console.log("ok");
