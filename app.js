@@ -188,7 +188,7 @@ async function executarScanner() {
                                                             
                                                     if (dadosIbov && dadosIbov.historicalDataPrice) {
                                                         const historicoIbov = dadosIbov.historicalDataPrice;
-                                                        historicoIbov.sort((a, b) => a.date - b.date);
+                                                        //historicoIbov.sort((a, b) => a.date - b.date);
                                                         // Achamos a posição do dia anterior no histórico do Ibov
                                                         const idxIbov = historicoIbov.findIndex(c => c.date === timestampDoDia);
                                                         
