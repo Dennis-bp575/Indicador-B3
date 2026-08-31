@@ -16,8 +16,8 @@ const meusAtivos = [
 ];
 
 const pesosAtivos = [
-  2, 1, 3, 1, 1, 3, 1, 1, // PRIO3 (2), VBBR3 (1*), PETR4 (3), CMIN3 (1), BRKM5 (1), PETR3 (3), USIM5 (1), UGPA3 (1*)
-  1, 1, 1, 1, 1, 1, 2, 2, // BBDC3 (1*), RAIZ4 (1*), BRAV3 (1*), AURE3 (1*), SANB11 (1*), TAEE11 (1*), B3SA3 (2), CSAN3 (2)
+  2, 3, 3, 1, 1, 3, 1, 3, // PRIO3 (2), VBBR3 (1*), PETR4 (3), CMIN3 (1), BRKM5 (1), PETR3 (3), USIM5 (1), UGPA3 (1*)
+  3, 1, 2, 1, 2, 2, 2, 2, // BBDC3 (1*), RAIZ4 (1*), BRAV3 (1*), AURE3 (1*), SANB11 (1*), TAEE11 (1*), B3SA3 (2), CSAN3 (2)
   2, 3, 1, 2, 1, 2, 1, 2, // ITSA4 (2), ITUB4 (3), COGN3 (1), BBDC4 (2), CVCB3 (1), VIVT3 (2), MGLU3 (1), CSMG3 (2)
   1, 2, 3, 3, 2, 3, 1, 2, // NATU3 (1), ABEV3 (2), BBAS3 (3), BBSE3 (3), CPLE3 (2), VALE3 (3), MOTV3 (1), GOAU4 (2)
   2, 1, 2, 2, 1, 2, 2, 2, // SBSP3 (2), CSNA3 (1), LREN3 (2), ASAI3 (2), VAMO3 (1), DIRR3 (2), GGBR4 (2), EQTL3 (2)
