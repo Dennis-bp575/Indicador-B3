@@ -194,7 +194,7 @@ async function executarScanner() {
                                                         
                                                         const idxDiaSeguinte = idxIbov + 1;
                                                         console.log(idxDiaSeguinte, idxIbov, timestampDoDia)
-                                                        if (idxDiaSeguinte < historicoIbov.length) {
+                                                        if (idxDiaSeguinte > historicoIbov.length) {
                                                         //console.log("ok");
                                                                         const ibovAmanha = historicoIbov[idxDiaSeguinte]; // O dia 11 real!
                                                                         const ibovHoje = historicoIbov[idxIbov];         // O dia 10 real
