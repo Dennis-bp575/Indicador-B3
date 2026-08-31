@@ -157,7 +157,7 @@ async function executarScanner() {
                                                 // 3. Compara as strings limpas
                                                 return dataFormatadaSegura === ultimaAtualizacao;    
                                     });
-                                    console.log(aFormatada, ultimaAtualizacao);
+                                    //console.log(aFormatada, ultimaAtualizacao);
                                     // Criamos a lista com os dias que faltam processar dali para frente!
                                     const diasParaProcessar = historicoCalendario.slice(indiceParada);
                                     //console.log(diasParaProcessar);
@@ -193,10 +193,7 @@ async function executarScanner() {
                                                         const idxIbov = historicoIbov.findIndex(c => c.date === timestampDoDia);
                                                         
                                                         const idxDiaSeguinte = idxIbov + 1;
-                                                
-                                                        //gravUltimoResult = false
-                                                        //calculaUltimoResult = false       
-                                                        //console.log(idxDiaSeguinte, historicoIbov.length);
+                                                        console.log(idxDiaSeguinte, idxIbov, timestampDoDia)
                                                         if (idxDiaSeguinte < historicoIbov.length) {
                                                         //console.log("ok");
                                                                         const ibovAmanha = historicoIbov[idxDiaSeguinte]; // O dia 11 real!
@@ -217,6 +214,7 @@ async function executarScanner() {
             
                                                                             let possuiDiaSeguinteNoBanco = historicoSalvo.some(item => item.dataSinal === dataAmanhaFormatada);
                                                                             // console.log(possuiDiaSeguinteNoBanco)
+                                                                           
                                                                             if (!possuiDiaSeguinteNoBanco) {
                                                                                 historicoReatualizado.push({
                                                                                     placar: "AGUARDANDO...",
