@@ -188,12 +188,13 @@ async function executarScanner() {
                                                             
                                                     if (dadosIbov && dadosIbov.historicalDataPrice) {
                                                         const historicoIbov = dadosIbov.historicalDataPrice;
-                                                        //historicoIbov.sort((a, b) => a.date - b.date);
+                                                        historicoIbov.sort((a, b) => a.date - b.date);
                                                         // Achamos a posição do dia anterior no histórico do Ibov
                                                         const idxIbov = historicoIbov.findIndex(c => c.date === timestampDoDia);
                                                         
                                                         const idxDiaSeguinte = idxIbov + 1;
-                                                        console.log(idxDiaSeguinte, idxIbov, timestampDoDia)
+                                                        const dataAmanha = new Date(ibovAmanha.date * 1000).toLocaleDateString('pt-BR');
+                                                        console.log(idxDiaSeguinte, idxIbov, dataAmanha, historicoIbov.length)
                                                         if (idxDiaSeguinte > historicoIbov.length) {
                                                         console.log("ok");
                                                                         const ibovAmanha = historicoIbov[idxDiaSeguinte]; // O dia 11 real!
