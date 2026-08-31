@@ -205,7 +205,8 @@ async function executarScanner() {
                                                                         const agora = new Date();
                                                                         const horaAtual = agora.getHours();
                                                                         const amanhaEHoje = dataAmanhaFormatada === agora.toLocaleDateString('pt-BR');
-                                                                        // console.log(amanhaEHoje);
+                                                                        console.log("amanhã é hj?")
+                                                                        console.log(amanhaEHoje);
                                                                         if (!amanhaEHoje) {
                                                                         //console.log("amanhã n é hoje");
 
