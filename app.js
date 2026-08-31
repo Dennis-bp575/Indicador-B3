@@ -195,13 +195,13 @@ async function executarScanner() {
                                                         const idxDiaSeguinte = idxIbov + 1;
                                                         console.log(idxDiaSeguinte, idxIbov, timestampDoDia)
                                                         if (idxDiaSeguinte > historicoIbov.length) {
-                                                        //console.log("ok");
+                                                        console.log("ok");
                                                                         const ibovAmanha = historicoIbov[idxDiaSeguinte]; // O dia 11 real!
                                                                         const ibovHoje = historicoIbov[idxIbov];         // O dia 10 real
-                                                            
+                                                                        
                                                                         const dataAmanhaFormatada = new Date(ibovAmanha.date * 1000).toLocaleDateString('pt-BR');
                                                                         //console.log(dataAmanhaFormatada);
-
+                                                                        console.log(ibovHoje, ibovAmanha, dataAmanhaFormatada)
                                                                         const agora = new Date();
                                                                         const horaAtual = agora.getHours();
                                                                         const amanhaEHoje = dataAmanhaFormatada === agora.toLocaleDateString('pt-BR');
