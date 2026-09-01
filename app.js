@@ -158,14 +158,13 @@ async function executarScanner() {
                                                 // 3. Compara as strings limpas
                                                 return dataFormatadaSegura === ultimaAtualizacao;    
                                     });
-                                    //console.log(aFormatada, ultimaAtualizacao);
-                                    // Criamos a lista com os dias que faltam processar dali para frente!
-                                    const diasParaProcessar = historicoCalendario.slice(indiceParada);
-                                    //console.log(diasParaProcessar);
-                                    //console.log(historicoCalendario);
-                                    //console.log(ultimaAtualizacao);
-                                    //let historicoReatualizado;
-                                    console.log(`[LocalStorage] 📖 Lendo às: ${performance.now()}`);
+                                   
+                                    // O slice(0, indiceParada) pega do dia mais recente (índice 0) até o dia que você parou.
+                                    // O .reverse() é opcional, mas excelente se você quiser processar do mais antigo para o mais novo.
+                                    const diasParaProcessar = historicoCalendario.slice(0, indiceParada).reverse();
+
+                                    
+
                                     let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
                                     //historicoReatualizado = structuredClone(historicoSalvo);
 
