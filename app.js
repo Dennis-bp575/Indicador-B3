@@ -408,14 +408,14 @@ async function executarScanner() {
                                                         placar: placarFormatado,
                                                         dataSinal: dataDesseDia,       
                                                     };
-                                                   // console.log(`✅ Item encontrado no índice ${index} e atualizado com sucesso!`);
+                                                    console.log(`✅ Item encontrado no índice ${index} e atualizado com sucesso!`);
                                                 } else {
-                                                  //  console.warn(`❌ Mesmo com o trim, a data "${timestampDoDia}" não foi encontrada no histórico.`);
+                                                  console.warn(`❌ Mesmo com o trim, a data "${timestampDoDia}" não foi encontrada no histórico.`);
                                                 }
                                                                                                 
                                                 
                                                 
-                                              //  console.log(`🔮 Novo sinal gerado para ${dataDesseDia} com o placar: ${placarFormatado}`);
+                                                console.log(`🔮 Novo sinal gerado para ${dataDesseDia} com o placar: ${placarFormatado}`);
                                                
                                     });
                                   //  console.log("Chegamos aqui?")
