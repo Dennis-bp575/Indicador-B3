@@ -192,7 +192,7 @@ async function executarScanner() {
                                                         // Achamos a posição do dia anterior no histórico do Ibov
                                                         const idxIbov = historicoIbov.findIndex(c => c.date === timestampDoDia);
                                                         
-                                                        const idxDiaSeguinte = idxIbov + 1;
+                                                        const idxDiaSeguinte = idxIbov;
                                                         
                                                         const dataAmanha = new Date(timestampDoDia * 1000).toLocaleDateString('pt-BR');
                                                         console.log(idxDiaSeguinte, idxIbov, dataAmanha, historicoIbov.length)
