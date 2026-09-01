@@ -561,12 +561,8 @@ historicoCronologico.forEach(item => {
     const num4_soma = numeros[3] || (tokenExaustao + t2);
     const num5_close = numeros[4] || 0;
     const num6_total = numeros[5] || (num4_soma + t3);
-    
-    // Variável base de controle do seu robô
+
     const somaTendencia = t2 + t3; 
-    
-    // 2. Análise de Probabilidade Preditiva (Filtro de Exaustão de Tendência)
-    // Se t3 salta para dois dígitos, o risco de exaustão/reversão imediata dispara
     const altaProbabilidadeExaustao = (t3 >= 7);
     
     // 3. Mecanismo de Decisão (Gatilho da Linha)
@@ -579,15 +575,15 @@ historicoCronologico.forEach(item => {
         gatilhoLinha = "TOPANDO";
     
     // Categoria B: Gatilhos de Entrada Condicional de Abertura
-    } else if (tokenExaustao > t2 && somaTendencia >= compraOpen_1 && t3 > t2 && somaTendencia <= compraOpen_2) {
-        gatilhoLinha = "COMPRA_OPEN";
+    //} else if (tokenExaustao > t2 && somaTendencia >= compraOpen_1 && t3 > t2 && somaTendencia <= compraOpen_2) {
+        //gatilhoLinha = "COMPRA_OPEN";
     
     // Categoria C: Gatilhos de Entrada em Tendência Direcional Confiável
     } else if (!altaProbabilidadeExaustao && tokenExaustao <= compra_1 && (somaTendencia >= compra_2 && somaTendencia <= compra_3)) {
         gatilhoLinha = "COMPRA";
     
     // Categoria D: Filtros de Força Bruta (Volume de Rompimento)
-    } else if (tokenExaustao > compra_4 || t2 > compra_4) {
+    } else if (t2 > compra_4) {
         gatilhoLinha = "COMPRA";
     } else if (tokenExaustao > compra_5 && tokenExaustao > t2 && t3 > t2) {
         gatilhoLinha = "COMPRA";
