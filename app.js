@@ -444,14 +444,15 @@ async function executarScanner() {
                         botaoAtualizar.disabled = false;
                         botaoAtualizar.innerHTML = `<span>Atualizar Scanner</span>`;
             }
-            if (!blocoResultadoAtual) { console.log("Deu Ruim"); }
+  
+            
             if (blocoResultadoAtual) {
 
                 const t2 = totalMatchesPalavras;
                 const t3 = totalMatchesFonteSecundaria;
                 const somaTendencia = t2 + t3; 
                 const resultado = `${totalReversoesCandle} e ${t2}+${t3}=${somaTendencia}`;
-                
+                console.log(resultado);
                 // 🧠 Lógica Dinâmica das Etiquetas de Previsão
                 let etiquetaSinal = "[⚪NEUTRO]";
                 let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
