@@ -164,6 +164,7 @@ async function executarScanner() {
                                     //console.log(historicoCalendario);
                                     //console.log(ultimaAtualizacao);
                                     //let historicoReatualizado;
+                                    console.log(`[LocalStorage] 📖 Lendo às: ${performance.now()}`);
                                     let historicoSalvo = JSON.parse(localStorage.getItem('historico_B3')) || [];
                                     //historicoReatualizado = structuredClone(historicoSalvo);
 
@@ -195,7 +196,7 @@ async function executarScanner() {
                                                         const idxDiaSeguinte = idxIbov + 1;
                                                         
                                                         const dataAmanha = new Date(timestampDoDia * 1000).toLocaleDateString('pt-BR');
-                                                        console.log(idxDiaSeguinte, idxIbov, dataAmanha, historicoIbov.length)
+                                                        //console.log(idxDiaSeguinte, idxIbov, dataAmanha, historicoIbov.length)
                                                         if (idxDiaSeguinte < historicoIbov.length) {
                                                         console.log("ok");
                                                                         const ibovAmanha = historicoIbov[idxDiaSeguinte]; // O dia 11 real!
@@ -421,7 +422,7 @@ async function executarScanner() {
                                   //  console.log("Chegamos aqui?")
                                     
                                     
-                                    
+                                    console.log(`[LocalStorage] 💾 Gravando às: ${performance.now()}`);
                                     localStorage.setItem('historico_B3', JSON.stringify(historicoReatualizado));
                                     desenharHistoricoNaTela();
                         } // Fechamento do: if (dadosBrutos.results && Array.isArray...)
