@@ -70,6 +70,7 @@ async function executarScanner() {
             let dataDesseDiaGlobal;
             let calculaUltimoResult;
             let gravaUltimoResult;
+            let placarFormatado = "";
         
             
             botaoAtualizar.disabled = true;
@@ -394,7 +395,7 @@ async function executarScanner() {
 
                                                 // 1. Buscamos o histórico atualizado do localStorage para não atropelar dados
                                                 //let historicoAtual = JSON.parse(localStorage.getItem('historico_B3')) || [];
-                                                const placarFormatado = `${totalMatchesPalavras}-${totalMatchesFonteSecundaria}-${totalReversoesCandle}`;
+                                                placarFormatado = `${totalMatchesPalavras}-${totalMatchesFonteSecundaria}-${totalReversoesCandle}`;
                                                 
                                                 const agora = new Date();
                                                 const horaAtual = agora.getHours();
@@ -452,7 +453,8 @@ async function executarScanner() {
                 const t3 = totalMatchesFonteSecundaria;
                 const somaTendencia = t2 + t3; 
                 const resultado = `${totalReversoesCandle} e ${t2}+${t3}=${somaTendencia}`;
-                console.log(resultado);
+                console.log(placarFormatado);
+                
                 // 🧠 Lógica Dinâmica das Etiquetas de Previsão
                 let etiquetaSinal = "[⚪NEUTRO]";
                 let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
