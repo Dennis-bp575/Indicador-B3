@@ -575,8 +575,8 @@ historicoCronologico.forEach(item => {
         gatilhoLinha = "TOPANDO";
     
     // Categoria B: Gatilhos de Entrada Condicional de Abertura
-    //} else if (tokenExaustao > t2 && somaTendencia >= compraOpen_1 && t3 > t2 && somaTendencia <= compraOpen_2) {
-        //gatilhoLinha = "COMPRA_OPEN";
+    } else if (tokenExaustao > t2 && somaTendencia >= compraOpen_1 && t3 > t2 && somaTendencia <= compraOpen_2) {
+        gatilhoLinha = "COMPRA_OPEN";
     
     // Categoria C: Gatilhos de Entrada em Tendência Direcional Confiável
     } else if (!altaProbabilidadeExaustao && tokenExaustao <= compra_1 && (somaTendencia >= compra_2 && somaTendencia <= compra_3)) {
