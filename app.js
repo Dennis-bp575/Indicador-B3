@@ -235,11 +235,11 @@ async function executarScanner() {
                                                                                     aberturaBolsa: "...",
                                                                                     resultadoBolsa: "..."
                                                                                 });
-                                                                                console.log(`📅 Criada base em 'AGUARDANDO...' para o dia posterior: ${dataAmanhaFormatada}`);
+                                                                                //console.log(`📅 Criada base em 'AGUARDANDO...' para o dia posterior: ${dataAmanhaFormatada}`);
                                                                             }
                                                                    
                                                                             //localStorage.setItem('historico_B3', JSON.stringify(historicoReatualizado));
-                                                                            console.log(`✅ Palpite do dia ${dataDesseDia} validado com o resultado do dia ${dataAmanhaFormatada}!`);
+                                                                            //console.log(`✅ Palpite do dia ${dataDesseDia} validado com o resultado do dia ${dataAmanhaFormatada}!`);
                                                                         }
                                                         } else {
                                                                 
@@ -547,31 +547,55 @@ let resultado = ""
 // 3. Processamos os estados na ordem em que o mercado aconteceu de verdade
 historicoCronologico.forEach(item => {
     // Processamento matemático dos tokens
+    // 1. Extração e Tratamento dos Dados do Placar
     const placar = item.placar; 
-    const numeros = placar.split('-').map(Number);
+    // Divide considerando que pode haver espaços ou traços no padrão completo
+    const partesPlacar = placar.replace(/\s+/g, '-').split('-');
+    const numeros = partesPlacar.map(Number);
+    
     const tokenExaustao = numeros[0]; 
     const t2 = numeros[1];
     const t3 = numeros[2];
+    
+    // Extensões pós-espaço mapeadas caso o placar venha completo (ex: 8-56-1 64 57 65)
+    const num4_soma = numeros[3] || (tokenExaustao + t2);
+    const num5_close = numeros[4] || 0;
+    const num6_total = numeros[5] || (num4_soma + t3);
+    
+    // Variável base de controle do seu robô
     const somaTendencia = t2 + t3; 
     
-
-    // Identifica o gatilho matemático puro da linha
+    // 2. Análise de Probabilidade Preditiva (Filtro de Exaustão de Tendência)
+    // Se t3 salta para dois dígitos, o risco de exaustão/reversão imediata dispara
+    const altaProbabilidadeExaustao = (t3 >= 7);
+    
+    // 3. Mecanismo de Decisão (Gatilho da Linha)
     let gatilhoLinha = "NEUTRO";
-    if (tokenExaustao > t2 && somaTendencia >= compraOpen_1 && t3 > t2 && somaTendencia <= compraOpen_2) {
-        gatilhoLinha = "COMPRA_OPEN";
-    } else if (tokenExaustao <= compra_1 && (somaTendencia >= compra_2 && somaTendencia <= compra_3)) {
-        gatilhoLinha = "COMPRA";
+    
+    // Categoria A: Gatilhos de Saída de Emergência e Trava de Prejuízo (Prioridade Máxima)
+    if (somaTendencia < vender_1 || (altaProbabilidadeExaustao && gatilhoLinha === "NEUTRO" && tokenExaustao < t2)) {
+        gatilhoLinha = "VENDER";
     } else if (tokenExaustao <= topando_1 && somaTendencia > topando_2) {
         gatilhoLinha = "TOPANDO";
-    } else if (somaTendencia < vender_1) {
-        gatilhoLinha = "VENDER";
-      } else if (tokenExaustao > compra_4) {
+    
+    // Categoria B: Gatilhos de Entrada Condicional de Abertura
+    } else if (tokenExaustao > t2 && somaTendencia >= compraOpen_1 && t3 > t2 && somaTendencia <= compraOpen_2) {
+        gatilhoLinha = "COMPRA_OPEN";
+    
+    // Categoria C: Gatilhos de Entrada em Tendência Direcional Confiável
+    } else if (!altaProbabilidadeExaustao && tokenExaustao <= compra_1 && (somaTendencia >= compra_2 && somaTendencia <= compra_3)) {
         gatilhoLinha = "COMPRA";
-      } else if (t2 > compra_4) {
+    
+    // Categoria D: Filtros de Força Bruta (Volume de Rompimento)
+    } else if (tokenExaustao > compra_4 || t2 > compra_4) {
         gatilhoLinha = "COMPRA";
-      } else if (tokenExaustao > compra_5 && tokenExaustao > t2 && t3 > t2) {
+    } else if (tokenExaustao > compra_5 && tokenExaustao > t2 && t3 > t2) {
         gatilhoLinha = "COMPRA";
     }
+    
+    // 4. Diagnóstico Auxiliar no Console para Validação de Backtesting
+    //console.log(`[ANALISADOR] Data: ${item.date} | Gatilho: ${gatilhoLinha} | Exaustão(t3): ${t3} (${altaProbabilidadeExaustao ? '⚠️ALTA' : '🟢OK'})`);
+
 
     // 🧠 Máquina de Estados Tradicional (Lendo o passado em direção ao presente)
     if (gatilhoLinha === "COMPRA" || gatilhoLinha === "COMPRA_OPEN") {
