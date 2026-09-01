@@ -412,7 +412,7 @@ async function executarScanner() {
                                                     };
                                                     //console.log(`✅ Item encontrado no índice ${index} e atualizado com sucesso!`);
                                                 } else {
-                                                  console.warn(`❌ Mesmo com o trim, a data "${timestampDoDia}" não foi encontrada no histórico.`);
+                                                  console.warn(`❌ Mesmo com o trim, a data "${dataDesseDia}" não foi encontrada no histórico.`);
                                                 }
                                                                                                 
                                                 
