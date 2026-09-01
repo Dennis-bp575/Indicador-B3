@@ -394,7 +394,7 @@ async function executarScanner() {
 
                                                 // 1. Buscamos o histórico atualizado do localStorage para não atropelar dados
                                                 //let historicoAtual = JSON.parse(localStorage.getItem('historico_B3')) || [];
-                                                placarFormatado = `${totalMatchesPalavras}-${totalMatchesFonteSecundaria}-${totalReversoesCandle}`;
+                                                placarFormatado = `${totalReversoesCandle}-${totalMatchesFonteSecundaria}-${totalMatchesPalavras}`;
 
                                                 const index = historicoReatualizado.findIndex(c => 
                                                     String(c.dataSinal).trim() === String(dataDesseDia).trim()
@@ -419,7 +419,7 @@ async function executarScanner() {
                                   //  console.log("Chegamos aqui?")
                                     
                                     
-                                    console.log(`[LocalStorage] 💾 Gravando às: ${performance.now()}`);
+                                    //console.log(`[LocalStorage] 💾 Gravando às: ${performance.now()}`);
                                     localStorage.setItem('historico_B3', JSON.stringify(historicoReatualizado));
                                     desenharHistoricoNaTela();
                         } // Fechamento do: if (dadosBrutos.results && Array.isArray...)
