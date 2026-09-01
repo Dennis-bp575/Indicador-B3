@@ -407,7 +407,7 @@ async function executarScanner() {
                                                 const index = historicoReatualizado.findIndex(c => 
                                                     String(c.dataSinal).trim() === String(dataDesseDia).trim()
                                                 );
-                                                console.log(index, placarFormatado); 
+                                                
                                                 if (index !== -1) {
                                                     historicoReatualizado[index] = {
                                                         ...historicoReatualizado[index],
@@ -628,7 +628,9 @@ historicoInvertido.forEach(item => {
     const t2 = numeros[1];
     const t3 = numeros[2];
     const somaTendencia = t2 + t3; 
-    resultado = `${tokenExaustao} e ${t2}+${t3}=${somaTendencia}`;
+    const somaTotal = tokenExaustao + t2 + t3; 
+    const somaInicio = tokenExaustao + t2; 
+    resultado = `${tokenExaustao} ${somaInicio} ${t2}+${t3}=${somaTendencia} ${somaTotal}`;
 
 
     let classeCor = "bg-gray-800 border-gray-700 text-gray-400";
