@@ -192,7 +192,7 @@ async function executarScanner() {
                                                         // Achamos a posição do dia anterior no histórico do Ibov
                                                         const idxIbov = historicoIbov.findIndex(c => c.date === timestampDoDia);
                                                         
-                                                        const idxDiaSeguinte = idxIbov;
+                                                        const idxDiaSeguinte = idxIbov + 1;
                                                         
                                                         const dataAmanha = new Date(timestampDoDia * 1000).toLocaleDateString('pt-BR');
                                                         console.log(idxDiaSeguinte, idxIbov, dataAmanha, historicoIbov.length)
@@ -210,14 +210,14 @@ async function executarScanner() {
                                                                         console.log("amanhã é hj?")
                                                                         console.log(amanhaEHoje);
                                                                         if (!amanhaEHoje) {
-                                                                        //console.log("amanhã n é hoje");
+                                                                        
 
                                                                             registroExistente.resultadoBolsa = ibovAmanha.close > ibovHoje.close ? "subiu" : "desceu";
                                                                             registroExistente.aberturaBolsa = ibovAmanha.open > ibovHoje.close ? "alta" : "baixa";
             
                                                                             let possuiDiaSeguinteNoBanco = historicoSalvo.some(item => item.dataSinal === dataAmanhaFormatada);
                                                                             // console.log(possuiDiaSeguinteNoBanco)
-                                                                           
+                                                                            console.log("possuiDiaSeguinteNoBanco");
                                                                             if (!possuiDiaSeguinteNoBanco) {
                                                                                 historicoReatualizado.push({
                                                                                     placar: "AGUARDANDO...",
