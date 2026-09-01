@@ -217,7 +217,7 @@ async function executarScanner() {
             
                                                                             let possuiDiaSeguinteNoBanco = historicoSalvo.some(item => item.dataSinal === dataAmanhaFormatada);
                                                                             // console.log(possuiDiaSeguinteNoBanco)
-                                                                            console.log("possuiDiaSeguinteNoBanco");
+                                                                            console.log(possuiDiaSeguinteNoBanco);
                                                                             if (!possuiDiaSeguinteNoBanco) {
                                                                                 historicoReatualizado.push({
                                                                                     placar: "AGUARDANDO...",
