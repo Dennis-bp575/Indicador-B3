@@ -203,12 +203,12 @@ async function executarScanner() {
                                                                         
                                                                         const dataAmanhaFormatada = new Date(ibovAmanha.date * 1000).toLocaleDateString('pt-BR');
                                                                         //console.log(dataAmanhaFormatada);
-                                                                        console.log(dataAmanhaFormatada)
+                                                                        //console.log(dataAmanhaFormatada)
                                                                         const agora = new Date();
                                                                         const horaAtual = agora.getHours();
                                                                         const amanhaEHoje = dataAmanhaFormatada === agora.toLocaleDateString('pt-BR');
-                                                                        console.log("amanhã é hj?")
-                                                                        console.log(amanhaEHoje);
+                                                                        //console.log("amanhã é hj?")
+                                                                        //console.log(amanhaEHoje);
                                                                         if (!amanhaEHoje) {
                                                                         
 
@@ -217,7 +217,7 @@ async function executarScanner() {
             
                                                                             let possuiDiaSeguinteNoBanco = historicoSalvo.some(item => item.dataSinal === dataAmanhaFormatada);
                                                                             // console.log(possuiDiaSeguinteNoBanco)
-                                                                            console.log(possuiDiaSeguinteNoBanco);
+                                                                            //console.log(possuiDiaSeguinteNoBanco);
                                                                             if (!possuiDiaSeguinteNoBanco) {
                                                                                 historicoReatualizado.push({
                                                                                     placar: "AGUARDANDO...",
@@ -240,7 +240,8 @@ async function executarScanner() {
                                                 }   
                                                 
                                     });
-
+                                    console.log(diaDoCalendario);
+                                    return;
                                     diasParaProcessar.forEach((diaDoCalendario) => {
                                                 // console.log(diasParaProcessar);
                                                 const timestampDoDia = diaDoCalendario.date; // Dia 10
