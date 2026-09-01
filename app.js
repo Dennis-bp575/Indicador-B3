@@ -60,7 +60,8 @@ const compra_3     = 55 //49
 const topando_1    = 2
 const topando_2    = 60 //55
 const vender_1     = 13 //10
-  
+const compra_4     = 40
+const compra_5     = 15
 desenharHistoricoNaTela();
 // ==========================================
 // 3. FUNÇÃO PRINCIPAL DO SCANNER
@@ -556,7 +557,7 @@ historicoCronologico.forEach(item => {
 
     // Identifica o gatilho matemático puro da linha
     let gatilhoLinha = "NEUTRO";
-    if (tokenExaustao > t2 && somaTendencia >= compraOpen_1 && t3 > t2 && compraOpen_2 <= 60) {
+    if (tokenExaustao > t2 && somaTendencia >= compraOpen_1 && t3 > t2 && somaTendencia <= compraOpen_2) {
         gatilhoLinha = "COMPRA_OPEN";
     } else if (tokenExaustao <= compra_1 && (somaTendencia >= compra_2 && somaTendencia <= compra_3)) {
         gatilhoLinha = "COMPRA";
@@ -564,6 +565,12 @@ historicoCronologico.forEach(item => {
         gatilhoLinha = "TOPANDO";
     } else if (somaTendencia < vender_1) {
         gatilhoLinha = "VENDER";
+      } else if (tokenExaustao > compra_4) {
+        gatilhoLinha = "COMPRA";
+      } else if (t2 > compra_4) {
+        gatilhoLinha = "COMPRA";
+      } else if (tokenExaustao > compra_5 && tokenExaustao > t2 && t3 > t2) {
+        gatilhoLinha = "COMPRA";
     }
 
     // 🧠 Máquina de Estados Tradicional (Lendo o passado em direção ao presente)
