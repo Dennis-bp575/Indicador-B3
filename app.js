@@ -244,8 +244,8 @@ async function executarScanner() {
                                     
                                     
                                     diasParaProcessar.forEach((diaDoCalendario) => {
-                                                console.log(diasParaProcessar);
-                                                console.log(diaDoCalendario);
+                                                //console.log(diasParaProcessar);
+                                                //console.log(diaDoCalendario);
                                                 const timestampDoDia = diaDoCalendario.date; // Dia 10
                                                 
                                                 const dataDesseDia = new Date(timestampDoDia * 1000).toLocaleDateString('pt-BR');
@@ -399,7 +399,7 @@ async function executarScanner() {
                                                 const index = historicoReatualizado.findIndex(c => 
                                                     String(c.dataSinal).trim() === String(dataDesseDia).trim()
                                                 );
-                                                
+                                                console.log(index, placarFormatado); 
                                                 if (index !== -1) {
                                                     historicoReatualizado[index] = {
                                                         ...historicoReatualizado[index],
