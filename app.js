@@ -52,7 +52,15 @@ const botaoAtualizar = document.getElementById('btn-atualizar');
 const blocoResultadoAtual = document.getElementById('resultado-atual');
 const blocoListaHistorico = document.getElementById('lista-historico');
 let ultimaAtualizacao = null;
-
+const compraOpen_1 = 30 //25
+const compraOpen_2 = 60
+const compra_1     = 2
+const compra_2     = 35
+const compra_3     = 55 //49
+const topando_1    = 2
+const topando_2    = 60 //55
+const vender_1     = 13 //10
+  
 desenharHistoricoNaTela();
 // ==========================================
 // 3. FUNÇÃO PRINCIPAL DO SCANNER
@@ -454,21 +462,21 @@ async function executarScanner() {
                 let etiquetaSinal = "[⚪NEUTRO]";
                 let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
 
-                if (totalReversoesCandle > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
+                if (totalReversoesCandle > t2 && somaTendencia >= compraOpen_1 && t3 > t2 && somaTendencia <= compraOpen_2) {
                     etiquetaSinal = "[🟢Mantém⚠️]";
                     classeCorEtiqueta = "text-emerald-400"; // Destaca em verde
                 } 
-                if (totalReversoesCandle <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
+                if (totalReversoesCandle <= compra_1 && (somaTendencia >= compra_2 && somaTendencia <= compra_3)) {
                     // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
                     etiquetaSinal = "[🟢Mantém]";
                     classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
                 }
                         
-                if (totalReversoesCandle <= 2 && somaTendencia > 49) {
+                if (totalReversoesCandle <= topando_1 && somaTendencia > topando_2) {
                     etiquetaSinal = "[⚠️TOPO]";
                     classeCorEtiqueta = "text-orange-600"; // Destaca em rosa/vermelho
                 }
-                if (somaTendencia < 10) {
+                if (somaTendencia < vender_1) {
                     etiquetaSinal = "[🚨VENDER🚨]";
                     classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
                 }
@@ -548,13 +556,13 @@ historicoCronologico.forEach(item => {
 
     // Identifica o gatilho matemático puro da linha
     let gatilhoLinha = "NEUTRO";
-    if (tokenExaustao > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
+    if (tokenExaustao > t2 && somaTendencia >= compraOpen_1 && t3 > t2 && compraOpen_2 <= 60) {
         gatilhoLinha = "COMPRA_OPEN";
-    } else if (tokenExaustao <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
+    } else if (tokenExaustao <= compra_1 && (somaTendencia >= compra_2 && somaTendencia <= compra_3)) {
         gatilhoLinha = "COMPRA";
-    } else if (tokenExaustao <= 2 && somaTendencia > 49) {
+    } else if (tokenExaustao <= topando_1 && somaTendencia > topando_2) {
         gatilhoLinha = "TOPANDO";
-    } else if (somaTendencia < 10) {
+    } else if (somaTendencia < vender_1) {
         gatilhoLinha = "VENDER";
     }
 
