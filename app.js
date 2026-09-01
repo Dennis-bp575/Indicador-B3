@@ -245,7 +245,7 @@ async function executarScanner() {
                                     
                                     diasParaProcessar.forEach((diaDoCalendario) => {
                                                 // console.log(diasParaProcessar);
-                                                console.log(diaDoCalendario);
+                                                //console.log(diaDoCalendario);
                                                 const timestampDoDia = diaDoCalendario.date; // Dia 10
                                                 
                                                 const dataDesseDia = new Date(timestampDoDia * 1000).toLocaleDateString('pt-BR');
@@ -410,14 +410,14 @@ async function executarScanner() {
                                                         placar: placarFormatado,
                                                         dataSinal: dataDesseDia,       
                                                     };
-                                                    console.log(`✅ Item encontrado no índice ${index} e atualizado com sucesso!`);
+                                                    //console.log(`✅ Item encontrado no índice ${index} e atualizado com sucesso!`);
                                                 } else {
                                                   console.warn(`❌ Mesmo com o trim, a data "${timestampDoDia}" não foi encontrada no histórico.`);
                                                 }
                                                                                                 
                                                 
                                                 
-                                                console.log(`🔮 Novo sinal gerado para ${dataDesseDia} com o placar: ${placarFormatado}`);
+                                                //console.log(`🔮 Novo sinal gerado para ${dataDesseDia} com o placar: ${placarFormatado}`);
                                                
                                     });
                                   //  console.log("Chegamos aqui?")
@@ -444,14 +444,14 @@ async function executarScanner() {
                         botaoAtualizar.disabled = false;
                         botaoAtualizar.innerHTML = `<span>Atualizar Scanner</span>`;
             }
-
+            if (!blocoResultadoAtual) { console.log("Deu Ruim"); }
             if (blocoResultadoAtual) {
 
                 const t2 = totalMatchesPalavras;
                 const t3 = totalMatchesFonteSecundaria;
                 const somaTendencia = t2 + t3; 
                 const resultado = `${totalReversoesCandle} e ${t2}+${t3}=${somaTendencia}`;
-
+                
                 // 🧠 Lógica Dinâmica das Etiquetas de Previsão
                 let etiquetaSinal = "[⚪NEUTRO]";
                 let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
