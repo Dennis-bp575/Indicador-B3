@@ -395,11 +395,7 @@ async function executarScanner() {
                                                 // 1. Buscamos o histórico atualizado do localStorage para não atropelar dados
                                                 //let historicoAtual = JSON.parse(localStorage.getItem('historico_B3')) || [];
                                                 placarFormatado = `${totalMatchesPalavras}-${totalMatchesFonteSecundaria}-${totalReversoesCandle}`;
-                                                
-                                                const agora = new Date();
-                                                const horaAtual = agora.getHours();
-                                                const ehHoje = dataDesseDia === agora.toLocaleDateString('pt-BR');
-                                                
+
                                                 const index = historicoReatualizado.findIndex(c => 
                                                     String(c.dataSinal).trim() === String(dataDesseDia).trim()
                                                 );
