@@ -116,10 +116,10 @@ async function executarScanner() {
                                     // 1. Criar o Set com os feriados de 2026 (a partir de 02/02/2026)
                                     // Utilizamos um Set() porque a busca nele tem performance O(1), ideal para 25k linhas.
                                     const feriados2026 = new Set([
-                                      "2025-11-20",
-                                      "2025-24-12",
-                                      "2025-25-12",
-                                      "2025-31-12", 
+                                      "2025-11-20", // Consciência Negra
+                                      "2025-12-24", // Véspera de Natal (Corrigido)
+                                      "2025-12-25", // Natal (Corrigido)
+                                      "2025-12-31", // Véspera de Ano Novo (Corrigido)
                                       "2026-01-01",
                                       "2026-02-16", // Carnaval
                                       "2026-02-17", // Carnaval
