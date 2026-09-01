@@ -161,7 +161,7 @@ async function executarScanner() {
                                    
                                     // O slice(0, indiceParada) pega do dia mais recente (índice 0) até o dia que você parou.
                                     // O .reverse() é opcional, mas excelente se você quiser processar do mais antigo para o mais novo.
-                                    const diasParaProcessar = historicoCalendario.slice(0, indiceParada).reverse();
+                                    const diasParaProcessar = historicoCalendario.slice(0, indiceParada+1).reverse();
 
                                     
 
