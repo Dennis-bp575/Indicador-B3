@@ -199,7 +199,7 @@ async function executarScanner() {
                                                         const dataAmanha = new Date(timestampDoDia * 1000).toLocaleDateString('pt-BR');
                                                         //console.log(idxDiaSeguinte, idxIbov, dataAmanha, historicoIbov.length)
                                                         if (idxDiaSeguinte < historicoIbov.length) {
-                                                        console.log("ok");
+                                                        //console.log("ok");
                                                                         const ibovAmanha = historicoIbov[idxDiaSeguinte]; // O dia 11 real!
                                                                         const ibovHoje = historicoIbov[idxIbov];         // O dia 10 real
                                                                         
@@ -245,8 +245,8 @@ async function executarScanner() {
                                     
                                     
                                     diasParaProcessar.forEach((diaDoCalendario) => {
-                                                // console.log(diasParaProcessar);
-                                                //console.log(diaDoCalendario);
+                                                console.log(diasParaProcessar);
+                                                console.log(diaDoCalendario);
                                                 const timestampDoDia = diaDoCalendario.date; // Dia 10
                                                 
                                                 const dataDesseDia = new Date(timestampDoDia * 1000).toLocaleDateString('pt-BR');
