@@ -203,7 +203,7 @@ async function executarScanner() {
                                                                         
                                                                         const dataAmanhaFormatada = new Date(ibovAmanha.date * 1000).toLocaleDateString('pt-BR');
                                                                         //console.log(dataAmanhaFormatada);
-                                                                        console.log(ibovHoje, ibovAmanha, dataAmanhaFormatada)
+                                                                        console.log(dataAmanhaFormatada)
                                                                         const agora = new Date();
                                                                         const horaAtual = agora.getHours();
                                                                         const amanhaEHoje = dataAmanhaFormatada === agora.toLocaleDateString('pt-BR');
