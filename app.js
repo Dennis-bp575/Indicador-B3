@@ -52,9 +52,9 @@ const botaoAtualizar = document.getElementById('btn-atualizar');
 const blocoResultadoAtual = document.getElementById('resultado-atual');
 const blocoListaHistorico = document.getElementById('lista-historico');
 let ultimaAtualizacao = null;
-const compraOpen_1 = 30 //25
-const compraOpen_2 = 60
-const compra_1     = 2
+const compraOpen_1 = 25 // 30 //25
+const compraOpen_2 = 65 // 60
+const compra_1     = 3
 const compra_2     = 35
 const compra_3     = 55 //49
 const topando_1    = 2
@@ -456,7 +456,7 @@ async function executarScanner() {
                 const t3 = totalMatchesFonteSecundaria;
                 const somaTendencia = t2 + t3; 
                 const resultado = `${totalReversoesCandle} e ${t2}+${t3}=${somaTendencia}`;
-                console.log(placarFormatado);
+                // console.log(placarFormatado);
                 
                 // 🧠 Lógica Dinâmica das Etiquetas de Previsão
                 let etiquetaSinal = "[⚪NEUTRO]";
