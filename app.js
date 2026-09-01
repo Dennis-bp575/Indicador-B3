@@ -630,7 +630,7 @@ historicoInvertido.forEach(item => {
     const somaTendencia = t2 + t3; 
     const somaTotal = tokenExaustao + t2 + t3; 
     const somaInicio = tokenExaustao + t2; 
-    resultado = `${tokenExaustao} ${somaInicio} ${t2}+${t3}=${somaTendencia} ${somaTotal}`;
+    resultado = `${tokenExaustao}-${t2}-${t3} ${somaInicio} ${somaTendencia} ${somaTotal}`;
 
 
     let classeCor = "bg-gray-800 border-gray-700 text-gray-400";
