@@ -241,10 +241,11 @@ async function executarScanner() {
                                                 }   
                                                 
                                     });
-                                    console.log(diaDoCalendario);
-                                    return;
+                                    
+                                    
                                     diasParaProcessar.forEach((diaDoCalendario) => {
                                                 // console.log(diasParaProcessar);
+                                                console.log(diaDoCalendario);
                                                 const timestampDoDia = diaDoCalendario.date; // Dia 10
                                                 
                                                 const dataDesseDia = new Date(timestampDoDia * 1000).toLocaleDateString('pt-BR');
