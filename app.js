@@ -578,12 +578,12 @@ historicoCronologico.forEach(item => {
         if (gatilhoLinha === "NEUTRO") {
             gatilhoLinha = "COMPRA";
         } 
-    } 
+    }
     if (numA <= a_5 && numC >= a_10) {
         if (gatilhoLinha === "NEUTRO") {
             gatilhoLinha = "COMPRA";
         } 
-    } 
+    }
     if (numC > numA && numB + numC > a_35) {
         if (gatilhoLinha === "NEUTRO") {
             gatilhoLinha = "COMPRA";
@@ -592,40 +592,19 @@ historicoCronologico.forEach(item => {
     if (numC > a_10 && numB + numC > a_35) {
         if (gatilhoLinha === "NEUTRO") {
             gatilhoLinha = "COMPRA";
-        } 
-    } 
+        }
+    }
     if (numB + numC > a_50 && numC === a_0) {
         if (gatilhoLinha === "NEUTRO" ||  gatilhoLinha === "COMPRA") {
             gatilhoLinha = "TOPANDO";
-        } 
-    } 
+        }
+    }
 
     if (numA < 15 && numB < 15 && numC < 15) {
           if (gatilhoLinha === "NEUTRO" ||  gatilhoLinha === "COMPRA") {
               gatilhoLinha = "VENDER";
-          } 
+          };
     } 
-//    } else if (tokenExaustao <= topando_1 && somaTendencia > topando_2) {
-//        gatilhoLinha = "TOPANDO";
-    
-    // Categoria B: Gatilhos de Entrada Condicional de Abertura
-//    } else if (tokenExaustao > t2 && somaTendencia >= compraOpen_1 && t3 > t2 && somaTendencia <= compraOpen_2) {
-//        gatilhoLinha = "COMPRA_OPEN";
-    
-    // Categoria C: Gatilhos de Entrada em Tendência Direcional Confiável
-//    } else if (!altaProbabilidadeExaustao && tokenExaustao <= compra_1 && (somaTendencia >= compra_2 && somaTendencia <= compra_3)) {
-//        gatilhoLinha = "COMPRA";
-    
-    // Categoria D: Filtros de Força Bruta (Volume de Rompimento)
-//    } else if (t2 > compra_4) {
-//        gatilhoLinha = "COMPRA";
-//    } else if (tokenExaustao > compra_5 && tokenExaustao > t2 && t3 > t2) {
-//        gatilhoLinha = "COMPRA";
-//    }
-    
-    // 4. Diagnóstico Auxiliar no Console para Validação de Backtesting
-    //console.log(`[ANALISADOR] Data: ${item.date} | Gatilho: ${gatilhoLinha} | Exaustão(t3): ${t3} (${altaProbabilidadeExaustao ? '⚠️ALTA' : '🟢OK'})`);
-
 
     // 🧠 Máquina de Estados Tradicional (Lendo o passado em direção ao presente)
     if (gatilhoLinha === "COMPRA") {
@@ -634,7 +613,7 @@ historicoCronologico.forEach(item => {
         } else {
             if (estadoAtual !== "COMPRADO") {
                  estadoAtual = "COMPRAR";
-            }// Primeiro dia que deu o sinal de compra
+            };// Primeiro dia que deu o sinal de compra
         }
     } else {
       if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
@@ -642,29 +621,17 @@ historicoCronologico.forEach(item => {
       } else {
           estadoAtual = "NEUTRO"
       }
-    } 
-
-    
+    }
     if (gatilhoLinha === "TOPANDO") {
         if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
-            estadoAtual = "VENDER TOPADO"; // Dispara a venda se estava posicionado
-        {
-    {
-////            estadoAtual = "SEM POSIÇÃO"; // Se já não tinha nada, ignora e não duplica a venda
-//        }
-//    } else if (gatilhoLinha === "VENDER") {
-//        if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
-//            estadoAtual = "VENDER"; // Dispara o stop/venda real se estava posicionado
-//        } else {
- //           estadoAtual = "SEM POSIÇÃO"; // Ignora para não aparecer duas vendas seguidas
-//        }
-//    } else if (gatilhoLinha === "NEUTRO") {
-//        if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
-////            estadoAtual = "COMPRADO"; // Se o mercado acalmou e você comprou antes, continua comprado
- //       } else {
-//            estadoAtual = "SEM POSIÇÃO"; // Se vendeu antes, continua zerado
-//        }
-//    }
+            estadoAtual = "VENDER TOPADO"; 
+        }
+    }
+    if (gatilhoLinha === "VENDER") {
+        if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
+            estadoAtual = "VENDER"; 
+        }
+    }
 
     // 4. Anexamos as strings de estilo e texto direto no objeto para usarmos depois
     item.visualSinal = "[⚪SEM POSIÇÃO]";
