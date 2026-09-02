@@ -551,6 +551,7 @@ const historicoCronologico = [...historicoSalvo];
 // 🧠 Variável de controle de estado tradicional (Avança do passado para o presente)
 let estadoAtual = "SEM POSIÇÃO"; 
 let resultado = ""
+let diasComprado = 0
 // 3. Processamos os estados na ordem em que o mercado aconteceu de verdade
 historicoCronologico.forEach(item => {
     // Processamento matemático dos tokens
@@ -612,23 +613,32 @@ historicoCronologico.forEach(item => {
             gatilhoLinha = "COMPRA";
         }
     }
-    if (numB + numC > a_50 && numC === a_0) {
-        if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
-            gatilhoLinha = "TOPANDO";
-        }
+    if (gatilhoLinha === "COMPRA") {
+          if (diasComprado === 3) {
+                gatilhoLinha = "VENDER";
+                diasComprado = 0;
+          } else {
+                diasComprado++;
+          }
     }
+ 
+    //if (numB + numC > a_50 && numC === a_0) {
+    //    if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
+    //        gatilhoLinha = "TOPANDO";
+    //    }
+    //}
 
-    if (numA < 15 && numB < 15 && numC < 15) {
-          if (gatilhoLinha === "NEUTRO") {
-              gatilhoLinha = "VENDER";
-          };
-    } 
+    //if (numA < 15 && numB < 15 && numC < 15) {
+    //      if (gatilhoLinha === "NEUTRO") {
+    //          gatilhoLinha = "VENDER";
+    //      };
+    //} 
 
-    if (numA <= 32 && numB <= 2 && numD <= 14) {
-          if (gatilhoLinha === "NEUTRO") {
-              gatilhoLinha = "VENDER";
-          };
-    } 
+    //if (numA <= 32 && numB <= 2 && numD <= 14) {
+    //      if (gatilhoLinha === "NEUTRO") {
+    //          gatilhoLinha = "VENDER";
+    //      };
+    //} 
 
     // 🧠 Máquina de Estados Tradicional (Lendo o passado em direção ao presente)
     if (gatilhoLinha === "COMPRA") {
