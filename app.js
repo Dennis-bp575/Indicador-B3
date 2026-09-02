@@ -595,13 +595,13 @@ historicoCronologico.forEach(item => {
         }
     }
     if (numB + numC > a_50 && numC === a_0) {
-        if (gatilhoLinha === "NEUTRO" ||  gatilhoLinha === "COMPRA") {
+        if (gatilhoLinha === "NEUTRO") {
             gatilhoLinha = "TOPANDO";
         }
     }
 
     if (numA < 15 && numB < 15 && numC < 15) {
-          if (gatilhoLinha === "NEUTRO" ||  gatilhoLinha === "COMPRA") {
+          if (gatilhoLinha === "NEUTRO") {
               gatilhoLinha = "VENDER";
           };
     } 
@@ -617,7 +617,7 @@ historicoCronologico.forEach(item => {
         }
     } else {
       if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
-            estadoAtual = "VENDER"; 
+            estadoAtual = "COMPRADO"; 
       } else {
           estadoAtual = "NEUTRO"
       }
