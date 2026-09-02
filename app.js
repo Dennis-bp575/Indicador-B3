@@ -576,8 +576,10 @@ historicoCronologico.forEach(item => {
     // 3. Mecanismo de Decisão (Gatilho da Linha)
     let gatilhoLinha = "NEUTRO";    
     // Categoria A: Gatilhos de Saída de Emergência e Trava de Prejuízo (Prioridade Máxima)
-    if (numB + numC > a_1 && numE > numD && gatilhoLinha = "NEUTRO") {
+    if (numB + numC > a_1 && numE > numD)
+      if (gatilhoLinha = "NEUTRO") {
         gatilhoLinha = "COMPRA";
+      {
     }
 //    } else if (tokenExaustao <= topando_1 && somaTendencia > topando_2) {
 //        gatilhoLinha = "TOPANDO";
