@@ -564,7 +564,7 @@ historicoCronologico.forEach(item => {
     const numA = numeros[0]; 
     const numB = numeros[1];
     const numC = numeros[2];
-    console.log(numA, numB, numC);
+    
     // Extensões pós-espaço mapeadas caso o placar venha completo (ex: 8-56-1 64 57 65)
     const numD = numA + numB;
     const numE = numB + numC;
@@ -620,7 +620,7 @@ historicoCronologico.forEach(item => {
     } else {
           if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
                 diasComprado++;
-          {
+          }
     }
     
  
