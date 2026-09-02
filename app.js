@@ -576,7 +576,7 @@ historicoCronologico.forEach(item => {
     // 3. Mecanismo de Decisão (Gatilho da Linha)
     let gatilhoLinha = "NEUTRO";    
     // Categoria A: Gatilhos de Saída de Emergência e Trava de Prejuízo (Prioridade Máxima)
-    if (numB + numC > a_1 && numE > numD) {
+    if (numB + numC > a_1 && numE > numD && gatilhoLinha = "NEUTRO") {
         gatilhoLinha = "COMPRA";
     }
 //    } else if (tokenExaustao <= topando_1 && somaTendencia > topando_2) {
@@ -604,7 +604,8 @@ historicoCronologico.forEach(item => {
     // 🧠 Máquina de Estados Tradicional (Lendo o passado em direção ao presente)
     if (gatilhoLinha === "COMPRA" || gatilhoLinha === "COMPRA_OPEN") {
         if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
-            estadoAtual = "VENDER"; // Continua mantendo a posição comprada
+            estadoAtual = "VENDER"; 
+            gatilhoLinha = "NEUTRO";
         } else {
             estadoAtual = "COMPRAR"; // Primeiro dia que deu o sinal de compra
         }
