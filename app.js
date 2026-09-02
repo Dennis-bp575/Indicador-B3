@@ -63,14 +63,11 @@ const vender_1     = 13 //10
 const compra_4     = 40
 const compra_5     = 15
 
-const a_1 = 35
-const b_1 = 6
-const b_2 = 6
-const c_1 = 6
-const c_2 = 35
-const d_1 = 9
-const e_1 = 50
-const e_2 = 0
+const a_0 = 0
+const a_5 = 5
+const a_10 = 10
+const a_35 = 35
+const a_50 = 50
 
 desenharHistoricoNaTela();
 // ==========================================
@@ -577,30 +574,36 @@ historicoCronologico.forEach(item => {
     let gatilhoLinha = "NEUTRO";    
     // Categoria A: Gatilhos de Saída de Emergência e Trava de Prejuízo (Prioridade Máxima)
     // Categoria A: Gatilhos de Saída de Emergência e Trava de Prejuízo (Prioridade Máxima)
-    if (numB + numC > a_1 && numE > numD) {
+    if (numB + numC > a_35 && numE > numD) {
         if (gatilhoLinha === "NEUTRO") {
             gatilhoLinha = "COMPRA";
         } 
     } 
-    if (numA < b_1 && numC > b_2) {
+    if (numA <= a_5 && numC >= a_10) {
         if (gatilhoLinha === "NEUTRO") {
             gatilhoLinha = "COMPRA";
         } 
     } 
-    if (numC > c_1 && numB + numC > c_2) {
+    if (numC > numA && numB + numC > a_35) {
         if (gatilhoLinha === "NEUTRO") {
             gatilhoLinha = "COMPRA";
         } 
     } 
-    if (numE > numD + d_1) {
+    if (numC > a_10 && numB + numC > a_35) {
         if (gatilhoLinha === "NEUTRO") {
             gatilhoLinha = "COMPRA";
         } 
     } 
-    if (numB + numC > e_1 && numC === e_2) {
-        if (gatilhoLinha === "NEUTRO") {
-            gatilhoLinha = "COMPRA";
+    if (numB + numC > a_50 && numC === a_0) {
+        if (gatilhoLinha === "NEUTRO" ||  gatilhoLinha = "COMPRA") {
+            gatilhoLinha = "TOPANDO";
         } 
+    } 
+
+    if (numA < 15 && numB < 15 && numC < 15) {
+          if (gatilhoLinha === "NEUTRO" ||  gatilhoLinha = "COMPRA") {
+              gatilhoLinha = "VENDER";
+          } 
     } 
 //    } else if (tokenExaustao <= topando_1 && somaTendencia > topando_2) {
 //        gatilhoLinha = "TOPANDO";
@@ -640,11 +643,13 @@ historicoCronologico.forEach(item => {
           estadoAtual = "NEUTRO"
       }
     } 
+
     
-//    else if (gatilhoLinha === "TOPANDO") {
-//        if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
-//            estadoAtual = "VENDER TOPADO"; // Dispara a venda se estava posicionado
-//        } else {
+    if (gatilhoLinha === "TOPANDO") {
+        if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
+            estadoAtual = "VENDER TOPADO"; // Dispara a venda se estava posicionado
+        {
+    {
 ////            estadoAtual = "SEM POSIÇÃO"; // Se já não tinha nada, ignora e não duplica a venda
 //        }
 //    } else if (gatilhoLinha === "VENDER") {
