@@ -651,20 +651,20 @@ historicoCronologico.forEach(item => {
         }
     } else {
       if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
-            estadoAtual = "COMPRADO"; 
+            if (diasComprado === 3) { estadoAtual = "VENDER";}
       } else {
-          estadoAtual = "NEUTRO"
+          estadoAtual = "NEUTRO";
       }
     }
-    if (gatilhoLinha === "TOPANDO") {
-        if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
-            estadoAtual = "VENDER TOPADO"; 
-        }
-    }
+    //if (gatilhoLinha === "TOPANDO") {
+   //     if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
+    //        estadoAtual = "VENDER TOPADO"; 
+   //     }
+   // }
     if (gatilhoLinha === "VENDER") {
-        if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
+        //if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
             estadoAtual = "VENDER"; 
-        }
+        //}
     }
 
     // 4. Anexamos as strings de estilo e texto direto no objeto para usarmos depois
