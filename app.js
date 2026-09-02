@@ -580,22 +580,22 @@ historicoCronologico.forEach(item => {
             gatilhoLinha = "COMPRA";
         }
         if (diasComprado > 0) {
-            diasComprado--
+            diasComprado = 0;
         }
     }
 
-    if (numA > numB && numC >= numB && numE > 15) {
-        if (gatilhoLinha === "NEUTRO") {
-            gatilhoLinha = "COMPRA";
-        } 
-    }
+    //if (numA > numB && numC >= numB && numE > 15) {
+    //    if (gatilhoLinha === "NEUTRO") {
+    //        gatilhoLinha = "COMPRA";
+    //    } 
+   // }
 
     if (numA > 38 && numC <= 2) {
         if (gatilhoLinha === "NEUTRO") {
             gatilhoLinha = "COMPRA";
         } 
         if (diasComprado > 0) {
-            diasComprado--
+            diasComprado = 0;
         }
     }
     if (numA < 32 && numB <= 2) {
@@ -603,27 +603,27 @@ historicoCronologico.forEach(item => {
             gatilhoLinha = "COMPRA";
         } 
         if (diasComprado > 0) {
-            diasComprado--
+            diasComprado = 0;
         }
     }
   
-    if (numA <= a_5 && numC >= a_10) {
-        if (gatilhoLinha === "NEUTRO") {
-            gatilhoLinha = "COMPRA";
-        } 
-    }
-    if (numC > numA && numB + numC > a_35) {
-        if (gatilhoLinha === "NEUTRO") {
-            gatilhoLinha = "COMPRA";
-        } 
-    } 
-    if (numC > a_10 && numB + numC > a_35) {
-        if (gatilhoLinha === "NEUTRO") {
-            gatilhoLinha = "COMPRA";
-        }
-    }
+//    if (numA <= a_5 && numC >= a_10) {
+//      if (gatilhoLinha === "NEUTRO") {
+//            gatilhoLinha = "COMPRA";
+//        } 
+//    }
+//    if (numC > numA && numB + numC > a_35) {
+//        if (gatilhoLinha === "NEUTRO") {
+//            gatilhoLinha = "COMPRA";
+ //       } 
+ //   } 
+ //   if (numC > a_10 && numB + numC > a_35) {
+ //       if (gatilhoLinha === "NEUTRO") {
+ //           gatilhoLinha = "COMPRA";
+ //      }
+ //   }
   
-    if (diasComprado === 2) {
+    if (diasComprado === 1) {
           gatilhoLinha = "VENDER";
           diasComprado = 0;
     } else {
