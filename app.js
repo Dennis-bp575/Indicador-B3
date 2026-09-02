@@ -578,7 +578,10 @@ historicoCronologico.forEach(item => {
     if (numB + numC > a_35 && numE > numD) {
         if (gatilhoLinha === "NEUTRO") {
             gatilhoLinha = "COMPRA";
-        } 
+        }
+        if (diasComprado > 0) {
+            diasComprado--
+        }
     }
 
     if (numA > numB && numC >= numB && numE > 15) {
@@ -591,11 +594,17 @@ historicoCronologico.forEach(item => {
         if (gatilhoLinha === "NEUTRO") {
             gatilhoLinha = "COMPRA";
         } 
+        if (diasComprado > 0) {
+            diasComprado--
+        }
     }
     if (numA < 32 && numB <= 2) {
         if (gatilhoLinha === "NEUTRO") {
             gatilhoLinha = "COMPRA";
         } 
+        if (diasComprado > 0) {
+            diasComprado--
+        }
     }
   
     if (numA <= a_5 && numC >= a_10) {
@@ -614,7 +623,7 @@ historicoCronologico.forEach(item => {
         }
     }
   
-    if (diasComprado === 3) {
+    if (diasComprado === 2) {
           gatilhoLinha = "VENDER";
           diasComprado = 0;
     } else {
