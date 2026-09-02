@@ -601,7 +601,7 @@ historicoCronologico.forEach(item => {
     } 
 
     if (numA < 15 && numB < 15 && numC < 15) {
-          if (gatilhoLinha === "NEUTRO" ||  gatilhoLinha = "COMPRA") {
+          if (gatilhoLinha === "NEUTRO" ||  gatilhoLinha === "COMPRA") {
               gatilhoLinha = "VENDER";
           } 
     } 
