@@ -563,7 +563,7 @@ historicoCronologico.forEach(item => {
     const numA = numeros[0]; 
     const numB = numeros[1];
     const numC = numeros[2];
-    
+    console.log(numA, numB, numC);
     // Extensões pós-espaço mapeadas caso o placar venha completo (ex: 8-56-1 64 57 65)
     const numD = numA + numB;
     const numE = numB + numC;
@@ -579,6 +579,18 @@ historicoCronologico.forEach(item => {
             gatilhoLinha = "COMPRA";
         } 
     }
+
+    if (numA > 38 && numC <= 2) {
+        if (gatilhoLinha === "NEUTRO") {
+            gatilhoLinha = "COMPRA";
+        } 
+    }
+    if (numA < 32 && numB <= 2) {
+        if (gatilhoLinha === "NEUTRO") {
+            gatilhoLinha = "COMPRA";
+        } 
+    }
+  
     if (numA <= a_5 && numC >= a_10) {
         if (gatilhoLinha === "NEUTRO") {
             gatilhoLinha = "COMPRA";
@@ -601,6 +613,12 @@ historicoCronologico.forEach(item => {
     }
 
     if (numA < 15 && numB < 15 && numC < 15) {
+          if (gatilhoLinha === "NEUTRO") {
+              gatilhoLinha = "VENDER";
+          };
+    } 
+
+    if (numA <= 32 && numB <= 2 && numD <= 14) {
           if (gatilhoLinha === "NEUTRO") {
               gatilhoLinha = "VENDER";
           };
