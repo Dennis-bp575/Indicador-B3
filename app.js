@@ -637,6 +637,7 @@ historicoCronologico.forEach(item => {
             estadoAtual = "VENDER"; 
       } else {
           estadoAtual = "NEUTRO"
+      }
     } 
     
 //    else if (gatilhoLinha === "TOPANDO") {
