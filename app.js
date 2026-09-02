@@ -582,7 +582,26 @@ historicoCronologico.forEach(item => {
             gatilhoLinha = "COMPRA";
         } 
     } 
-
+    if (numA < b_1 && numC > b_2) {
+        if (gatilhoLinha === "NEUTRO") {
+            gatilhoLinha = "COMPRA";
+        } 
+    } 
+    if (numC > c_1 && numB + numC > c_2) {
+        if (gatilhoLinha === "NEUTRO") {
+            gatilhoLinha = "COMPRA";
+        } 
+    } 
+    if (numE > numD + d_1) {
+        if (gatilhoLinha === "NEUTRO") {
+            gatilhoLinha = "COMPRA";
+        } 
+    } 
+    if (numB + numC > e_1 && numC === e_2) {
+        if (gatilhoLinha === "NEUTRO") {
+            gatilhoLinha = "COMPRA";
+        } 
+    } 
 //    } else if (tokenExaustao <= topando_1 && somaTendencia > topando_2) {
 //        gatilhoLinha = "TOPANDO";
     
@@ -614,8 +633,12 @@ historicoCronologico.forEach(item => {
             estadoAtual = "COMPRAR"; // Primeiro dia que deu o sinal de compra
         }
     } else {
+      if (estadoAtual === "COMPRAR") {
+            estadoAtual = "VENDER"; 
+      } else {
           estadoAtual = "NEUTRO"
     } 
+    
 //    else if (gatilhoLinha === "TOPANDO") {
 //        if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
 //            estadoAtual = "VENDER TOPADO"; // Dispara a venda se estava posicionado
