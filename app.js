@@ -570,7 +570,7 @@ historicoCronologico.forEach(item => {
     // Extensões pós-espaço mapeadas caso o placar venha completo (ex: 8-56-1 64 57 65)
     const numD = numA + numB;
     const numE = numB + numC;
-    const numF = numA + numB + numC);
+    const numF = numA + numB + numC;
     //const somaTendencia = t2 + t3; 
     //const altaProbabilidadeExaustao = (t3 >= 7);    
     // 3. Mecanismo de Decisão (Gatilho da Linha)
