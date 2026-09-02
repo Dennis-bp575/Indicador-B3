@@ -613,14 +613,16 @@ historicoCronologico.forEach(item => {
             gatilhoLinha = "COMPRA";
         }
     }
-    if (gatilhoLinha === "COMPRA") {
-          if (diasComprado === 3) {
-                gatilhoLinha = "VENDER";
-                diasComprado = 0;
-          } else {
+  
+    if (diasComprado === 3) {
+          gatilhoLinha = "VENDER";
+          diasComprado = 0;
+    } else {
+          if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
                 diasComprado++;
-          }
+          {
     }
+    
  
     //if (numB + numC > a_50 && numC === a_0) {
     //    if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
