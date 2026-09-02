@@ -627,13 +627,14 @@ historicoCronologico.forEach(item => {
     // 🧠 Máquina de Estados Tradicional (Lendo o passado em direção ao presente)
     if (gatilhoLinha === "COMPRA") {
         if (estadoAtual === "COMPRAR") {
-            estadoAtual = "VENDER"; 
-            gatilhoLinha = "NEUTRO";
+            estadoAtual = "COMPRADO"; 
         } else {
-            estadoAtual = "COMPRAR"; // Primeiro dia que deu o sinal de compra
+            if (estadoAtual !== "COMPRADO") {
+                 estadoAtual = "COMPRAR";
+            }// Primeiro dia que deu o sinal de compra
         }
     } else {
-      if (estadoAtual === "COMPRAR") {
+      if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
             estadoAtual = "VENDER"; 
       } else {
           estadoAtual = "NEUTRO"
