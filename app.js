@@ -580,6 +580,12 @@ historicoCronologico.forEach(item => {
         } 
     }
 
+    if (numA > numB && numC >= numB && numE > 15) {
+        if (gatilhoLinha === "NEUTRO") {
+            gatilhoLinha = "COMPRA";
+        } 
+    }
+
     if (numA > 38 && numC <= 2) {
         if (gatilhoLinha === "NEUTRO") {
             gatilhoLinha = "COMPRA";
