@@ -62,6 +62,16 @@ const topando_2    = 60 //55
 const vender_1     = 13 //10
 const compra_4     = 40
 const compra_5     = 15
+
+const a_1 = 35
+const b_1 = 6
+const b_2 = 6
+const c_1 = 6
+const c_2 = 35
+const d_1 = 9
+const e_1 = 50
+const e_2 = 0
+
 desenharHistoricoNaTela();
 // ==========================================
 // 3. FUNÇÃO PRINCIPAL DO SCANNER
@@ -553,41 +563,39 @@ historicoCronologico.forEach(item => {
     const partesPlacar = placar.replace(/\s+/g, '-').split('-');
     const numeros = partesPlacar.map(Number);
     
-    const tokenExaustao = numeros[0]; 
-    const t2 = numeros[1];
-    const t3 = numeros[2];
+    const numA = numeros[0]; 
+    const numB = numeros[1];
+    const numC = numeros[2];
     
     // Extensões pós-espaço mapeadas caso o placar venha completo (ex: 8-56-1 64 57 65)
-    const num4_soma = numeros[3] || (tokenExaustao + t2);
-    const num5_close = numeros[4] || 0;
-    const num6_total = numeros[5] || (num4_soma + t3);
-
-    const somaTendencia = t2 + t3; 
-    const altaProbabilidadeExaustao = (t3 >= 7);
-    
+    const numD = numA + numB;
+    const numE = numB + numC;
+    const numF = numA + numB + numC);
+    //const somaTendencia = t2 + t3; 
+    //const altaProbabilidadeExaustao = (t3 >= 7);    
     // 3. Mecanismo de Decisão (Gatilho da Linha)
-    let gatilhoLinha = "NEUTRO";
-    
+    let gatilhoLinha = "NEUTRO";    
     // Categoria A: Gatilhos de Saída de Emergência e Trava de Prejuízo (Prioridade Máxima)
-    if (somaTendencia < vender_1 || (altaProbabilidadeExaustao && gatilhoLinha === "NEUTRO" && tokenExaustao < t2)) {
-        gatilhoLinha = "VENDER";
-    } else if (tokenExaustao <= topando_1 && somaTendencia > topando_2) {
-        gatilhoLinha = "TOPANDO";
-    
-    // Categoria B: Gatilhos de Entrada Condicional de Abertura
-    } else if (tokenExaustao > t2 && somaTendencia >= compraOpen_1 && t3 > t2 && somaTendencia <= compraOpen_2) {
-        gatilhoLinha = "COMPRA_OPEN";
-    
-    // Categoria C: Gatilhos de Entrada em Tendência Direcional Confiável
-    } else if (!altaProbabilidadeExaustao && tokenExaustao <= compra_1 && (somaTendencia >= compra_2 && somaTendencia <= compra_3)) {
-        gatilhoLinha = "COMPRA";
-    
-    // Categoria D: Filtros de Força Bruta (Volume de Rompimento)
-    } else if (t2 > compra_4) {
-        gatilhoLinha = "COMPRA";
-    } else if (tokenExaustao > compra_5 && tokenExaustao > t2 && t3 > t2) {
+    if (numB + numC > a_1 && numE > NumD) {
         gatilhoLinha = "COMPRA";
     }
+//    } else if (tokenExaustao <= topando_1 && somaTendencia > topando_2) {
+//        gatilhoLinha = "TOPANDO";
+    
+    // Categoria B: Gatilhos de Entrada Condicional de Abertura
+//    } else if (tokenExaustao > t2 && somaTendencia >= compraOpen_1 && t3 > t2 && somaTendencia <= compraOpen_2) {
+//        gatilhoLinha = "COMPRA_OPEN";
+    
+    // Categoria C: Gatilhos de Entrada em Tendência Direcional Confiável
+//    } else if (!altaProbabilidadeExaustao && tokenExaustao <= compra_1 && (somaTendencia >= compra_2 && somaTendencia <= compra_3)) {
+//        gatilhoLinha = "COMPRA";
+    
+    // Categoria D: Filtros de Força Bruta (Volume de Rompimento)
+//    } else if (t2 > compra_4) {
+//        gatilhoLinha = "COMPRA";
+//    } else if (tokenExaustao > compra_5 && tokenExaustao > t2 && t3 > t2) {
+//        gatilhoLinha = "COMPRA";
+//    }
     
     // 4. Diagnóstico Auxiliar no Console para Validação de Backtesting
     //console.log(`[ANALISADOR] Data: ${item.date} | Gatilho: ${gatilhoLinha} | Exaustão(t3): ${t3} (${altaProbabilidadeExaustao ? '⚠️ALTA' : '🟢OK'})`);
@@ -596,29 +604,30 @@ historicoCronologico.forEach(item => {
     // 🧠 Máquina de Estados Tradicional (Lendo o passado em direção ao presente)
     if (gatilhoLinha === "COMPRA" || gatilhoLinha === "COMPRA_OPEN") {
         if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
-            estadoAtual = "COMPRADO"; // Continua mantendo a posição comprada
+            estadoAtual = "VENDER"; // Continua mantendo a posição comprada
         } else {
             estadoAtual = "COMPRAR"; // Primeiro dia que deu o sinal de compra
         }
-    } else if (gatilhoLinha === "TOPANDO") {
-        if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
-            estadoAtual = "VENDER TOPADO"; // Dispara a venda se estava posicionado
-        } else {
-            estadoAtual = "SEM POSIÇÃO"; // Se já não tinha nada, ignora e não duplica a venda
-        }
-    } else if (gatilhoLinha === "VENDER") {
-        if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
-            estadoAtual = "VENDER"; // Dispara o stop/venda real se estava posicionado
-        } else {
-            estadoAtual = "SEM POSIÇÃO"; // Ignora para não aparecer duas vendas seguidas
-        }
-    } else if (gatilhoLinha === "NEUTRO") {
-        if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
-            estadoAtual = "COMPRADO"; // Se o mercado acalmou e você comprou antes, continua comprado
-        } else {
-            estadoAtual = "SEM POSIÇÃO"; // Se vendeu antes, continua zerado
-        }
-    }
+    } 
+//    else if (gatilhoLinha === "TOPANDO") {
+//        if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
+//            estadoAtual = "VENDER TOPADO"; // Dispara a venda se estava posicionado
+//        } else {
+////            estadoAtual = "SEM POSIÇÃO"; // Se já não tinha nada, ignora e não duplica a venda
+//        }
+//    } else if (gatilhoLinha === "VENDER") {
+//        if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
+//            estadoAtual = "VENDER"; // Dispara o stop/venda real se estava posicionado
+//        } else {
+ //           estadoAtual = "SEM POSIÇÃO"; // Ignora para não aparecer duas vendas seguidas
+//        }
+//    } else if (gatilhoLinha === "NEUTRO") {
+//        if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
+////            estadoAtual = "COMPRADO"; // Se o mercado acalmou e você comprou antes, continua comprado
+ //       } else {
+//            estadoAtual = "SEM POSIÇÃO"; // Se vendeu antes, continua zerado
+//        }
+//    }
 
     // 4. Anexamos as strings de estilo e texto direto no objeto para usarmos depois
     item.visualSinal = "[⚪SEM POSIÇÃO]";
