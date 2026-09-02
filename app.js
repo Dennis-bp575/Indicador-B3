@@ -595,7 +595,7 @@ historicoCronologico.forEach(item => {
         }
     }
     if (numB + numC > a_50 && numC === a_0) {
-        if (gatilhoLinha === "NEUTRO") {
+        if (estadoAtual === "COMPRAR" || estadoAtual === "COMPRADO") {
             gatilhoLinha = "TOPANDO";
         }
     }
