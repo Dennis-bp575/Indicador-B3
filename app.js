@@ -501,7 +501,7 @@ function desenharHistoricoNaTela() {
         const t2 = numeros[1];
         const t3 = numeros[2];
         const somaTendencia = t2 + t3; 
-        const resultado = `${tokenExaustao} e ${t2}+${t3}=${somaTendencia}`;
+        const resultado = `${t3} e ${t2}+${tokenExaustao}=${somaTendencia}`;
 
         // 🧠 Lógica Dinâmica das Etiquetas de Previsão
         let etiquetaSinal = "[⚪NEUTRO]";
