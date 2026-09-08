@@ -385,7 +385,7 @@ async function executarScanner() {
             }
 
             if (blocoResultadoAtual) {
-
+console.log("bloco atual");
                 const t2 = totalMatchesPalavras;
                 const t3 = totalMatchesFonteSecundaria;
                 const somaTendencia = t2 + t3; 
