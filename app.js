@@ -101,8 +101,7 @@ async function executarScanner() {
                                                 console.warn(`⚠️ Não foi possível carregar os dados de ${ticker}`);
                                     }
                         }
-                        console.log(dadosBrutos.results);
-                        return;
+                        
                         // 1. Verificamos se a Brapi realmente devolveu a lista de resultados
                         if (dadosBrutos.results && Array.isArray(dadosBrutos.results)) {
                                     const historicoCalendario = dadosBrutos.results[0].historicalDataPrice;                    
@@ -385,7 +384,7 @@ async function executarScanner() {
             }
 
             if (blocoResultadoAtual) {
-console.log("bloco atual");
+                console.log("bloco atual");
                 const t2 = totalMatchesPalavras;
                 const t3 = totalMatchesFonteSecundaria;
                 const somaTendencia = t2 + t3; 
