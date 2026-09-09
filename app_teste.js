@@ -526,7 +526,7 @@ function desenharHistoricoNaTela() {
             classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
         }
 
-        if (tokenExaustao > t2 && tokenExaustao > t3) {
+        if (tokenExaustao > (t2+10) && t2 > t3) {
             etiquetaSinal = "[🚨VENDER-NOVO🚨]";
             classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
         }
