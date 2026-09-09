@@ -387,7 +387,7 @@ async function executarScanner() {
                
                 const t2 = totalMatchesPalavras;
                 const t3 = totalMatchesFonteSecundaria;
-                const somaTendencia = t2 + t3; 
+                const somaTendencia = totalReversoesCandle + t3; 
                 const resultado = `${t2} e ${t3}+${totalReversoesCandle}=${somaTendencia}`;
 
                 // 🧠 Lógica Dinâmica das Etiquetas de Previsão
