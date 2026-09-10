@@ -477,8 +477,10 @@ function desenharHistoricoNaTela() {
 
     let ultimoA = 0;
     let estadoAtual = "NEUTRO";
-    let estadoComprado = false;
-    let estadoVendido = false;
+    let estadoComprado = 0
+    let jaFoi = false;
+    let jaFoiV = false;
+    
     // O loop agora roda sobre a lista invertida
     historicoInvertido.forEach(item => {
         let classeCor = "bg-gray-800 border-gray-700 text-gray-400";
@@ -509,87 +511,108 @@ function desenharHistoricoNaTela() {
         // 🧠 Lógica Dinâmica das Etiquetas de Previsão
         let etiquetaSinal = "[⚪NEUTRO]";
         let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
-
+        jafoi = false
         if (tokenExaustao > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
             etiquetaSinal = "[🟢COMPRA]";
-            if (estadoComprado === true) {
-                        estadoAtual = "NEUTRO";
-                        estadoComprado = false;
-            } else {
-                        estadoAtual = "COMPRA";
-                        estadoComprado = true;
-                        estadoVendido = false;
-            };
+            if (estadoComprado === 0) {
+                        estadoComprado = 1;
+            } else { 
+                        if (estadoComprado === 1) {
+                                    estadoComprado === 0;
+                        } else { 
+                                    if (estadoComprado === 2) { 
+                                                 estadoComprado = 1;
+                                    }
+                        }
+            }
+            jaFoi = true   
             classeCorEtiqueta = "text-emerald-400";
+            
         } 
-        if (tokenExaustao <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
+        if (jaFoi === false && tokenExaustao <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
             etiquetaSinal = "[🟢COMPRA] ";
-            if (estadoComprado === true) {
-                        estadoAtual = "NEUTRO";
-                        estadoComprado = false;
-            } else {
-                        estadoAtual = "COMPRA";
-                        estadoComprado = true;
-                        estadoVendido = false;
-            };
+            if (estadoComprado === 0) {
+                        estadoComprado = 1;
+            } else { 
+                        if (estadoComprado === 1) {
+                                    estadoComprado === 0;
+                        } else { 
+                                    if (estadoComprado === 2) { 
+                                                 estadoComprado = 1;
+                                    }
+                        }
+            }
+            jaFoi = true   
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
         }
                 
         if (tokenExaustao <= 2 && somaTendencia > 49) {
             etiquetaSinal = "[🔴VENDA]";
-            if (estadoVendido === true) { estadoAtual = "NEUTRO" };
-            if (estadoComprado === true) {
-                        estadoAtual = "VENDA";
-                        estadoComprado = false;
-                        estadoVendido = true;
-            } else {
-                        estadoAtual = "NEUTRO";   
-                        estadoVendido = false;
-            };
-            
+            if (estadoComprado === 0) {
+                        estadoComprado = 0;
+            } else { 
+                        if (estadoComprado === 1) {
+                                    estadoComprado === 2;
+                        } else { 
+                                    if (estadoComprado === 2) { 
+                                                 estadoComprado = 0;
+                                    }
+                        }
+            }
+            jaFoiV = true;
             classeCorEtiqueta = "text-orange-600"; // Destaca em rosa/vermelho
         }
-        if (somaTendencia < 10) {
+        if (jaFoiV === false && somaTendencia < 10) {
             etiquetaSinal = "[🔴VENDA]";
-            if (estadoVendido === true) { estadoAtual = "NEUTRO" };
-            if (estadoComprado === true) {
-                        estadoAtual = "VENDA";
-                        estadoComprado = false;
-                        estadoVendido = true
-            } else {
-                        estadoAtual = "NEUTRO";
-                        estadoVendido = false;
-            };
+            if (estadoComprado === 0) {
+                        estadoComprado = 0;
+            } else { 
+                        if (estadoComprado === 1) {
+                                    estadoComprado === 2;
+                        } else { 
+                                    if (estadoComprado === 2) { 
+                                                 estadoComprado = 0;
+                                    }
+                        }
+            }
             
             classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
         }
 
-        if (tokenExaustao > (ultimoA + 28) && somaTendencia <= 10) {
+        if (jaFoi === false && tokenExaustao > (ultimoA + 28) && somaTendencia <= 10) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
             etiquetaSinal = "[🟢COMPRA] ";
-            if (estadoComprado === true) {
-                        estadoAtual = "NEUTRO";
-                        estadoComprado = false;
-            } else {
-                        estadoAtual = "COMPRA";
-                        estadoComprado = true;
-                        estadoVendido = false;
-            };
+            if (estadoComprado === 0) {
+                        estadoComprado = 1;
+            } else { 
+                        if (estadoComprado === 1) {
+                                    estadoComprado === 0;
+                        } else { 
+                                    if (estadoComprado === 2) { 
+                                                 estadoComprado = 1;
+                                    }
+                        }
+            }
+            jaFoi = true   
+            
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
         }
 
-        if (tokenExaustao > (ultimoA + 20) && t3 > t2) {
+        if (jaFoi === false && tokenExaustao > (ultimoA + 20) && t3 > t2) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
             etiquetaSinal = "[🟢COMPRA] ";
-            if (estadoComprado === true) {
-                        estadoAtual = "NEUTRO";
-                        estadoComprado = false;
-            } else {
-                        estadoAtual = "COMPRA";
-                        estadoComprado = true;
-                        estadoVendido = false;
-            };
+            if (estadoComprado === 0) {
+                        estadoComprado = 1;
+            } else { 
+                        if (estadoComprado === 1) {
+                                    estadoComprado === 0;
+                        } else { 
+                                    if (estadoComprado === 2) { 
+                                                 estadoComprado = 1;
+                                    }
+                        }
+            }
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
         }
         ultimoA = tokenExaustao;
