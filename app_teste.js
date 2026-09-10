@@ -578,7 +578,7 @@ function desenharHistoricoNaTela() {
         ultimoA = tokenExaustao
         
         tocarBeep();
-
+            console.log(estadoAtual);
         if (estadoAtual ==! "NEUTRO") { 
                     const linhaHtml = `
                         <div class="flex items-center justify-between bg-gray-850 border border-gray-800 rounded-xl p-4 shadow-sm">
