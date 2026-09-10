@@ -387,8 +387,8 @@ async function executarScanner() {
                
                 const t2 = totalMatchesPalavras;
                 const t3 = totalMatchesFonteSecundaria;
-                const somaTendencia = t2 + t3; 
-                const resultado = `${totalReversoesCandle} e ${t2}+${t3}=${somaTendencia}`;
+                const somaTendencia = totalReversoesCandle + t3; 
+                const resultado = `${t2} e ${t3}+${totalReversoesCandle}=${somaTendencia}`;
 
                 // 🧠 Lógica Dinâmica das Etiquetas de Previsão
                 let etiquetaSinal = "[⚪NEUTRO]";
@@ -526,13 +526,7 @@ function desenharHistoricoNaTela() {
             classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
         }
 
-        if (t2 > 40 && t2 <= 2 && tokenExaustao < 10) {
-            // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
-            etiquetaSinal = "[🟢COMPRA-NOVA] ";
-            classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
-        }
-
-        if (t2 < t3 && tokenExaustao < t2) {
+        if ((tokenExaustao + t2) > 40 && (tokenExaustao + t2) < 55 && t3 <= 2) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
             etiquetaSinal = "[🟢COMPRA-NOVA] ";
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
@@ -654,4 +648,5 @@ function tocarBeep() {
         console.log("Aviso de áudio contido:", erro.message);
     }
 }
+
 
