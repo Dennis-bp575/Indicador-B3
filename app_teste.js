@@ -575,11 +575,13 @@ function desenharHistoricoNaTela() {
             };
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
         }
-        ultimoA = tokenExaustao
+        ultimoA = tokenExaustao;
         
-        // tocarBeep();
-            console.log(estadoAtual);
+        
+
         if (estadoAtual ==! "NEUTRO") { 
+                    console.log("entrou aqui");
+                    console.log(estadoAtual);
                     const linhaHtml = `
                         <div class="flex items-center justify-between bg-gray-850 border border-gray-800 rounded-xl p-4 shadow-sm">
                             <div class="flex flex-col">
