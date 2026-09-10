@@ -579,7 +579,7 @@ function desenharHistoricoNaTela() {
         
         
 
-        if (estadoAtual ==! "NEUTRO") { 
+        if (estadoAtual === "COMPRA" || estadoAtual === "VENDA") { 
                     console.log("entrou aqui");
                     console.log(estadoAtual);
                     const linhaHtml = `
