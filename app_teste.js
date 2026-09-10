@@ -515,7 +515,7 @@ function desenharHistoricoNaTela() {
                         estadoAtual = "NEUTRO";
             } else {
                         estadoAtual = "COMPRA";
-                        estadoComprado = True;
+                        estadoComprado = true;
             };
             classeCorEtiqueta = "text-emerald-400";
         } 
@@ -526,7 +526,7 @@ function desenharHistoricoNaTela() {
                         estadoAtual = "NEUTRO";
             } else {
                         estadoAtual = "COMPRA";
-                        estadoComprado = True;
+                        estadoComprado = true;
             };
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
         }
@@ -559,7 +559,7 @@ function desenharHistoricoNaTela() {
                         estadoAtual = "NEUTRO";
             } else {
                         estadoAtual = "COMPRA";
-                        estadoComprado = True;
+                        estadoComprado = true;
             };
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
         }
@@ -571,7 +571,7 @@ function desenharHistoricoNaTela() {
                         estadoAtual = "NEUTRO";
             } else {
                         estadoAtual = "COMPRA";
-                        estadoComprado = True;
+                        estadoComprado = true;
             };
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
         }
