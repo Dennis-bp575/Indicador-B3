@@ -475,7 +475,9 @@ function desenharHistoricoNaTela() {
         ultimaAtualizacao = "Sem registros";
     }
 
-    let ultimoA = 0
+    let ultimoA = 0;
+    let estadoAtual = "NEUTRO";
+    let estadoComprado = false;
     // O loop agora roda sobre a lista invertida
     historicoInvertido.forEach(item => {
         let classeCor = "bg-gray-800 border-gray-700 text-gray-400";
@@ -508,71 +510,101 @@ function desenharHistoricoNaTela() {
         let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
 
         if (tokenExaustao > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
-            etiquetaSinal = "[🟢COMPRA⚠️Open]";
-            classeCorEtiqueta = "text-emerald-400"; // Destaca em verde
+            etiquetaSinal = "[🟢COMPRA]";
+            if (estadoComprado = true) {
+                        estadoAtual = "NEUTRO";
+            } else {
+                        estadoAtual = "COMPRA";
+                        estadoComprado = True;
+            };
+            classeCorEtiqueta = "text-emerald-400";
         } 
         if (tokenExaustao <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
             etiquetaSinal = "[🟢COMPRA] ";
+            if (estadoComprado = true) {
+                        estadoAtual = "NEUTRO";
+            } else {
+                        estadoAtual = "COMPRA";
+                        estadoComprado = True;
+            };
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
         }
                 
         if (tokenExaustao <= 2 && somaTendencia > 49) {
-            etiquetaSinal = "[⚠️TOPANDO]";
+            etiquetaSinal = "[🔴VENDA]";
+            if (estadoComprado = true) {
+                        estadoAtual = "VENDA";
+            } else {
+                        estadoAtual = "NEUTRO";
+                        estadoComprado = False;
+            };
             classeCorEtiqueta = "text-orange-600"; // Destaca em rosa/vermelho
         }
         if (somaTendencia < 10) {
-            etiquetaSinal = "[🚨VENDER🚨]";
+            etiquetaSinal = "[🔴VENDA]";
+            if (estadoComprado = true) {
+                        estadoAtual = "VENDA";
+            } else {
+                        estadoAtual = "NEUTRO";
+                        estadoComprado = False;
+            };
             classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
-        }
-
-        if ((tokenExaustao + t2) > 40 && (tokenExaustao + t2) < 55 && t3 <= 2) {
-            // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
-            etiquetaSinal = "[🟢COMPRA-NOVA] ";
-            classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
         }
 
         if (tokenExaustao > (ultimoA + 28) && somaTendencia <= 10) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
             etiquetaSinal = "[🟢COMPRA] ";
+            if (estadoComprado = true) {
+                        estadoAtual = "NEUTRO";
+            } else {
+                        estadoAtual = "COMPRA";
+                        estadoComprado = True;
+            };
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
         }
 
         if (tokenExaustao > (ultimoA + 20) && t3 > t2) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
             etiquetaSinal = "[🟢COMPRA] ";
+            if (estadoComprado = true) {
+                        estadoAtual = "NEUTRO";
+            } else {
+                        estadoAtual = "COMPRA";
+                        estadoComprado = True;
+            };
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
         }
         ultimoA = tokenExaustao
-                
+        
         tocarBeep();
 
-        // A sua constante com o HTML atualizado contendo os Avisos Inteligentes
-        const linhaHtml = `
-            <div class="flex items-center justify-between bg-gray-850 border border-gray-800 rounded-xl p-4 shadow-sm">
-                <div class="flex flex-col">
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs font-black ${classeCorEtiqueta}">${etiquetaSinal}</span>
-                        <span class="font-bold text-white text-base">${resultado}</span>
-                    </div>
-                    <span class="text-xs text-gray-500 mt-1">Data do Sinal: ${item.dataSinal}</span>
-                </div>
-                
-                <!-- Grupo de Badges à direita -->
-                <div class="flex flex-col sm:flex-row items-end sm:items-center gap-2">
-                    <!-- Novo Badge de Abertura -->
-                    <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCorAbertura}">
-                        Open: ${item.aberturaBolsa || "..."}
-                    </div>
-                    
-                    <!-- Seu Badge Antigo de Fechamento -->
-                    <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCor}">
-                        Close: ${item.resultadoBolsa}
-                    </div>
-                </div>
-            </div>
-        `;
-
+        if (estadoAtual ==! "NEUTRO") { 
+                    const linhaHtml = `
+                        <div class="flex items-center justify-between bg-gray-850 border border-gray-800 rounded-xl p-4 shadow-sm">
+                            <div class="flex flex-col">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-black ${classeCorEtiqueta}">${etiquetaSinal}</span>
+                                    <span class="font-bold text-white text-base">${resultado}</span>
+                                </div>
+                                <span class="text-xs text-gray-500 mt-1">Data do Sinal: ${item.dataSinal}</span>
+                            </div>
+                            
+                            <!-- Grupo de Badges à direita -->
+                            <div class="flex flex-col sm:flex-row items-end sm:items-center gap-2">
+                                <!-- Novo Badge de Abertura -->
+                                <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCorAbertura}">
+                                    Open: ${item.aberturaBolsa || "..."}
+                                </div>
+                                
+                                <!-- Seu Badge Antigo de Fechamento -->
+                                <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCor}">
+                                    Close: ${item.resultadoBolsa}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+        };
 
         blocoListaHistorico.insertAdjacentHTML('beforeend', linhaHtml);
     });
