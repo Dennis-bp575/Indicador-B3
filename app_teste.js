@@ -511,7 +511,7 @@ function desenharHistoricoNaTela() {
 
         if (tokenExaustao > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
             etiquetaSinal = "[🟢COMPRA]";
-            if (estadoComprado = true) {
+            if (estadoComprado === true) {
                         estadoAtual = "NEUTRO";
             } else {
                         estadoAtual = "COMPRA";
@@ -522,7 +522,7 @@ function desenharHistoricoNaTela() {
         if (tokenExaustao <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
             etiquetaSinal = "[🟢COMPRA] ";
-            if (estadoComprado = true) {
+            if (estadoComprado === true) {
                         estadoAtual = "NEUTRO";
             } else {
                         estadoAtual = "COMPRA";
@@ -533,7 +533,7 @@ function desenharHistoricoNaTela() {
                 
         if (tokenExaustao <= 2 && somaTendencia > 49) {
             etiquetaSinal = "[🔴VENDA]";
-            if (estadoComprado = true) {
+            if (estadoComprado === true) {
                         estadoAtual = "VENDA";
                         estadoComprado = false;
             } else {
@@ -543,7 +543,7 @@ function desenharHistoricoNaTela() {
         }
         if (somaTendencia < 10) {
             etiquetaSinal = "[🔴VENDA]";
-            if (estadoComprado = true) {
+            if (estadoComprado === true) {
                         estadoAtual = "VENDA";
                         estadoComprado = false;
             } else {
@@ -555,7 +555,7 @@ function desenharHistoricoNaTela() {
         if (tokenExaustao > (ultimoA + 28) && somaTendencia <= 10) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
             etiquetaSinal = "[🟢COMPRA] ";
-            if (estadoComprado = true) {
+            if (estadoComprado === true) {
                         estadoAtual = "NEUTRO";
             } else {
                         estadoAtual = "COMPRA";
@@ -567,7 +567,7 @@ function desenharHistoricoNaTela() {
         if (tokenExaustao > (ultimoA + 20) && t3 > t2) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
             etiquetaSinal = "[🟢COMPRA] ";
-            if (estadoComprado = true) {
+            if (estadoComprado === true) {
                         estadoAtual = "NEUTRO";
             } else {
                         estadoAtual = "COMPRA";
@@ -577,7 +577,7 @@ function desenharHistoricoNaTela() {
         }
         ultimoA = tokenExaustao
         
-        tocarBeep();
+        // tocarBeep();
             console.log(estadoAtual);
         if (estadoAtual ==! "NEUTRO") { 
                     const linhaHtml = `
