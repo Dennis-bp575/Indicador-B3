@@ -478,6 +478,7 @@ function desenharHistoricoNaTela() {
     let ultimoA = 0;
     let estadoAtual = "NEUTRO";
     let estadoComprado = false;
+    let estadoVendido = false;
     // O loop agora roda sobre a lista invertida
     historicoInvertido.forEach(item => {
         let classeCor = "bg-gray-800 border-gray-700 text-gray-400";
@@ -513,9 +514,11 @@ function desenharHistoricoNaTela() {
             etiquetaSinal = "[🟢COMPRA]";
             if (estadoComprado === true) {
                         estadoAtual = "NEUTRO";
+                        estadoComprado = false;
             } else {
                         estadoAtual = "COMPRA";
                         estadoComprado = true;
+                        estadoVendido = false;
             };
             classeCorEtiqueta = "text-emerald-400";
         } 
@@ -524,31 +527,41 @@ function desenharHistoricoNaTela() {
             etiquetaSinal = "[🟢COMPRA] ";
             if (estadoComprado === true) {
                         estadoAtual = "NEUTRO";
+                        estadoComprado = false;
             } else {
                         estadoAtual = "COMPRA";
                         estadoComprado = true;
+                        estadoVendido = false;
             };
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
         }
                 
         if (tokenExaustao <= 2 && somaTendencia > 49) {
             etiquetaSinal = "[🔴VENDA]";
+            if (estadoVendido === true) { estadoAtual = "NEUTRO" };
             if (estadoComprado === true) {
                         estadoAtual = "VENDA";
                         estadoComprado = false;
+                        estadoVendido = true;
             } else {
-                        estadoAtual = "NEUTRO";       
+                        estadoAtual = "NEUTRO";   
+                        estadoVendido = false;
             };
+            
             classeCorEtiqueta = "text-orange-600"; // Destaca em rosa/vermelho
         }
         if (somaTendencia < 10) {
             etiquetaSinal = "[🔴VENDA]";
+            if (estadoVendido === true) { estadoAtual = "NEUTRO" };
             if (estadoComprado === true) {
                         estadoAtual = "VENDA";
                         estadoComprado = false;
+                        estadoVendido = true
             } else {
                         estadoAtual = "NEUTRO";
+                        estadoVendido = false;
             };
+            
             classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
         }
 
@@ -557,9 +570,11 @@ function desenharHistoricoNaTela() {
             etiquetaSinal = "[🟢COMPRA] ";
             if (estadoComprado === true) {
                         estadoAtual = "NEUTRO";
+                        estadoComprado = false;
             } else {
                         estadoAtual = "COMPRA";
                         estadoComprado = true;
+                        estadoVendido = false;
             };
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
         }
@@ -569,9 +584,11 @@ function desenharHistoricoNaTela() {
             etiquetaSinal = "[🟢COMPRA] ";
             if (estadoComprado === true) {
                         estadoAtual = "NEUTRO";
+                        estadoComprado = false;
             } else {
                         estadoAtual = "COMPRA";
                         estadoComprado = true;
+                        estadoVendido = false;
             };
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
         }
