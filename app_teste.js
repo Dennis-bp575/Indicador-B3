@@ -535,9 +535,9 @@ function desenharHistoricoNaTela() {
             etiquetaSinal = "[🔴VENDA]";
             if (estadoComprado = true) {
                         estadoAtual = "VENDA";
-            } else {
-                        estadoAtual = "NEUTRO";
                         estadoComprado = False;
+            } else {
+                        estadoAtual = "NEUTRO";       
             };
             classeCorEtiqueta = "text-orange-600"; // Destaca em rosa/vermelho
         }
@@ -545,9 +545,9 @@ function desenharHistoricoNaTela() {
             etiquetaSinal = "[🔴VENDA]";
             if (estadoComprado = true) {
                         estadoAtual = "VENDA";
+                        estadoComprado = False;
             } else {
                         estadoAtual = "NEUTRO";
-                        estadoComprado = False;
             };
             classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
         }
