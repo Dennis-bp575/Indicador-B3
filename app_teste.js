@@ -518,7 +518,7 @@ function desenharHistoricoNaTela() {
                         estadoComprado = 1;
             } else { 
                         if (estadoComprado === 1) {
-                                    estadoComprado === 0;
+                                    estadoComprado === 3;
                         } else { 
                                     if (estadoComprado === 2) { 
                                                  estadoComprado = 1;
@@ -536,7 +536,7 @@ function desenharHistoricoNaTela() {
                         estadoComprado = 1;
             } else { 
                         if (estadoComprado === 1) {
-                                    estadoComprado === 0;
+                                    estadoComprado === 3;
                         } else { 
                                     if (estadoComprado === 2) { 
                                                  estadoComprado = 1;
@@ -549,8 +549,8 @@ function desenharHistoricoNaTela() {
                 
         if (tokenExaustao <= 2 && somaTendencia > 49) {
             etiquetaSinal = "[🔴VENDA]";
-            if (estadoComprado === 0) {
-                        estadoComprado = 0;
+            if (estadoComprado === 3) {
+                        estadoComprado = 2;
             } else { 
                         if (estadoComprado === 1) {
                                     estadoComprado === 2;
@@ -565,8 +565,8 @@ function desenharHistoricoNaTela() {
         }
         if (jaFoiV === false && somaTendencia < 10) {
             etiquetaSinal = "[🔴VENDA]";
-            if (estadoComprado === 0) {
-                        estadoComprado = 0;
+            if (estadoComprado === 3) {
+                        estadoComprado = 2;
             } else { 
                         if (estadoComprado === 1) {
                                     estadoComprado === 2;
@@ -587,7 +587,7 @@ function desenharHistoricoNaTela() {
                         estadoComprado = 1;
             } else { 
                         if (estadoComprado === 1) {
-                                    estadoComprado === 0;
+                                    estadoComprado === 3;
                         } else { 
                                     if (estadoComprado === 2) { 
                                                  estadoComprado = 1;
@@ -606,7 +606,7 @@ function desenharHistoricoNaTela() {
                         estadoComprado = 1;
             } else { 
                         if (estadoComprado === 1) {
-                                    estadoComprado === 0;
+                                    estadoComprado === 3;
                         } else { 
                                     if (estadoComprado === 2) { 
                                                  estadoComprado = 1;
@@ -621,7 +621,7 @@ function desenharHistoricoNaTela() {
 
         if (estadoComprado === 1 || estadoComprado === 2) { 
                     console.log("entrou aqui");
-                    console.log(estadoAtual);
+                    console.log(estadoComprado);
                     const linhaHtml = `
                         <div class="flex items-center justify-between bg-gray-850 border border-gray-800 rounded-xl p-4 shadow-sm">
                             <div class="flex flex-col">
