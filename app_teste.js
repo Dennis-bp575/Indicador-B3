@@ -535,7 +535,7 @@ function desenharHistoricoNaTela() {
             etiquetaSinal = "[🔴VENDA]";
             if (estadoComprado = true) {
                         estadoAtual = "VENDA";
-                        estadoComprado = False;
+                        estadoComprado = false;
             } else {
                         estadoAtual = "NEUTRO";       
             };
@@ -545,7 +545,7 @@ function desenharHistoricoNaTela() {
             etiquetaSinal = "[🔴VENDA]";
             if (estadoComprado = true) {
                         estadoAtual = "VENDA";
-                        estadoComprado = False;
+                        estadoComprado = false;
             } else {
                         estadoAtual = "NEUTRO";
             };
