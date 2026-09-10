@@ -604,9 +604,10 @@ function desenharHistoricoNaTela() {
                             </div>
                         </div>
                     `;
+                    blocoListaHistorico.insertAdjacentHTML('beforeend', linhaHtml);
         };
 
-        blocoListaHistorico.insertAdjacentHTML('beforeend', linhaHtml);
+        
     });
 }
 
