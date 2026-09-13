@@ -71,6 +71,7 @@ async function executarScanner() {
             let dataDesseDiaGlobal;
             let calculaUltimoResult;
             let gravaUltimoResult;
+            let ultimoAA;
             
             botaoAtualizar.disabled = true;
             botaoAtualizar.innerHTML = `
@@ -333,7 +334,7 @@ async function executarScanner() {
                                                 // 1. Buscamos o histórico atualizado do localStorage para não atropelar dados
                                                 //let historicoAtual = JSON.parse(localStorage.getItem('historico_B3')) || [];
                                                 const placarFormatado = `${totalMatchesPalavras}-${totalMatchesFonteSecundaria}-${totalReversoesCandle}`;
-                                                
+                                                ultimoAA = totalMatchesPalavras;
                                                 const agora = new Date();
                                                 const horaAtual = agora.getHours();
                                                 const ehHoje = dataDesseDia === agora.toLocaleDateString('pt-BR');
@@ -395,22 +396,34 @@ async function executarScanner() {
                 let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
 
                 if (totalReversoesCandle > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
-                    etiquetaSinal = "[🟢Mantém⚠️]";
+                    etiquetaSinal = "[🟢Compra-Mantém]";
                     classeCorEtiqueta = "text-emerald-400"; // Destaca em verde
                 } 
                 if (totalReversoesCandle <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
                     // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
-                    etiquetaSinal = "[🟢Mantém]";
+                    etiquetaSinal = "[🟢Compra-Mantém]";
                     classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
                 }
                         
                 if (totalReversoesCandle <= 2 && somaTendencia > 49) {
-                    etiquetaSinal = "[⚠️TOPO]";
+                    etiquetaSinal = "[🚨VENDER🚨]";
                     classeCorEtiqueta = "text-orange-600"; // Destaca em rosa/vermelho
                 }
                 if (somaTendencia < 10) {
                     etiquetaSinal = "[🚨VENDER🚨]";
                     classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
+                }
+
+                if (tokenExaustao > (ultimoAA + 28) && somaTendencia <= 10) {
+                        // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
+                        etiquetaSinal = "[🟢Compra-Mantém] ";
+                        classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
+                }
+            
+                if (tokenExaustao > (ultimoAA + 20) && t3 > t2) {
+            // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
+                     etiquetaSinal = "[🟢Compra-Mantém] ";
+                     classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
                 }
 
                 const agora15 = new Date();
