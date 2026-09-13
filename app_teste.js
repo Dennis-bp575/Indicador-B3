@@ -71,6 +71,7 @@ async function executarScanner() {
             let dataDesseDiaGlobal;
             let calculaUltimoResult;
             let gravaUltimoResult;
+            let ultimoAA;
             
             botaoAtualizar.disabled = true;
             botaoAtualizar.innerHTML = `
@@ -333,7 +334,7 @@ async function executarScanner() {
                                                 // 1. Buscamos o histórico atualizado do localStorage para não atropelar dados
                                                 //let historicoAtual = JSON.parse(localStorage.getItem('historico_B3')) || [];
                                                 const placarFormatado = `${totalMatchesPalavras}-${totalMatchesFonteSecundaria}-${totalReversoesCandle}`;
-                                                
+                                                ultimoAA = totalMatchesPalavras;
                                                 const agora = new Date();
                                                 const horaAtual = agora.getHours();
                                                 const ehHoje = dataDesseDia === agora.toLocaleDateString('pt-BR');
@@ -395,22 +396,34 @@ async function executarScanner() {
                 let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
 
                 if (totalReversoesCandle > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
-                    etiquetaSinal = "[🟢Mantém⚠️]";
+                    etiquetaSinal = "[🟢Compra-Mantém]";
                     classeCorEtiqueta = "text-emerald-400"; // Destaca em verde
                 } 
                 if (totalReversoesCandle <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
                     // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
-                    etiquetaSinal = "[🟢Mantém]";
+                    etiquetaSinal = "[🟢Compra-Mantém]";
                     classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
                 }
                         
                 if (totalReversoesCandle <= 2 && somaTendencia > 49) {
-                    etiquetaSinal = "[⚠️TOPO]";
+                    etiquetaSinal = "[🚨VENDER🚨]";
                     classeCorEtiqueta = "text-orange-600"; // Destaca em rosa/vermelho
                 }
                 if (somaTendencia < 10) {
                     etiquetaSinal = "[🚨VENDER🚨]";
                     classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
+                }
+
+                if (tokenExaustao > (ultimoAA + 28) && somaTendencia <= 10) {
+                        // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
+                        etiquetaSinal = "[🟢Compra-Mantém] ";
+                        classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
+                }
+            
+                if (tokenExaustao > (ultimoAA + 20) && t3 > t2) {
+            // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
+                     etiquetaSinal = "[🟢Compra-Mantém] ";
+                     classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
                 }
 
                 const agora15 = new Date();
@@ -475,12 +488,7 @@ function desenharHistoricoNaTela() {
         ultimaAtualizacao = "Sem registros";
     }
 
-    let ultimoA = 0;
-    let estadoAtual = "NEUTRO";
-    let estadoComprado = 0
-    let jaFoi = false;
-    let jaFoiV = false;
-    
+    let ultimoA = 0
     // O loop agora roda sobre a lista invertida
     historicoInvertido.forEach(item => {
         let classeCor = "bg-gray-800 border-gray-700 text-gray-400";
@@ -511,145 +519,77 @@ function desenharHistoricoNaTela() {
         // 🧠 Lógica Dinâmica das Etiquetas de Previsão
         let etiquetaSinal = "[⚪NEUTRO]";
         let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
-        jafoi = false
+
         if (tokenExaustao > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
             etiquetaSinal = "[🟢COMPRA]";
-            if (estadoComprado === 0) {
-                        estadoComprado = 1;
-            } else { 
-                        if (estadoComprado === 1) {
-                                    estadoComprado === 3;
-                        } else { 
-                                    if (estadoComprado === 2) { 
-                                                 estadoComprado = 1;
-                                    }
-                        }
-            }
-            jaFoi = true   
-            classeCorEtiqueta = "text-emerald-400";
-            
+            classeCorEtiqueta = "text-emerald-400"; // Destaca em verde
         } 
-        if (jaFoi === false && tokenExaustao <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
+        if (tokenExaustao <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
             etiquetaSinal = "[🟢COMPRA] ";
-            if (estadoComprado === 0) {
-                        estadoComprado = 1;
-            } else { 
-                        if (estadoComprado === 1) {
-                                    estadoComprado === 3;
-                        } else { 
-                                    if (estadoComprado === 2) { 
-                                                 estadoComprado = 1;
-                                    }
-                        }
-            }
-            jaFoi = true   
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
         }
                 
         if (tokenExaustao <= 2 && somaTendencia > 49) {
-            etiquetaSinal = "[🔴VENDA]";
-            if (estadoComprado === 3) {
-                        estadoComprado = 2;
-            } else { 
-                        if (estadoComprado === 1) {
-                                    estadoComprado === 2;
-                        } else { 
-                                    if (estadoComprado === 2) { 
-                                                 estadoComprado = 0;
-                                    }
-                        }
-            }
-            jaFoiV = true;
+            etiquetaSinal = "[🚨VENDER-SHORT🚨]";
             classeCorEtiqueta = "text-orange-600"; // Destaca em rosa/vermelho
         }
-        if (jaFoiV === false && somaTendencia < 10) {
-            etiquetaSinal = "[🔴VENDA]";
-            if (estadoComprado === 3) {
-                        estadoComprado = 2;
-            } else { 
-                        if (estadoComprado === 1) {
-                                    estadoComprado === 2;
-                        } else { 
-                                    if (estadoComprado === 2) { 
-                                                 estadoComprado = 0;
-                                    }
-                        }
-            }
-            
+        if (somaTendencia < 10) {
+            etiquetaSinal = "[🚨VENDER-SHORT🚨]";
             classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
         }
+        if ((tokenExaustao - t2) > 15) {
+            etiquetaSinal = "[🚨VENDER-SAIR🚨]";
+            classeCorEtiqueta = "text-red-600"; // Destaca em rosa/vermelho
+        }
+        if (tokenExaustao > (t2 + t3)) {
+            etiquetaSinal = "[🚨VENDER-SAIR🚨]";
+            classeCorEtiqueta = "text-red-600"; // Destaca em rosa/vermelho
+        }
 
-        if (jaFoi === false && tokenExaustao > (ultimoA + 28) && somaTendencia <= 10) {
+        if (tokenExaustao > (ultimoA + 28) && somaTendencia <= 10) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
             etiquetaSinal = "[🟢COMPRA] ";
-            if (estadoComprado === 0) {
-                        estadoComprado = 1;
-            } else { 
-                        if (estadoComprado === 1) {
-                                    estadoComprado === 3;
-                        } else { 
-                                    if (estadoComprado === 2) { 
-                                                 estadoComprado = 1;
-                                    }
-                        }
-            }
-            jaFoi = true   
-            
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
         }
 
-        if (jaFoi === false && tokenExaustao > (ultimoA + 20) && t3 > t2) {
+        if (tokenExaustao > (ultimoA + 20) && t3 > t2) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
             etiquetaSinal = "[🟢COMPRA] ";
-            if (estadoComprado === 0) {
-                        estadoComprado = 1;
-            } else { 
-                        if (estadoComprado === 1) {
-                                    estadoComprado === 3;
-                        } else { 
-                                    if (estadoComprado === 2) { 
-                                                 estadoComprado = 1;
-                                    }
-                        }
-            }
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
         }
-        ultimoA = tokenExaustao;
-        
-        
+        ultimoA = tokenExaustao
+                
+        tocarBeep();
 
-        if (estadoComprado === 1 || estadoComprado === 2) { 
-                    console.log("entrou aqui");
-                    console.log(estadoComprado);
-                    const linhaHtml = `
-                        <div class="flex items-center justify-between bg-gray-850 border border-gray-800 rounded-xl p-4 shadow-sm">
-                            <div class="flex flex-col">
-                                <div class="flex items-center gap-2">
-                                    <span class="text-xs font-black ${classeCorEtiqueta}">${etiquetaSinal}</span>
-                                    <span class="font-bold text-white text-base">${resultado}</span>
-                                </div>
-                                <span class="text-xs text-gray-500 mt-1">Data do Sinal: ${item.dataSinal}</span>
-                            </div>
-                            
-                            <!-- Grupo de Badges à direita -->
-                            <div class="flex flex-col sm:flex-row items-end sm:items-center gap-2">
-                                <!-- Novo Badge de Abertura -->
-                                <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCorAbertura}">
-                                    Open: ${item.aberturaBolsa || "..."}
-                                </div>
-                                
-                                <!-- Seu Badge Antigo de Fechamento -->
-                                <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCor}">
-                                    Close: ${item.resultadoBolsa}
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    blocoListaHistorico.insertAdjacentHTML('beforeend', linhaHtml);
-        };
+        // A sua constante com o HTML atualizado contendo os Avisos Inteligentes
+        const linhaHtml = `
+            <div class="flex items-center justify-between bg-gray-850 border border-gray-800 rounded-xl p-4 shadow-sm">
+                <div class="flex flex-col">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-black ${classeCorEtiqueta}">${etiquetaSinal}</span>
+                        <span class="font-bold text-white text-base">${resultado}</span>
+                    </div>
+                    <span class="text-xs text-gray-500 mt-1">Data do Sinal: ${item.dataSinal}</span>
+                </div>
+                
+                <!-- Grupo de Badges à direita -->
+                <div class="flex flex-col sm:flex-row items-end sm:items-center gap-2">
+                    <!-- Novo Badge de Abertura -->
+                    <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCorAbertura}">
+                        Open: ${item.aberturaBolsa || "..."}
+                    </div>
+                    
+                    <!-- Seu Badge Antigo de Fechamento -->
+                    <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCor}">
+                        Close: ${item.resultadoBolsa}
+                    </div>
+                </div>
+            </div>
+        `;
 
-        
+
+        blocoListaHistorico.insertAdjacentHTML('beforeend', linhaHtml);
     });
 }
 
