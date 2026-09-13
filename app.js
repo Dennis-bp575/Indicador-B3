@@ -521,7 +521,7 @@ function desenharHistoricoNaTela() {
         let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
 
         if (tokenExaustao > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
-            etiquetaSinal = "[🟢COMPRA⚠️Open]";
+            etiquetaSinal = "[🟢COMPRA]";
             classeCorEtiqueta = "text-emerald-400"; // Destaca em verde
         } 
         if (tokenExaustao <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
@@ -531,7 +531,7 @@ function desenharHistoricoNaTela() {
         }
                 
         if (tokenExaustao <= 2 && somaTendencia > 49) {
-            etiquetaSinal = "[⚠️TOPANDO]";
+            etiquetaSinal = "[🚨VENDER🚨]";
             classeCorEtiqueta = "text-orange-600"; // Destaca em rosa/vermelho
         }
         if (somaTendencia < 10) {
