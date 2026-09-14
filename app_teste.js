@@ -544,48 +544,48 @@ function desenharHistoricoNaTela() {
         if (tokenExaustao > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
             etiquetaSinal = "🟢ENTRADA LONG";
             classeCorEtiqueta = "text-emerald-400"; // Destaca em verde
-            classeBG = "bg-emerald-950 bg-opacity-40 border-emerald-800";
+            classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
         } 
         if (tokenExaustao <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
             etiquetaSinal = "🟢ENTRADA LONG";
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
-            classeBG = "bg-emerald-950 bg-opacity-40 border-emerald-800";
+            classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
         }
                 
         if (tokenExaustao <= 2 && somaTendencia > 49) {
             etiquetaSinal = "🟠ENTRADA SHORT";
             classeCorEtiqueta = "text-orange-600"; // Destaca em rosa/vermelho
-            classeBG = "bg-rose-950 bg-opacity-40 border-rose-900";
+            classeBG = "bg-rose-950 bg-opacity-40 border border-rose-900";
         }
         if (somaTendencia < 10) {
             etiquetaSinal = "🟠ENTRADA SHORT";
             classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
-            classeBG = "bg-rose-950 bg-opacity-40 border-rose-900";
+            classeBG = "bg-rose-950 bg-opacity-40 border border-rose-900";
         }
         if ((tokenExaustao - t2) > 15) {
             etiquetaSinal = "🚨SAÍDA SHORT";
             classeCorEtiqueta = "text-red-600"; // Destaca em rosa/vermelho
-            classeBG = "bg-red-950 bg-opacity-40 border-red-900";
+            classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
         }
         if (tokenExaustao > (t2 + t3)) {
             etiquetaSinal = "🚨SAÍDA SHORT";
             classeCorEtiqueta = "text-red-600"; // Destaca em rosa/vermelho
-            classeBG = "bg-red-950 bg-opacity-40 border-red-900";
+            classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
         }
 
         if (tokenExaustao > (ultimoA + 28) && somaTendencia <= 10) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
             etiquetaSinal = "🟢ENTRADA LONG";
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
-            classeBG = "bg-emerald-950 bg-opacity-40 border-emerald-800";
+            classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
         }
 
         if (tokenExaustao > (ultimoA + 20) && t3 > t2) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
             etiquetaSinal = "🟢ENTRADA LONG";
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
-            classeBG = "bg-emerald-950 bg-opacity-40 border-emerald-800";
+            classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
         }
         ultimoA = tokenExaustao
                 
