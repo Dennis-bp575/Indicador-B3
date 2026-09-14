@@ -397,33 +397,33 @@ async function executarScanner() {
                 
 
                 if (totalReversoesCandle > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
-                    etiquetaSinal = "[🟢Compra-Mantém]";
+                    etiquetaSinal = "🟢ENTRADA LONG";
                     classeCorEtiqueta = "text-emerald-400"; // Destaca em verde
                 } 
                 if (totalReversoesCandle <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
                     // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
-                    etiquetaSinal = "[🟢Compra-Mantém]";
+                    etiquetaSinal = "🟢ENTRADA LONG";
                     classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
                 }
                         
                 if (totalReversoesCandle <= 2 && somaTendencia > 49) {
-                    etiquetaSinal = "[🚨VENDER🚨]";
+                    etiquetaSinal = "🟠ENTRADA SHORT";
                     classeCorEtiqueta = "text-orange-600"; // Destaca em rosa/vermelho
                 }
                 if (somaTendencia < 10) {
-                    etiquetaSinal = "[🚨VENDER🚨]";
+                    etiquetaSinal = "🟠ENTRADA SHORT";
                     classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
                 }
 
-                if (tokenExaustao > (ultimoAA + 28) && somaTendencia <= 10) {
+                if (t2 > (ultimoAA + 28) && somaTendencia <= 10) {
                         // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
-                        etiquetaSinal = "[🟢Compra-Mantém] ";
+                        etiquetaSinal = "🟢ENTRADA LONG";
                         classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
                 }
             
-                if (tokenExaustao > (ultimoAA + 20) && t3 > t2) {
+                if (t2 > (ultimoAA + 20) && t3 > t2) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
-                     etiquetaSinal = "[🟢Compra-Mantém] ";
+                     etiquetaSinal = "🟢ENTRADA LONG ";
                      classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
                 }
 
