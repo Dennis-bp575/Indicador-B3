@@ -540,7 +540,7 @@ function desenharHistoricoNaTela() {
             classeBG = "bg-rose-950 bg-opacity-40 border-rose-900";
         }
         if (somaTendencia < 10) {
-            etiquetaSinal = "🟠ENTRADA SHORT]";
+            etiquetaSinal = "🟠ENTRADA SHORT";
             classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
             classeBG = "bg-rose-950 bg-opacity-40 border-rose-900";
         }
