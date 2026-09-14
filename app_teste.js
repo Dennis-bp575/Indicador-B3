@@ -431,7 +431,7 @@ async function executarScanner() {
                 }
 
 
-                if (tokenExaustao > (ultimoAA + 28) && somaTendencia <= 10) {
+                if (t2 > (ultimoAA + 28) && somaTendencia <= 10) {
                         // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
                         etiquetaSinal = "🟢ENTRADA LONG";
                         classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
@@ -439,7 +439,7 @@ async function executarScanner() {
                         
                 }
             
-                if (tokenExaustao > (ultimoAA + 20) && t3 > t2) {
+                if (t2 > (ultimoAA + 20) && t3 > t2) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
                      etiquetaSinal = "🟢ENTRADA LONG";
                      classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
