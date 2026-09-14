@@ -394,43 +394,63 @@ async function executarScanner() {
                 // 🧠 Lógica Dinâmica das Etiquetas de Previsão
                 let etiquetaSinal = "[⚪NEUTRO]";
                 let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
+                let classeBG = "bg-gray-800 border border-gray-700";
 
                 if (totalReversoesCandle > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
-                    etiquetaSinal = "[🟢Compra-Mantém]";
+                    etiquetaSinal = "🟢ENTRADA LONG";
                     classeCorEtiqueta = "text-emerald-400"; // Destaca em verde
+                    classeBG = "bg-emerald-950 bg-opacity-40 border-emerald-800";
                 } 
                 if (totalReversoesCandle <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
                     // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
-                    etiquetaSinal = "[🟢Compra-Mantém]";
+                    etiquetaSinal = "🟢ENTRADA LONG";
                     classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
+                    classeBG = "bg-emerald-950 bg-opacity-40 border-emerald-800";
                 }
                         
                 if (totalReversoesCandle <= 2 && somaTendencia > 49) {
-                    etiquetaSinal = "[🚨VENDER🚨]";
+                    etiquetaSinal = "🟠ENTRADA SHORT";
                     classeCorEtiqueta = "text-orange-600"; // Destaca em rosa/vermelho
+                    classeBG = "bg-rose-950 bg-opacity-40 border-rose-900";
                 }
                 if (somaTendencia < 10) {
-                    etiquetaSinal = "[🚨VENDER🚨]";
+                    etiquetaSinal = "🟠ENTRADA SHORT";
                     classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
+                    classeBG = "bg-rose-950 bg-opacity-40 border-rose-900";
                 }
+
+                if ((t2 - t3) > 15) {
+                        etiquetaSinal = "🚨SAÍDA SHORT";
+                        classeCorEtiqueta = "text-red-600"; // Destaca em rosa/vermelho
+                        classeBG = "bg-red-950 bg-opacity-40 border-red-900";
+                }
+                if (t2 > (totalReversoesCandle + t3)) {
+                        etiquetaSinal = "🚨SAÍDA SHORT";
+                        classeCorEtiqueta = "text-red-600"; // Destaca em rosa/vermelho
+                        classeBG = "bg-red-950 bg-opacity-40 border-red-900";
+                }
+
 
                 if (tokenExaustao > (ultimoAA + 28) && somaTendencia <= 10) {
                         // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
-                        etiquetaSinal = "[🟢Compra-Mantém] ";
+                        etiquetaSinal = "🟢ENTRADA LONG";
                         classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
+                        classeBG = "bg-emerald-950 bg-opacity-40 border-emerald-800";
+                        
                 }
             
                 if (tokenExaustao > (ultimoAA + 20) && t3 > t2) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
-                     etiquetaSinal = "[🟢Compra-Mantém] ";
+                     etiquetaSinal = "🟢ENTRADA LONG";
                      classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
+                     classeBG = "bg-emerald-950 bg-opacity-40 border-emerald-800";
                 }
 
                 const agora15 = new Date();
                 const hora15Formatada = agora15.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
                 blocoResultadoAtual.innerHTML = `
-                    <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 text-center shadow-lg">
+                    <div class="${classeBG} rounded-xl p-6 text-center shadow-lg">
                         <div class="text-2xl font-extrabold ${classeCorEtiqueta} mb-2">${etiquetaSinal}</div>
                         <span class="font-bold text-white text-base">${resultado}</span>
                         <p class="font-bold text-white text-base">Atualizado às ${hora15Formatada}</p>
@@ -519,44 +539,53 @@ function desenharHistoricoNaTela() {
         // 🧠 Lógica Dinâmica das Etiquetas de Previsão
         let etiquetaSinal = "[⚪NEUTRO]";
         let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
+        let classeBG = "bg-gray-850";
 
         if (tokenExaustao > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
-            etiquetaSinal = "[🟢COMPRA]";
+            etiquetaSinal = "🟢ENTRADA LONG";
             classeCorEtiqueta = "text-emerald-400"; // Destaca em verde
+            classeBG = "bg-emerald-950 bg-opacity-40 border-emerald-800";
         } 
         if (tokenExaustao <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
-            etiquetaSinal = "[🟢COMPRA] ";
+            etiquetaSinal = "🟢ENTRADA LONG";
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
+            classeBG = "bg-emerald-950 bg-opacity-40 border-emerald-800";
         }
                 
         if (tokenExaustao <= 2 && somaTendencia > 49) {
-            etiquetaSinal = "[🚨VENDER-SHORT🚨]";
+            etiquetaSinal = "🟠ENTRADA SHORT";
             classeCorEtiqueta = "text-orange-600"; // Destaca em rosa/vermelho
+            classeBG = "bg-rose-950 bg-opacity-40 border-rose-900";
         }
         if (somaTendencia < 10) {
-            etiquetaSinal = "[🚨VENDER-SHORT🚨]";
+            etiquetaSinal = "🟠ENTRADA SHORT";
             classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
+            classeBG = "bg-rose-950 bg-opacity-40 border-rose-900";
         }
         if ((tokenExaustao - t2) > 15) {
-            etiquetaSinal = "[🚨VENDER-SAIR🚨]";
+            etiquetaSinal = "🚨SAÍDA SHORT";
             classeCorEtiqueta = "text-red-600"; // Destaca em rosa/vermelho
+            classeBG = "bg-red-950 bg-opacity-40 border-red-900";
         }
         if (tokenExaustao > (t2 + t3)) {
-            etiquetaSinal = "[🚨VENDER-SAIR🚨]";
+            etiquetaSinal = "🚨SAÍDA SHORT";
             classeCorEtiqueta = "text-red-600"; // Destaca em rosa/vermelho
+            classeBG = "bg-red-950 bg-opacity-40 border-red-900";
         }
 
         if (tokenExaustao > (ultimoA + 28) && somaTendencia <= 10) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
-            etiquetaSinal = "[🟢COMPRA] ";
+            etiquetaSinal = "🟢ENTRADA LONG";
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
+            classeBG = "bg-emerald-950 bg-opacity-40 border-emerald-800";
         }
 
         if (tokenExaustao > (ultimoA + 20) && t3 > t2) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
-            etiquetaSinal = "[🟢COMPRA] ";
+            etiquetaSinal = "🟢ENTRADA LONG";
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
+            classeBG = "bg-emerald-950 bg-opacity-40 border-emerald-800";
         }
         ultimoA = tokenExaustao
                 
@@ -564,7 +593,7 @@ function desenharHistoricoNaTela() {
 
         // A sua constante com o HTML atualizado contendo os Avisos Inteligentes
         const linhaHtml = `
-            <div class="flex items-center justify-between bg-gray-850 border border-gray-800 rounded-xl p-4 shadow-sm">
+            <div class="flex items-center justify-between ${classeBG} rounded-xl p-4 shadow-sm">
                 <div class="flex flex-col">
                     <div class="flex items-center gap-2">
                         <span class="text-xs font-black ${classeCorEtiqueta}">${etiquetaSinal}</span>
