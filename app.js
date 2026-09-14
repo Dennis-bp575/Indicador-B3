@@ -394,6 +394,7 @@ async function executarScanner() {
                 // 🧠 Lógica Dinâmica das Etiquetas de Previsão
                 let etiquetaSinal = "[⚪NEUTRO]";
                 let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
+                
 
                 if (totalReversoesCandle > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
                     etiquetaSinal = "[🟢Compra-Mantém]";
@@ -519,36 +520,43 @@ function desenharHistoricoNaTela() {
         // 🧠 Lógica Dinâmica das Etiquetas de Previsão
         let etiquetaSinal = "[⚪NEUTRO]";
         let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
+        let classeBG = "bg-gray-850";
 
         if (tokenExaustao > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
-            etiquetaSinal = "[🟢COMPRA]";
+            etiquetaSinal = "🟢ENTRADA LONG";
             classeCorEtiqueta = "text-emerald-400"; // Destaca em verde
+            classeBG = "bg-emerald-950 bg-opacity-40 border-emerald-800";
         } 
         if (tokenExaustao <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
-            etiquetaSinal = "[🟢COMPRA] ";
+            etiquetaSinal = "🟢ENTRADA LONG";
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
+            classeBG = "bg-emerald-950 bg-opacity-40 border-emerald-800";
         }
                 
         if (tokenExaustao <= 2 && somaTendencia > 49) {
-            etiquetaSinal = "[🚨VENDER🚨]";
+            etiquetaSinal = "🟠ENTRADA SHORT";
             classeCorEtiqueta = "text-orange-600"; // Destaca em rosa/vermelho
+            classeBG = "bg-rose-950 bg-opacity-40 border-rose-900";
         }
         if (somaTendencia < 10) {
-            etiquetaSinal = "[🚨VENDER🚨]";
+            etiquetaSinal = "🟠ENTRADA SHORT]";
             classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
+            classeBG = "bg-rose-950 bg-opacity-40 border-rose-900";
         }
 
         if (tokenExaustao > (ultimoA + 28) && somaTendencia <= 10) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
-            etiquetaSinal = "[🟢COMPRA] ";
+            etiquetaSinal = "🟢ENTRADA LONG";
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
+            classeBG = "bg-emerald-950 bg-opacity-40 border-emerald-800";
         }
 
         if (tokenExaustao > (ultimoA + 20) && t3 > t2) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
-            etiquetaSinal = "[🟢COMPRA] ";
+            etiquetaSinal = "🟢ENTRADA LONG";
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
+            classeBG = "bg-emerald-950 bg-opacity-40 border-emerald-800";
         }
         ultimoA = tokenExaustao
                 
@@ -556,7 +564,7 @@ function desenharHistoricoNaTela() {
 
         // A sua constante com o HTML atualizado contendo os Avisos Inteligentes
         const linhaHtml = `
-            <div class="flex items-center justify-between bg-gray-850 border border-gray-800 rounded-xl p-4 shadow-sm">
+            <div class="flex items-center justify-between ${classeBG} rounded-xl p-4 shadow-sm">
                 <div class="flex flex-col">
                     <div class="flex items-center gap-2">
                         <span class="text-xs font-black ${classeCorEtiqueta}">${etiquetaSinal}</span>
