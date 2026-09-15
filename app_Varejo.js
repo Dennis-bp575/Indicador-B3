@@ -396,23 +396,27 @@ async function executarScanner() {
                 let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
                 
 
-                if (totalReversoesCandle > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
+                if (t2 > t3 && somaTendencia >= 25 && totalReversoesCandle > t3 && somaTendencia <= 60) {
                     etiquetaSinal = "🟢ENTRADA LONG";
                     classeCorEtiqueta = "text-emerald-400"; // Destaca em verde
+                    classeBG = "bg-emerald-950 bg-opacity-40 border-emerald-800";
                 } 
-                if (totalReversoesCandle <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
+                if (t2 <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
                     // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
                     etiquetaSinal = "🟢ENTRADA LONG";
                     classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
+                    classeBG = "bg-emerald-950 bg-opacity-40 border-emerald-800";
                 }
                         
-                if (totalReversoesCandle <= 2 && somaTendencia > 49) {
+                if (t2 <= 2 && somaTendencia > 49) {
                     etiquetaSinal = "🟠ENTRADA SHORT";
                     classeCorEtiqueta = "text-orange-600"; // Destaca em rosa/vermelho
+                    classeBG = "bg-rose-950 bg-opacity-40 border-rose-900";
                 }
                 if (somaTendencia < 10) {
                     etiquetaSinal = "🟠ENTRADA SHORT";
                     classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
+                    classeBG = "bg-rose-950 bg-opacity-40 border-rose-900";
                 }
 
                 if (t2 > (ultimoAA + 28) && somaTendencia <= 10) {
