@@ -563,12 +563,12 @@ function desenharHistoricoNaTela() {
             classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
             classeBG = "bg-rose-950 bg-opacity-40 border border-rose-900";
         }
-        if ((tokenExaustao - t2) > 10) {
+        if ((tokenExaustao - t2) > 8) {
             etiquetaSinal = "🚨SAÍDA SHORT A";
             classeCorEtiqueta = "text-red-600"; // Destaca em rosa/vermelho
             classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
         }
-        if (tokenExaustao > (t2 + t3) && tokenExaustao > 20) {
+        if (tokenExaustao > (t2 + t3) && tokenExaustao > 25) {
             etiquetaSinal = "🚨SAÍDA SHORT B";
             classeCorEtiqueta = "text-red-600"; // Destaca em rosa/vermelho
             classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
