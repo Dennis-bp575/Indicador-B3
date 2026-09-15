@@ -570,7 +570,7 @@ function desenharHistoricoNaTela() {
         // }
         if (tokenExaustao > (t2 + t3 + 10) && tokenExaustao > 20) {
             etiquetaSinal = "🟢ENTRADA LONG E";
-            classeCorEtiqueta = "text-red-600"; // Destaca em rosa/vermelho
+            classeCorEtiqueta = "text-green-600"; // Destaca em rosa/vermelho
             classeBG = "bg-green-950 bg-opacity-40 border border-green-800";
         }
 
