@@ -569,7 +569,7 @@ function desenharHistoricoNaTela() {
             // classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
         // }
         if (tokenExaustao > (t2 + t3 + 10) && tokenExaustao > 20) {
-            etiquetaSinal = "🚨SAÍDA SHORT B";
+            etiquetaSinal = "🟢ENTRADA LONG D";
             classeCorEtiqueta = "text-red-600"; // Destaca em rosa/vermelho
             classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
         }
