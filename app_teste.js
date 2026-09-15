@@ -568,7 +568,7 @@ function desenharHistoricoNaTela() {
             // classeCorEtiqueta = "text-red-600"; // Destaca em rosa/vermelho
             // classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
         // }
-        if (tokenExaustao > (t2 + t3) && tokenExaustao > 25 && (tokenExaustao - t2) < 10) {
+        if (tokenExaustao > (t2 + t3 + 10) && tokenExaustao > 20 || (tokenExaustao - t2) < 10) {
             etiquetaSinal = "🚨SAÍDA SHORT B";
             classeCorEtiqueta = "text-red-600"; // Destaca em rosa/vermelho
             classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
