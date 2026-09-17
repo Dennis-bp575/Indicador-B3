@@ -509,6 +509,7 @@ function desenharHistoricoNaTela() {
     }
 
     let ultimoA = 0
+    let ultimoSinalExibido = null; 
     // O loop agora roda sobre a lista invertida
     historicoInvertido.forEach(item => {
         let classeCor = "bg-gray-800 border-gray-700 text-gray-400";
@@ -542,48 +543,48 @@ function desenharHistoricoNaTela() {
         let classeBG = "bg-gray-850";
 
         if (tokenExaustao > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
-            etiquetaSinal = "🟢ENTRADA LONG A";
+            etiquetaSinal = "🟢ENTRADA LONG";
             classeCorEtiqueta = "text-emerald-400"; // Destaca em verde
             classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
         } 
         if (tokenExaustao <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
-            etiquetaSinal = "🟢ENTRADA LONG B";
+            etiquetaSinal = "🟢ENTRADA LONG";
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
             classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
         }
                 
         if (tokenExaustao <= 2 && somaTendencia > 49) {
-            etiquetaSinal = "🟠ENTRADA SHORT A";
+            etiquetaSinal = "🟠ENTRADA SHORT";
             classeCorEtiqueta = "text-orange-600"; // Destaca em rosa/vermelho
             classeBG = "bg-rose-950 bg-opacity-40 border border-rose-900";
         }
         if (somaTendencia < 10) {
-            etiquetaSinal = "🟠ENTRADA SHORT B";
+            etiquetaSinal = "🟠ENTRADA SHORT";
             classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
             classeBG = "bg-rose-950 bg-opacity-40 border border-rose-900";
         }
         if ((tokenExaustao - t2) > 15) {
-            etiquetaSinal = "🚨SAÍDA SHORT A";
+            etiquetaSinal = "🚨SAÍDA SHORT;
             classeCorEtiqueta = "text-red-600"; // Destaca em rosa/vermelho
             classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
         }
         if (tokenExaustao > (t2 + t3)) {
-            etiquetaSinal = "🚨SAÍDA SHORT B";
+            etiquetaSinal = "🚨SAÍDA SHORT";
             classeCorEtiqueta = "text-red-600"; // Destaca em rosa/vermelho
             classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
         }
 
         if (tokenExaustao > (ultimoA + 28) && somaTendencia <= 10) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
-            etiquetaSinal = "🟢ENTRADA LONG C";
+            etiquetaSinal = "🟢ENTRADA LONG";
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
             classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
         }
 
         if (tokenExaustao > (ultimoA + 20) && t3 > t2) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
-            etiquetaSinal = "🟢ENTRADA LONG D";
+            etiquetaSinal = "🟢ENTRADA LONG";
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
             classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
         }
@@ -591,37 +592,50 @@ function desenharHistoricoNaTela() {
                 
         tocarBeep();
 
-            // Envolve todo o bloco com um IF para ignorar o sinal neutro
-            if (etiquetaSinal !== "[⚪NEUTRO]") {
+            // 2. Extraia o tipo puro do sinal para facilitar a comparação (LONG ou SHORT)
+            // Se a sua etiqueta contiver o texto completo, podemos usar .includes() para checar
+            const ehLong = etiquetaSinal.includes("LONG");
+            const ehShort = etiquetaSinal.includes("SHORT");
+            const ehSdShort = etiquetaSinal.includes("SD SHORT");
             
-                const linhaHtml = `
-                    <div class="flex items-center justify-between ${classeBG} rounded-xl p-4 shadow-sm">
-                        <div class="flex flex-col">
-                            <div class="flex items-center gap-2">
-                                <span class="text-xs font-black ${classeCorEtiqueta}">${etiquetaSinal}</span>
-                                <span class="font-bold text-white text-base">${resultado}</span>
-                            </div>
-                            <span class="text-xs text-gray-500 mt-1">Data do Sinal: ${item.dataSinal}</span>
-                        </div>
-                        
-                        <!-- Grupo de Badges à direita -->
-                        <div class="flex flex-col sm:flex-row items-end sm:items-center gap-2">
-                            <!-- Novo Badge de Abertura -->
-                            <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCorAbertura}">
-                                Open: ${item.aberturaBolsa || "..."}
+            // 3. Aplica a nova regra de validação dentro do IF principal
+            if (etiquetaSinal !== "[⚪NEUTRO]") {
+                
+                // Só prossegue se o sinal atual for diferente do último sinal que foi desenhado na tela
+                if ((ehLong && ultimoSinalExibido !== "🟢ENTRADA LONG") || (ehShort && ultimoSinalExibido !== "🟠ENTRADA SHORT") || (ehSdShort && ultimoSinalExibido !== "🚨SAÍDA SHORT")) {
+                    
+                    const linhaHtml = `
+                        <div class="flex items-center justify-between ${classeBG} rounded-xl p-4 shadow-sm">
+                            <div class="flex flex-col">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-black ${classeCorEtiqueta}">${etiquetaSinal}</span>
+                                    <span class="font-bold text-white text-base">${resultado}</span>
+                                </div>
+                                <span class="text-xs text-gray-500 mt-1">Data do Sinal: ${item.dataSinal}</span>
                             </div>
                             
-                            <!-- Seu Badge Antigo de Fechamento -->
-                            <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCor}">
-                                Close: ${item.resultadoBolsa}
+                            <!-- Grupo de Badges à direita -->
+                            <div class="flex flex-col sm:flex-row items-end sm:items-center gap-2">
+                                <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCorAbertura}">
+                                    Open: ${item.aberturaBolsa || "..."}
+                                </div>
+                                <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCor}">
+                                    Close: ${item.resultadoBolsa}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
+                    `;
             
-                // Só insere no bloco se passou na condição acima
-                blocoListaHistorico.insertAdjacentHTML('beforeend', linhaHtml);
+                    // Insere a linha na tela
+                    blocoListaHistorico.insertAdjacentHTML('beforeend', linhaHtml);
+                    
+                    // 4. ATUALIZA A MEMÓRIA: Diz ao código qual foi o último tipo gravado com sucesso
+                    if (ehLong) ultimoSinalExibido = "🟢ENTRADA LONG";
+                    if (ehShort) ultimoSinalExibido = "🟠ENTRADA SHORT";
+                    if (ehSdShort) ultimoSinalExibido = "🚨SAÍDA SHORT";
+                }
             }
+
 
     });
 }
