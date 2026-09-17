@@ -596,7 +596,7 @@ function desenharHistoricoNaTela() {
             // Se a sua etiqueta contiver o texto completo, podemos usar .includes() para checar
             const ehLong = etiquetaSinal.includes("LONG");
             const ehShort = etiquetaSinal.includes("SHORT");
-            const ehSdShort = etiquetaSinal.includes("SD SHORT");
+            const ehSdShort = etiquetaSinal.includes("SAÍDA");
             
             // 1. Crie essa variável ANTES de começar o loop dos sinais (iniciando vazia)
             let ultimoSinalExibido = null; 
@@ -615,15 +615,15 @@ function desenharHistoricoNaTela() {
                     // Aplica a máquina de estados baseada no último que foi impresso
                     if (ultimoSinalExibido === "🟢ENTRADA LONG") {
                         // LONG só sai se o próximo for SHORT
-                        if (etiquetaSinal === ehShort) sinalValido = true;
+                        if (ehShort) sinalValido = true;
                     } 
                     else if (ultimoSinalExibido === "🟠ENTRADA SHORT") {
                         // SHORT aceita virar outro SHORT ou ir para SAÍDA SHORT
-                        if (etiquetaSinal === ehLong || etiquetaSinal === ehSdShort) sinalValido = true;
+                        if (ehLong || ehSdShort) sinalValido = true;
                     } 
                     else if (ultimoSinalExibido === "🚨SAÍDA SHORT") {
                         // SAÍDA SHORT travou, agora só aceita reabrir se for um sinal LONG
-                        if (etiquetaSinal === ehLong) sinalValido = true;
+                        if (ehLong) sinalValido = true;
                     }
                 }
             
@@ -654,8 +654,8 @@ function desenharHistoricoNaTela() {
                     blocoListaHistorico.insertAdjacentHTML('beforeend', linhaHtml);
             
                     // Atualiza a memória de forma exata usando os seus blocos de texto:
-                    if (ehLong)   ultimoSinalExibido = "🟢ENTRADA LONG";
-                    if (ehShort)  ultimoSinalExibido = "🟠ENTRADA SHORT";
+                    if (ehLong) ultimoSinalExibido = "🟢ENTRADA LONG";
+                    if (ehShort) ultimoSinalExibido = "🟠ENTRADA SHORT";
                     if (ehSdShort) ultimoSinalExibido = "🚨SAÍDA SHORT";
                 }
             }
