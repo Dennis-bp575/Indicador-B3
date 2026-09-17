@@ -619,7 +619,7 @@ function desenharHistoricoNaTela() {
                     } 
                     else if (ultimoSinalExibido === "🟠ENTRADA SHORT") {
                         // SHORT aceita virar outro SHORT ou ir para SAÍDA SHORT
-                        if (ehLong || ehSdShort) sinalValido = true;
+                        if (ehShort || ehSdShort) sinalValido = true;
                     } 
                     else if (ultimoSinalExibido === "🚨SAÍDA SHORT") {
                         // SAÍDA SHORT travou, agora só aceita reabrir se for um sinal LONG
