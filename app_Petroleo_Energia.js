@@ -615,15 +615,15 @@ function desenharHistoricoNaTela() {
                     // Aplica a máquina de estados baseada no último que foi impresso
                     if (ultimoSinalExibido === "🟢ENTRADA LONG") {
                         // LONG só sai se o próximo for SHORT
-                        if (ehShort) sinalValido = true;
+                        if (etiquetaSinal === ehShort) sinalValido = true;
                     } 
                     else if (ultimoSinalExibido === "🟠ENTRADA SHORT") {
                         // SHORT aceita virar outro SHORT ou ir para SAÍDA SHORT
-                        if (ehShort || ehSdShort) sinalValido = true;
+                        if (etiquetaSinal === ehLong || etiquetaSinal === ehSdShort) sinalValido = true;
                     } 
                     else if (ultimoSinalExibido === "🚨SAÍDA SHORT") {
                         // SAÍDA SHORT travou, agora só aceita reabrir se for um sinal LONG
-                        if (ehLong) sinalValido = true;
+                        if (etiquetaSinal === ehLong) sinalValido = true;
                     }
                 }
             
