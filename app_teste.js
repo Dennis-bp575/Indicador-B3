@@ -1,4 +1,4 @@
-// app_teste.js - Painel de Simulação de Ativos (Com Data de Início)
+// app_teste.js - Painel de Simulação de Ativos (Com Preço da Última Negociação)
 
 (function() {
     // 1. Cria o container do painel de simulação dentro do HTML existente
@@ -15,7 +15,7 @@
     painelSimulacao.id = 'painel-simulacao-ativos';
     painelSimulacao.className = 'mt-6 bg-gray-850 bg-opacity-40 border border-gray-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm space-y-5 transition-all duration-300';
     
-    // Injeta o HTML estrutural atualizado com o campo de data
+    // Injeta o HTML estrutural atualizado com o campo de data e o card de última negociação abaixo do botão
     painelSimulacao.innerHTML = `
         <!-- Cabeçalho do Ativo Selecionado -->
         <div class="flex justify-between items-center border-b border-gray-800 pb-3">
@@ -26,11 +26,11 @@
             <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Simulador 16:45</span>
         </div>
 
-        <!-- Grid de Informações: Preço e Estado -->
+        <!-- Grid de Informações: Preço de Entrada da Simulação e Estado -->
         <div class="grid grid-cols-2 gap-4 text-center">
-            <!-- Bloco de Preço -->
+            <!-- Bloco de Preço de Entrada (Dia 10/07) -->
             <div class="bg-gray-900/50 border border-gray-800 rounded-xl p-4 flex flex-col justify-center">
-                <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider block mb-1">Preço Atual</span>
+                <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider block mb-1">Preço Entrada</span>
                 <div id="simulacao-preco" class="text-2xl font-black text-gray-200">R$ --,--</div>
             </div>
 
@@ -50,24 +50,34 @@
                 <span>Inverter Posição</span>
             </button>
         </div>
+
+        <!-- NOVO CARD: ÚLTIMA NEGOCIAÇÃO DA BOLSA (Abaixo do botão inverter) -->
+        <div class="bg-gray-900/30 border border-gray-800 rounded-xl p-3 flex justify-between items-center text-sm px-4">
+            <div class="flex items-center gap-2">
+                <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-gray-400 font-medium">Última Negociação (B3)</span>
+            </div>
+            <div id="simulacao-preco-mercado" class="font-bold text-gray-100 text-base">R$ --,--</div>
+        </div>
     `;
 
     // Insere o painel logo após o bloco de abas
     containerAbasAtivos.parentNode.insertBefore(painelSimulacao, containerAbasAtivos.nextSibling);
 
-    // 2. Banco de dados local com os dados oficiais (SHORT iniciando em 10/07)
+    // 2. Banco de dados local contendo o preço fixo de Entrada (10/07) e o preço Atual de mercado da Bolsa (B3)
     const dadosAtivos = {
-        'CEAB3': { preco: '9,34', posicao: 'SHORT', inicio: '10/07' },
-        'VAMO3': { preco: '3,46', posicao: 'SHORT', inicio: '10/07' },
-        'CSAN3': { preco: '3,85', posicao: 'SHORT', inicio: '10/07' }
+        'CEAB3': { precoEntrada: '9,34', precoMercado: '8,89', posicao: 'SHORT', inicio: '10/07' },
+        'VAMO3': { precoEntrada: '3,46', precoMercado: '3,35', posicao: 'SHORT', inicio: '10/07' },
+        'CSAN3': { precoEntrada: '3,85', precoMercado: '3,67', posicao: 'SHORT', inicio: '10/07' }
     };
 
-    let ativoAtual = 'CEAB3'; // Iniciando na primeira aba do novo setup
+    let ativoAtual = 'CEAB3'; // Iniciando na primeira aba por padrão
 
     // Elementos internos do painel para manipulação
     const txtTicket = document.getElementById('simulacao-ticket');
     const txtDataInicio = document.getElementById('simulacao-data-inicio');
-    const txtPreco = document.getElementById('simulacao-preco');
+    const txtPrecoEntrada = document.getElementById('simulacao-preco');
+    const txtPrecoMercado = document.getElementById('simulacao-preco-mercado');
     const cardEstado = document.getElementById('simulacao-estado-card');
     const txtEstado = document.getElementById('simulacao-estado-texto');
     const btnInverter = document.getElementById('btn-inverter-posicao');
@@ -81,14 +91,13 @@
 
         txtTicket.innerText = ticket;
         txtDataInicio.innerText = `Início: ${dados.inicio}`;
-        txtPreco.innerText = `R$ ${dados.preco}`;
+        txtPrecoEntrada.innerText = `R$ ${dados.precoEntrada}`;
+        txtPrecoMercado.innerText = `R$ ${dados.precoMercado}`;
 
         if (dados.posicao === 'LONG') {
-            // Estilização Verde para LONG (Comprado)
             cardEstado.className = "rounded-xl p-4 border bg-emerald-950 bg-opacity-40 border-emerald-800 text-emerald-400 transition-all duration-300 flex flex-col justify-center";
             txtEstado.innerText = "LONG";
         } else {
-            // Estilização Vermelha para SHORT (Vendido)
             cardEstado.className = "rounded-xl p-4 border bg-rose-950 bg-opacity-40 border-rose-900 text-rose-400 transition-all duration-300 flex flex-col justify-center";
             txtEstado.innerText = "SHORT";
         }
