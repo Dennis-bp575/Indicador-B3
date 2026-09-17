@@ -123,19 +123,28 @@
                 Resultado atual:
             </div>
             
-           <!-- Mude no seu index.html para forçar o tamanho e a cor -->
+           <!-- Mude no seu index.html para forçar o tamanho e a cor 
             <div id="resultado-atual" 
                  style="font-size: 2.25rem !important; color: #34d399 !important;" 
                  class="font-extrabold tracking-tight mt-1">
                  Aguardando...
             </div>
+-->
+            <div id="card-sinal" class="bg-gray-700/50 rounded-xl p-6 text-center border border-gray-600 transition-all duration-300">
+                <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider block mb-1">Sinal Atual</span>
+                <div id="resultado-atual" class="text-3xl font-black text-gray-400 animate-pulse">CARREGANDO...</div>
+                
+            </div>
+            
 
         </div>
+
         
-        <!-- BOTÃO DE ATUALIZAÇÃO MAIS ESTREITO E JUSTIFICADO -->
+        
+        <!-- BOTÃO DE ATUALIZAÇÃO MAIS ESTREITO E JUSTIFICADO  -->
         <div class="px-1 mt-3 flex justify-center">
-            <!-- py-2 deixa o botão mais estreito verticalmente, e max-w-xs limita a largura horizontal -->
-            <button id="btn-atualizar" class="w-full max-w-xs flex items-center justify-center bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-gray-900 font-bold py-2 px-4 rounded-xl shadow-lg transform active:scale-[0.98] transition-all focus:outline-none focus:ring-2 focus:ring-emerald-400 text-sm">
+              <!-- py-2 deixa o botão mais estreito verticalmente, e max-w-xs limita a largura horizontal -->
+           <button id="btn-atualizar" class="w-full max-w-xs flex items-center justify-center bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-gray-900 font-bold py-2 px-4 rounded-xl shadow-lg transform active:scale-[0.98] transition-all focus:outline-none focus:ring-2 focus:ring-emerald-400 text-sm">
                 <span>Atualizar</span>
             </button>
         </div>
