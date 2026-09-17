@@ -565,7 +565,7 @@ function desenharHistoricoNaTela() {
             classeBG = "bg-rose-950 bg-opacity-40 border border-rose-900";
         }
         if ((tokenExaustao - t2) > 15) {
-            etiquetaSinal = "🚨SAÍDA SHORT;
+            etiquetaSinal = "🚨SAÍDA SHORT";
             classeCorEtiqueta = "text-red-600"; // Destaca em rosa/vermelho
             classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
         }
