@@ -494,7 +494,7 @@ function desenharHistoricoNaTela() {
     }
 
     let ultimoA = 0
-    let ultimoSinalExibido = null; 
+  
     // O loop agora roda sobre a lista invertida
     historicoInvertido.forEach(item => {
         let classeCor = "bg-gray-800 border-gray-700 text-gray-400";
@@ -566,50 +566,32 @@ function desenharHistoricoNaTela() {
         ultimoA = tokenExaustao
                 
         tocarBeep();
-
-            
-            // 2. Extraia o tipo puro do sinal para facilitar a comparação (LONG ou SHORT)
-            // Se a sua etiqueta contiver o texto completo, podemos usar .includes() para checar
-            const ehLong = etiquetaSinal.includes("LONG");
-            const ehShort = etiquetaSinal.includes("SHORT");
-            
-            // 3. Aplica a nova regra de validação dentro do IF principal
-            if (etiquetaSinal !== "[⚪NEUTRO]") {
                 
-                // Só prossegue se o sinal atual for diferente do último sinal que foi desenhado na tela
-                if ((ehLong && ultimoSinalExibido !== "🟢ENTRADA LONG") || (ehShort && ultimoSinalExibido !== "🟠ENTRADA SHORT")) {
-                    
-                    const linhaHtml = `
-                        <div class="flex items-center justify-between ${classeBG} rounded-xl p-4 shadow-sm">
-                            <div class="flex flex-col">
-                                <div class="flex items-center gap-2">
-                                    <span class="text-xs font-black ${classeCorEtiqueta}">${etiquetaSinal}</span>
-                                    <span class="font-bold text-white text-base">${resultado}</span>
-                                </div>
-                                <span class="text-xs text-gray-500 mt-1">Data do Sinal: ${item.dataSinal}</span>
-                            </div>
-                            
-                            <!-- Grupo de Badges à direita -->
-                            <div class="flex flex-col sm:flex-row items-end sm:items-center gap-2">
-                                <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCorAbertura}">
-                                    Open: ${item.aberturaBolsa || "..."}
-                                </div>
-                                <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCor}">
-                                    Close: ${item.resultadoBolsa}
-                                </div>
-                            </div>
-                        </div>
-                    `;
-            
-                    // Insere a linha na tela
-                    blocoListaHistorico.insertAdjacentHTML('beforeend', linhaHtml);
-                    
-                    // 4. ATUALIZA A MEMÓRIA: Diz ao código qual foi o último tipo gravado com sucesso
-                    if (ehLong) ultimoSinalExibido = "🟢ENTRADA LONG";
-                    if (ehShort) ultimoSinalExibido = "🟠ENTRADA SHORT";
-                }
-            }
+        const linhaHtml = `
+            <div class="flex items-center justify-between ${classeBG} rounded-xl p-4 shadow-sm">
+                <div class="flex flex-col">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-black ${classeCorEtiqueta}">${etiquetaSinal}</span>
+                        <span class="font-bold text-white text-base">${resultado}</span>
+                    </div>
+                    <span class="text-xs text-gray-500 mt-1">Data do Sinal: ${item.dataSinal}</span>
+                </div>
+                
+                <!-- Grupo de Badges à direita -->
+                <div class="flex flex-col sm:flex-row items-end sm:items-center gap-2">
+                    <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCorAbertura}">
+                        Open: ${item.aberturaBolsa || "..."}
+                    </div>
+                    <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCor}">
+                        Close: ${item.resultadoBolsa}
+                    </div>
+                </div>
+            </div>
+        `;
 
+        // Insere a linha na tela
+        blocoListaHistorico.insertAdjacentHTML('beforeend', linhaHtml);
+                    
 
     });
 }
