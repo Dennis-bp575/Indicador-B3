@@ -594,9 +594,9 @@ function desenharHistoricoNaTela() {
 
             // 2. Extraia o tipo puro do sinal para facilitar a comparação (LONG ou SHORT)
             // Se a sua etiqueta contiver o texto completo, podemos usar .includes() para checar
-            const ehLong = etiquetaSinal.includes("LONG");
-            const ehShort = etiquetaSinal.includes("SHORT");
-            const ehSdShort = etiquetaSinal.includes("SAÍDA");
+            const ehLong = etiquetaSinal.includes("ENTRADA LONG");
+            const ehShort = etiquetaSinal.includes("ENTRADA SHORT");
+            const ehSdShort = etiquetaSinal.includes("SAÍDA SHORT");
             
             // 1. Crie essa variável ANTES de começar o loop dos sinais (iniciando vazia)
             let ultimoSinalExibido = null; 
@@ -604,8 +604,8 @@ function desenharHistoricoNaTela() {
             // ... dentro do seu laço de repetição (forEach ou for) ...
             
             if (etiquetaSinal !== "[⚪NEUTRO]") {
-                console.log(etiquetaSinal, ehLong, ehShort, ehSdShort);
-                        return;
+                // console.log(etiquetaSinal, ehLong, ehShort, ehSdShort);
+                        // return;
                 // Define uma variável para controlar se o sinal atual é válido baseado no histórico
                 let sinalValido = false;
             
