@@ -161,6 +161,37 @@
 
     // Inicializa exibindo CEAB3 por padrão
     atualizarPainelVisual('CEAB3');
-
+    
+    async function buscarPrecoB3(ticket) {
+        try {
+            // Mostra um estado de carregando enquanto busca
+            txtPrecoMercado.innerText = "Atualizando...";
+            
+            // Faz a requisição para a API gratuita do Brapi
+            const resposta = await fetch(`https://brapi.dev{ticket}`);
+            const dadosApi = Milford = await resposta.json();
+            
+            if (dadosApi && dadosApi.results && dadosApi.results[0]) {
+                const precoFechamento = dadosApi.results[0].regularMarketPrice;
+                
+                // Formata o número recebido para o padrão brasileiro (Ex: 8,89)
+                const precoFormatado = precoFechamento.toLocaleString('pt-BR', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+                
+                // Atualiza o nosso objeto temporário local com o dado real obtido
+                dadosAtivos[ticket].precoMercado = precoFormatado;
+                
+                // Exibe o preço atualizado na tela
+                txtPrecoMercado.innerText = `R$ ${precoFormatado}`;
+            } else {
+                txtPrecoMercado.innerText = "Erro ao ler dados";
+            }
+        } catch (erro) {
+            console.error("Erro ao buscar cotação na B3:", erro);
+            txtPrecoMercado.innerText = "Erro de conexão";
+        }
+    }
 })();
 
