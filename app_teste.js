@@ -168,7 +168,7 @@
             txtPrecoMercado.innerText = "Atualizando...";
             
             // Faz a requisição para a API gratuita do Brapi
-            const resposta = await fetch(`https://brapi.dev{ticket}`);
+            const resposta = await fetch(`https://brapi.dev{ticket}?token=whN8hFPcawDXwGhjRLAoN7`);
             const dadosApi = Milford = await resposta.json();
             
             if (dadosApi && dadosApi.results && dadosApi.results[0]) {
