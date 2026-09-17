@@ -3,9 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Indicador Quant</title>
+    <title>Indicador B3</title>
     <!-- Tailwind CSS para estilização rápida -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+        <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seletor de Estratégia</title>
+    <style>
+        /* Container principal com o fundo escuro do exemplo */
+        .container-estrategia {
+            background-color: #171e2b;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: sans-serif;
+            color: #94a3b8;
+        }
+
+        .titulo-seletor {
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Grupo de botões lado a lado */
+        .grupo-opcoes {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Esconde o rádio button nativo (aquela bolinha feia) */
+        .opcao-item input[type="radio"] {
+            display: none;
+        }
+
+        /* Estilização padrão do botão desmarcado (Baixa/Neutro) */
+        .opcao-item .botao-customizado {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: #94a3b8;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        /* Efeito de hover (passar o mouse) */
+        .opcao-item .botao-customizado:hover {
+            background-color: #334155;
+            color: #f1f5f9;
+        }
+
+        /* Estilização quando o botão estiver SELECIONADO */
+        .opcao-item input[type="radio"]:checked + .botao-customizado {
+            background-color: #064e3b; /* Fundo verde escuro */
+            border-color: #10b981;     /* Borda verde brilhante */
+            color: #34d399;            /* Texto verde claro */
+        }
+
+        /* Pequena seta indicativa opcional após o texto */
+        .botao-customizado::after {
+            content: " ▾";
+            margin-left: 8px;
+            font-size: 10px;
+            opacity: 0.7;
+        }
+        
+        /* Muda a seta quando selecionado */
+        .opcao-item input[type="radio"]:checked + .botao-customizado::after {
+            content: " ▲";
+            opacity: 1;
+        }
+    </style>
+    
 </head>
 <body class="bg-gray-900 text-gray-100 font-sans min-h-screen p-4 md:p-8">
 
@@ -16,16 +94,30 @@
         <div class="bg-gray-850 bg-opacity-50 border border-gray-800 rounded-2xl p-4 text-center shadow-xl backdrop-blur-sm">
             <!-- Rótulo Principal -->
 
-             <div>Selecione Estratégia:
+           <div class="container-estrategia">
+                <div class="titulo-seletor">Selecione Estratégia:</div>
                 
-                <!-- Botão de Seleção -->
-                <select id="seletorEstrategia">
-                    <option value="">-- Selecione --</option>
-                    <option value="app_Varejo.js">Varejo</option>
-                    <option value="app_Petroleo_Energia.js">Petróleo-Energia</option>
-                    <option value="app_teste.js">Teste</option>
-                </select>
-            
+                <div class="grupo-opcoes" id="seletorEstrategia">
+                    
+                    <!-- Opção Varejo -->
+                    <label class="opcao-item">
+                        <input type="radio" name="estrategia" value="app_Varejo.js">
+                        <span class="botao-customizado">Varejo</span>
+                    </label>
+                    
+                    <!-- Opção Petróleo-Energia -->
+                    <label class="opcao-item">
+                        <input type="radio" name="estrategia" value="app_Petroleo_Energia.js">
+                        <span class="botao-customizado">Petróleo-Energia</span>
+                    </label>
+                    
+                    <!-- Opção Teste -->
+                    <label class="opcao-item">
+                        <input type="radio" name="estrategia" value="app_teste.js">
+                        <span class="botao-customizado">Teste</span>
+                    </label>
+                    
+                </div>
             </div>
             <div class="text-white font-extrabold text-sm">
                 Resultado atual:
@@ -85,30 +177,36 @@
 
     </div>
     <script> 
-
-        // 1. Pega o nome do script que foi passado na URL (ex: ?script=petr3.js)
+        // 1. Pega o nome do script que foi passado na URL (ex: ?script=app_Varejo.js)
         const urlParams = new URLSearchParams(window.location.search);
         const scriptParaCarregar = urlParams.get('script');
-
+    
         // 2. Se tiver um script na URL, cria a tag e injeta ela no fim do HTML
         if (scriptParaCarregar) {
             const scriptTag = document.createElement('script');
             scriptTag.src = scriptParaCarregar;
             document.body.appendChild(scriptTag);
-
-            // Deixa o select marcado com o ativo atual para você saber qual está rodando
-            document.getElementById('seletorEstrategia').value = scriptParaCarregar;
+    
+            // Deixa o botão de rádio correto marcado como ativo baseado no valor da URL
+            const radioAtivo = document.querySelector(`input[name="estrategia"][value="${scriptParaCarregar}"]`);
+            if (radioAtivo) {
+                radioAtivo.checked = true;
+            }
         }
-
-        // 3. Escuta o botão de seleção. Quando você mudar o ativo, ele recarrega a página mudando a URL
-        document.getElementById('seletorEstrategia').addEventListener('change', function() {
-            const arquivo = this.value;
-            if (arquivo) {
-                // Recarrega a página atual injetando o "?script=nome_do_arquivo.js"
-                window.location.search = `?script=${arquivo}`;
+    
+        // 3. Escuta os botões de seleção dentro do container. Quando você mudar, ele recarrega a página mudando a URL
+        const containerEstrategia = document.getElementById('seletorEstrategia');
+        containerEstrategia.addEventListener('change', function(event) {
+            // Verifica se o elemento que mudou foi realmente um dos inputs de rádio
+            if (event.target && event.target.name === 'estrategia') {
+                const arquivo = event.target.value;
+                if (arquivo) {
+                    // Recarrega a página atual injetando o "?script=nome_do_arquivo.js"
+                    window.location.search = `?script=${arquivo}`;
+                }
             }
         });
-    
     </script>
+
 </body>
 </html>
