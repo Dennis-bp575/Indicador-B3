@@ -409,14 +409,14 @@ async function executarScanner() {
                 }
                         
                 if (t2 <= 2 && somaTendencia > 49) {
-                    etiquetaSinal = "🟠ENTRADA SHORT";
-                    classeCorEtiqueta = "text-orange-600"; // Destaca em rosa/vermelho
-                    classeBG = "bg-rose-950 bg-opacity-40 border-rose-900";
+                    etiquetaSinal = "🔵ENTRADA SHORT";
+                    classeCorEtiqueta = "text-blue-600"; // Destaca em rosa/vermelho
+                    classeBG = "bg-blue-950 bg-opacity-40 border-blue-900";
                 }
                 if (somaTendencia < 10) {
-                    etiquetaSinal = "🟠ENTRADA SHORT";
-                    classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
-                    classeBG = "bg-rose-950 bg-opacity-40 border-rose-900";
+                    etiquetaSinal = "🔵ENTRADA SHORT";
+                    classeCorEtiqueta = "text-blue-400"; // Destaca em rosa/vermelho
+                    classeBG = "bg-blue-950 bg-opacity-40 border-blue-900";
                 }
 
                 if (t2 > (ultimoAA + 28) && somaTendencia <= 10) {
@@ -540,14 +540,14 @@ function desenharHistoricoNaTela() {
         }
                 
         if (tokenExaustao <= 2 && somaTendencia > 49) {
-            etiquetaSinal = "🟠ENTRADA SHORT";
-            classeCorEtiqueta = "text-orange-600"; // Destaca em rosa/vermelho
-            classeBG = "bg-rose-950 bg-opacity-40 border border-rose-900";
+            etiquetaSinal = "🔵ENTRADA SHORT";
+            classeCorEtiqueta = "text-blue-600"; // Destaca em rosa/vermelho
+            classeBG = "bg-blue-950 bg-opacity-40 border border-blue-900";
         }
         if (somaTendencia < 10) {
-            etiquetaSinal = "🟠ENTRADA SHORT";
-            classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
-            classeBG = "bg-rose-950 bg-opacity-40 border border-rose-900";
+            etiquetaSinal = "🔵ENTRADA SHORT";
+            classeCorEtiqueta = "text-blue-400"; // Destaca em rosa/vermelho
+            classeBG = "bg-blue-950 bg-opacity-40 border border-blue-900";
         }
 
         if (tokenExaustao > (ultimoA + 28) && somaTendencia <= 10) {
