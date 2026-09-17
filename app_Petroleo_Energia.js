@@ -598,11 +598,37 @@ function desenharHistoricoNaTela() {
             const ehShort = etiquetaSinal.includes("SHORT");
             const ehSdShort = etiquetaSinal.includes("SD SHORT");
             
-            // 3. Aplica a nova regra de validação dentro do IF principal
+            // 1. Crie essa variável ANTES de começar o loop dos sinais (iniciando vazia)
+            let ultimoSinalExibido = null; 
+            
+            // ... dentro do seu laço de repetição (forEach ou for) ...
+            
             if (etiquetaSinal !== "[⚪NEUTRO]") {
-                
-                // Só prossegue se o sinal atual for diferente do último sinal que foi desenhado na tela
-                if ((ehLong && ultimoSinalExibido !== "🟢ENTRADA LONG") || (ehShort && ultimoSinalExibido !== "🟠ENTRADA SHORT") || (ehSdShort && ultimoSinalExibido !== "🚨SAÍDA SHORT")) {
+            
+                // Define uma variável para controlar se o sinal atual é válido baseado no histórico
+                let sinalValido = false;
+            
+                // Se for o PRIMEIRO sinal de todos, deixa passar para definir o estado inicial
+                if (ultimoSinalExibido === null) {
+                    sinalValido = true;
+                } else {
+                    // Aplica a máquina de estados baseada no último que foi impresso
+                    if (ultimoSinalExibido === "🟢ENTRADA LONG") {
+                        // LONG só sai se o próximo for SHORT
+                        if (ehShort) sinalValido = true;
+                    } 
+                    else if (ultimoSinalExibido === "🟠ENTRADA SHORT") {
+                        // SHORT aceita virar outro SHORT ou ir para SAÍDA SHORT
+                        if (ehLong || ehSdShort) sinalValido = true;
+                    } 
+                    else if (ultimoSinalExibido === "🚨SAÍDA SHORT") {
+                        // SAÍDA SHORT travou, agora só aceita reabrir se for um sinal LONG
+                        if (ehLong) sinalValido = true;
+                    }
+                }
+            
+                // Se o sinal respeitou as regras do setor de energia, monta e coloca na tela
+                if (sinalValido) {
                     
                     const linhaHtml = `
                         <div class="flex items-center justify-between ${classeBG} rounded-xl p-4 shadow-sm">
@@ -614,7 +640,6 @@ function desenharHistoricoNaTela() {
                                 <span class="text-xs text-gray-500 mt-1">Data do Sinal: ${item.dataSinal}</span>
                             </div>
                             
-                            <!-- Grupo de Badges à direita -->
                             <div class="flex flex-col sm:flex-row items-end sm:items-center gap-2">
                                 <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCorAbertura}">
                                     Open: ${item.aberturaBolsa || "..."}
@@ -626,12 +651,11 @@ function desenharHistoricoNaTela() {
                         </div>
                     `;
             
-                    // Insere a linha na tela
                     blocoListaHistorico.insertAdjacentHTML('beforeend', linhaHtml);
-                    
-                    // 4. ATUALIZA A MEMÓRIA: Diz ao código qual foi o último tipo gravado com sucesso
-                    if (ehLong) ultimoSinalExibido = "🟢ENTRADA LONG";
-                    if (ehShort) ultimoSinalExibido = "🟠ENTRADA SHORT";
+            
+                    // Atualiza a memória de forma exata usando os seus blocos de texto:
+                    if (ehLong)   ultimoSinalExibido = "🟢ENTRADA LONG";
+                    if (ehShort)  ultimoSinalExibido = "🟠ENTRADA SHORT";
                     if (ehSdShort) ultimoSinalExibido = "🚨SAÍDA SHORT";
                 }
             }
