@@ -561,7 +561,7 @@ function desenharHistoricoNaTela() {
         }
         if (somaTendencia < 10) {
             etiquetaSinal = "🔵ENTRADA SHORT";
-            classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
+            classeCorEtiqueta = "text-blue-400"; // Destaca em rosa/vermelho
             classeBG = "bg-blue-950 bg-opacity-40 border border-blue-900";
         }
         if ((tokenExaustao - t2) > 15) {
