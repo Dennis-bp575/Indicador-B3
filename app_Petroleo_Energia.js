@@ -598,13 +598,8 @@ function desenharHistoricoNaTela() {
             const ehShort = etiquetaSinal.includes("ENTRADA SHORT");
             const ehSdShort = etiquetaSinal.includes("SAÍDA SHORT");
             
-            // 1. Crie essa variável ANTES de começar o loop dos sinais (iniciando vazia)
-            let ultimoSinalExibido = null; 
-            
-            // ... dentro do seu laço de repetição (forEach ou for) ...
-            
             if (etiquetaSinal !== "[⚪NEUTRO]") {
-                console.log(etiquetaSinal, ehLong, ehShort, ehSdShort);
+                // console.log(etiquetaSinal, ultimoSinalExibido, ehLong, ehShort, ehSdShort);
                         // return;
                 // Define uma variável para controlar se o sinal atual é válido baseado no histórico
                 let sinalValido = false;
