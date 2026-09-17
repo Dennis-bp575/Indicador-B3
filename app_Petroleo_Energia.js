@@ -598,32 +598,32 @@ function desenharHistoricoNaTela() {
             const ehShort = etiquetaSinal.includes("ENTRADA SHORT");
             const ehSdShort = etiquetaSinal.includes("SAÍDA SHORT");
             
+
             if (etiquetaSinal !== "[⚪NEUTRO]") {
-                // console.log(etiquetaSinal, ultimoSinalExibido, ehLong, ehShort, ehSdShort);
-                        // return;
-                // Define uma variável para controlar se o sinal atual é válido baseado no histórico
+            
                 let sinalValido = false;
             
-                // Se for o PRIMEIRO sinal de todos, deixa passar para definir o estado inicial
+                // Se for o PRIMEIRO card a ser desenhado (o mais recente da história), deixa passar sempre
                 if (ultimoSinalExibido === null) {
                     sinalValido = true;
                 } else {
-                    // Aplica a máquina de estados baseada no último que foi impresso
+                    // MÁQUINA DE ESTADOS INVERTIDA (Olhando do presente para o passado)
+                    // O "ultimoSinalExibido" aqui representa a linha que aconteceu DEPOIS no tempo real
                     if (ultimoSinalExibido === "🟢ENTRADA LONG") {
-                        // LONG só sai se o próximo for SHORT
-                        if (ehShort) sinalValido = true;
+                        // Se o mais novo na tela é LONG, o anterior na história precisa ser SHORT
+                        if (ehShort || ehSdShort) sinalValido = true;
                     } 
                     else if (ultimoSinalExibido === "🟠ENTRADA SHORT") {
-                        // SHORT aceita virar outro SHORT ou ir para SAÍDA SHORT
-                        if (ehLong || ehSdShort) sinalValido = true;
+                        // Se o mais novo é SHORT, o anterior podia ser outro SHORT ou a SAÍDA SHORT
+                        if (ehLong) sinalValido = true;
                     } 
                     else if (ultimoSinalExibido === "🚨SAÍDA SHORT") {
-                        // SAÍDA SHORT travou, agora só aceita reabrir se for um sinal LONG
-                        if (ehLong) sinalValido = true;
+                        // Se o mais novo é SAÍDA SHORT, o anterior na linha do tempo obrigatoriamente foi um LONG
+                        if (ehShort) sinalValido = true;
                     }
                 }
             
-                // Se o sinal respeitou as regras do setor de energia, monta e coloca na tela
+                // Se o sinal se encaixa na ordem cronológica inversa correta, renderiza o HTML
                 if (sinalValido) {
                     
                     const linhaHtml = `
@@ -649,13 +649,12 @@ function desenharHistoricoNaTela() {
             
                     blocoListaHistorico.insertAdjacentHTML('beforeend', linhaHtml);
             
-                    // Atualiza a memória de forma exata usando os seus blocos de texto:
-                    if (ehLong) ultimoSinalExibido = "🟢ENTRADA LONG";
-                    if (ehShort) ultimoSinalExibido = "🟠ENTRADA SHORT";
+                    // Atualiza a memória para a próxima verificação do loop
+                    if (ehLong)   ultimoSinalExibido = "🟢ENTRADA LONG";
+                    if (ehShort)  ultimoSinalExibido = "🟠ENTRADA SHORT";
                     if (ehSdShort) ultimoSinalExibido = "🚨SAÍDA SHORT";
                 }
             }
-
 
     });
 }
