@@ -604,7 +604,7 @@ function desenharHistoricoNaTela() {
             // ... dentro do seu laço de repetição (forEach ou for) ...
             
             if (etiquetaSinal !== "[⚪NEUTRO]") {
-                // console.log(etiquetaSinal, ehLong, ehShort, ehSdShort);
+                console.log(etiquetaSinal, ehLong, ehShort, ehSdShort);
                         // return;
                 // Define uma variável para controlar se o sinal atual é válido baseado no histórico
                 let sinalValido = false;
