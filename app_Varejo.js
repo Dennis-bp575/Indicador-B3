@@ -567,33 +567,38 @@ function desenharHistoricoNaTela() {
         tocarBeep();
 
         // A sua constante com o HTML atualizado contendo os Avisos Inteligentes
-        const linhaHtml = `
-            <div class="flex items-center justify-between ${classeBG} rounded-xl p-4 shadow-sm">
-                <div class="flex flex-col">
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs font-black ${classeCorEtiqueta}">${etiquetaSinal}</span>
-                        <span class="font-bold text-white text-base">${resultado}</span>
+        // Envolve todo o bloco com um IF para ignorar o sinal neutro
+            if (etiquetaSinal !== "[⚪NEUTRO]") {
+            
+                const linhaHtml = `
+                    <div class="flex items-center justify-between ${classeBG} rounded-xl p-4 shadow-sm">
+                        <div class="flex flex-col">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-black ${classeCorEtiqueta}">${etiquetaSinal}</span>
+                                <span class="font-bold text-white text-base">${resultado}</span>
+                            </div>
+                            <span class="text-xs text-gray-500 mt-1">Data do Sinal: ${item.dataSinal}</span>
+                        </div>
+                        
+                        <!-- Grupo de Badges à direita -->
+                        <div class="flex flex-col sm:flex-row items-end sm:items-center gap-2">
+                            <!-- Novo Badge de Abertura -->
+                            <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCorAbertura}">
+                                Open: ${item.aberturaBolsa || "..."}
+                            </div>
+                            
+                            <!-- Seu Badge Antigo de Fechamento -->
+                            <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCor}">
+                                Close: ${item.resultadoBolsa}
+                            </div>
+                        </div>
                     </div>
-                    <span class="text-xs text-gray-500 mt-1">Data do Sinal: ${item.dataSinal}</span>
-                </div>
-                
-                <!-- Grupo de Badges à direita -->
-                <div class="flex flex-col sm:flex-row items-end sm:items-center gap-2">
-                    <!-- Novo Badge de Abertura -->
-                    <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCorAbertura}">
-                        Open: ${item.aberturaBolsa || "..."}
-                    </div>
-                    
-                    <!-- Seu Badge Antigo de Fechamento -->
-                    <div class="flex items-center font-bold px-3 py-1 rounded-full text-xs ${classeCor}">
-                        Close: ${item.resultadoBolsa}
-                    </div>
-                </div>
-            </div>
-        `;
+                `;
+            
+                // Só insere no bloco se passou na condição acima
+                blocoListaHistorico.insertAdjacentHTML('beforeend', linhaHtml);
+            }
 
-
-        blocoListaHistorico.insertAdjacentHTML('beforeend', linhaHtml);
     });
 }
 
