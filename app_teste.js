@@ -122,18 +122,59 @@ const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
         });
     });
 
-    // 5. Lógica do clique no Botão "Inverter" (Simulação local)
-    btnInverter.addEventListener('click', function() {
-        if (dadosAtivos[ativoAtual].posicao === 'LONG') {
-            dadosAtivos[ativoAtual].posicao = 'SHORT';
-        } else {
-            dadosAtivos[ativoAtual].posicao = 'LONG';
-        }
+    // === MODIFIQUE O EVENTO DE CLIQUE DO BOTÃO PARA ESTA VERSÃO ASSÍNCRONA ===
+    btnInverter.addEventListener('click', async function() {
+        // 1. Define qual será a nova posição localmente antes de enviar
+        const posicaoAtual = dadosAtivos[ativoAtual].posicao;
+        const novaPosicao = posicaoAtual === 'LONG' ? 'SHORT' : 'LONG';
         
-        // Renderiza as mudanças na tela
-        atualizarPainelVisual(ativoAtual);
-        console.log(`[Simulação] Posição de ${ativoAtual} mudou para:`, dadosAtivos[ativoAtual].posicao);
+        // Desabilita o botão brevemente para evitar cliques duplos durante o envio
+        btnInverter.disabled = true;
+        btnInverter.innerText = "Salvando na Nuvem...";
+
+        try {
+            // 2. Monta a URL REST apontando para o ticket selecionado
+            const url = `${SUPABASE_URL}/rest/v1/simulacao_ativos?ticket=eq.${ativoAtual}`;
+        
+            // 3. Faz a requisição PATCH para atualizar apenas a coluna 'posicao'
+            const resposta = await fetch(url, {
+                method: 'PATCH',
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=representation' // Pede para o banco retornar a linha modificada
+                },
+                body: JSON.stringify({
+                    posicao: novaPosicao
+                })
+            });
+
+            if (!resposta.ok) throw new Error(`Erro ao salvar: ${resposta.status}`);
+
+            // 4. Se salvou com sucesso na nuvem, atualiza a nossa memória local e a tela
+            dadosAtivos[ativoAtual].posicao = novaPosicao;
+            atualizarPainelVisual(ativoAtual);
+            
+            console.log(`[Supabase PATCH] Sucesso! ${ativoAtual} agora está em: ${novaPosicao}`);
+
+        } catch (erro) {
+            console.error("Erro ao inverter posição no Supabase:", erro);
+            alert("Não foi possível salvar a inversão. Tente novamente.");
+            // Restaura o visual se der erro para permitir tentar de novo
+            atualizarPainelVisual(ativoAtual);
+        } finally {
+            // Reativa o botão de qualquer forma após o término do processo
+            btnInverter.disabled = false;
+            btnInverter.innerHTML = `
+                <svg xmlns="http://w3.org" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.253 8H18" />
+                </svg>
+                <span>Inverter Posição</span>
+            `;
+        }
     });
+
 
     // Inicializa exibindo CEAB3 por padrão
     atualizarPainelVisual('CEAB3');
