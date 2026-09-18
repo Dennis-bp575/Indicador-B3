@@ -57,6 +57,7 @@
             <div class="flex items-center gap-2">
                 <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
                 <span class="text-gray-400 font-medium">Última Negociação (B3)</span>
+                <span id="simulacao-rentabilidade" class="text-xs font-bold ml-1 transition-all duration-300"></span>
             </div>
             <div id="simulacao-preco-mercado" class="font-bold text-gray-100 text-base">R$ --,--</div>
         </div>
@@ -79,6 +80,7 @@
     const txtDataInicio = document.getElementById('simulacao-data-inicio');
     const txtPrecoEntrada = document.getElementById('simulacao-preco');
     const txtPrecoMercado = document.getElementById('simulacao-preco-mercado');
+    const txtRentabilidade = document.getElementById('simulacao-rentabilidade'); 
     const cardEstado = document.getElementById('simulacao-estado-card');
     const txtEstado = document.getElementById('simulacao-estado-texto');
     const btnInverter = document.getElementById('btn-inverter-posicao');
@@ -154,7 +156,32 @@
                 
                 // Atualiza o nosso objeto temporário local com o dado real obtido
                 dadosAtivos[ticket].precoMercado = precoFormatado;
+              
+                const pEntrada = parseFloat(dadosAtivos[ticket].precoEntrada.replace(',', '.'));
+                const pMercado = precoFechamento; // Usa o valor numérico direto da API
+                const posicaoAtual = dadosAtivos[ticket].posicao;
                 
+                let rentabilidade = 0;
+                
+                // Calcula baseado na direção (Se for SHORT, inverte o ganho/perda)
+                if (posicaoAtual === 'LONG') {
+                    rentabilidade = ((pMercado - pEntrada) / pEntrada) * 1050; // Ajustado para simulação percentual
+                } else {
+                    rentabilidade = ((pEntrada - pMercado) / pEntrada) * 1050;
+                }
+
+                // Ajusta a cor e o texto do badge de porcentagem
+                if (rentabilidade > 0) {
+                    txtRentabilidade.innerText = `(+${rentabilidade.toFixed(2)}%)`;
+                    txtRentabilidade.className = "text-xs font-bold ml-1 text-emerald-400 bg-emerald-950/50 px-1.5 py-0.5 rounded";
+                } else if (rentabilidade < 0) {
+                    txtRentabilidade.innerText = `(${rentabilidade.toFixed(2)}%)`;
+                    txtRentabilidade.className = "text-xs font-bold ml-1 text-rose-400 bg-rose-950/50 px-1.5 py-0.5 rounded";
+                } else {
+                    txtRentabilidade.innerText = `(0.00%)`;
+                    txtRentabilidade.className = "text-xs font-bold ml-1 text-gray-500 bg-gray-800 px-1.5 py-0.5 rounded";
+                }
+
                 // Exibe o preço atualizado na tela
                 txtPrecoMercado.innerText = `R$ ${precoFormatado}`;
             } else {
