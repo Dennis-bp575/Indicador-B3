@@ -1,7 +1,7 @@
     // === ENCAIXAR ESTA NOVA FUNÇÃO AQUI ===
 const SUPABASE_URL = 'https://zqdjkazwinzmmtwgpycn.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
-const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
+// const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 (function() {
     // 1. Cria o container do painel de simulação dentro do HTML existente
@@ -138,37 +138,39 @@ const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
     // Inicializa exibindo CEAB3 por padrão
     atualizarPainelVisual('CEAB3');
 
-
-        // === ENCAIXAR ESTA NOVA FUNÇÃO AQUI ===
-    // Busca a posição atual e o preço de entrada gravados no Supabase
     async function buscarDadosSupabase(ticket) {
         try {
-            // Faz o SELECT filtrando pelo ativo selecionado
-            const { data, error } = await supabaseClient
-                .from('simulacao_ativos')
-                .select('posicao, preco_atual, data_inicio')
-                .eq('ticket', ticket)
-                .single(); // Traz apenas uma linha
+            // Monta a URL REST filtrando pelo ticket exato (eq.TICKET)
+            const url = `${SUPABASE_URL}/rest/v1/simulacao_ativos?ticket=eq.${ticket}&select=posicao,preco_atual,data_inicio`;
+        
+            const resposta = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'apikey': SUPABASE_KEY, // Use a sua variável de chave aqui
+                    'Authorization': `Bearer ${SUPABASE_KEY}`,
+                    'Accept': 'application/vnd.pgrst.object+json' // Força o Supabase a devolver um objeto único em vez de uma lista []
+                }
+            });
 
-            if (error) throw error;
+            if (!resposta.ok) throw new Error(`Erro HTTP: ${resposta.status}`);
+
+            const data = await resposta.json();
 
             if (data) {
                 // Formata a data de '2026-07-10' para o padrão visual '10/07'
                 const [ano, mes, dia] = data.data_inicio.split('-');
                 const dataFormatada = `${dia}/${mes}`;
 
-                // Atualiza o nosso objeto temporário local com os dados reais do banco
+                // Atualiza o nosso objeto temporário local com os dados reais vindos da API REST
                 dadosAtivos[ticket].posicao = data.posicao;
                 dadosAtivos[ticket].precoEntrada = data.preco_atual.toString().replace('.', ',');
                 dadosAtivos[ticket].inicio = dataFormatada;
 
-                console.log(`[Supabase] Dados carregados para ${ticket}:`, data);
-                
-                // Retorna true para avisar que deu tudo certo
+                console.log(`[Supabase REST] Dados carregados para ${ticket}:`, data);
                 return true;
             }
         } catch (erro) {
-            console.error(`Erro ao buscar dados de ${ticket} no Supabase:`, erro);
+            console.error(`Erro ao buscar dados de ${ticket} no Supabase via REST:`, erro);
         }
         return false;
     }
