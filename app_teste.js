@@ -1,5 +1,7 @@
     // === ENCAIXAR ESTA NOVA FUNÇÃO AQUI ===
-
+const SUPABASE_URL = 'https://zqdjkazwinzmmtwgpycn.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 (function() {
     // 1. Cria o container do painel de simulação dentro do HTML existente
@@ -86,10 +88,12 @@
     const btnInverter = document.getElementById('btn-inverter-posicao');
 
     // 3. Função para renderizar as informações e aplicar as cores correspondentes
-    function atualizarPainelVisual(ticket) {
+    async function atualizarPainelVisual(ticket) {
         ativoAtual = ticket;
-        const dados = dadosAtivos[ticket];
+        // Busca os dados atualizados na nuvem antes de renderizar na tela
+        await buscarDadosSupabase(ticket);
 
+        const dados = dadosAtivos[ticket];
         if (!dados) return;
 
         txtTicket.innerText = ticket;
@@ -131,6 +135,42 @@
 
     // Inicializa exibindo CEAB3 por padrão
     atualizarPainelVisual('CEAB3');
+
+
+        // === ENCAIXAR ESTA NOVA FUNÇÃO AQUI ===
+    // Busca a posição atual e o preço de entrada gravados no Supabase
+    async function buscarDadosSupabase(ticket) {
+        try {
+            // Faz o SELECT filtrando pelo ativo selecionado
+            const { data, error } = await supabase
+                .from('simulacao_ativos')
+                .select('posicao, preco_atual, data_inicio')
+                .eq('ticket', ticket)
+                .single(); // Traz apenas uma linha
+
+            if (error) throw error;
+
+            if (data) {
+                // Formata a data de '2026-07-10' para o padrão visual '10/07'
+                const [ano, mes, dia] = data.data_inicio.split('-');
+                const dataFormatada = `${dia}/${mes}`;
+
+                // Atualiza o nosso objeto temporário local com os dados reais do banco
+                dadosAtivos[ticket].posicao = data.posicao;
+                dadosAtivos[ticket].precoEntrada = data.preco_atual.toString().replace('.', ',');
+                dadosAtivos[ticket].inicio = dataFormatada;
+
+                console.log(`[Supabase] Dados carregados para ${ticket}:`, data);
+                
+                // Retorna true para avisar que deu tudo certo
+                return true;
+            }
+        } catch (erro) {
+            console.error(`Erro ao buscar dados de ${ticket} no Supabase:`, erro);
+        }
+        return false;
+    }
+
     
     async function buscarPrecoB3(ticket) {
         try {
