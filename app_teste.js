@@ -65,6 +65,15 @@ const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
             </div>
             <div id="simulacao-preco-mercado" class="font-bold text-gray-100 text-base">R$ --,--</div>
         </div>
+
+        <!-- NOVO CONTAINER: LISTA DO HISTÓRICO EMPILHADO -->
+        <div class="space-y-2 mt-4 pt-3 border-t border-gray-800">
+            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider block px-1">Histórico de Reversões</span>
+            <div id="simulacao-lista-historico" class="space-y-2 max-h-40 overflow-y-auto pr-1 text-xs">
+                <!-- Os itens do histórico serão injetados aqui via JavaScript -->
+                <div class="text-gray-600 text-center py-2 italic">Nenhuma reversão registrada para este ativo...</div>
+            </div>
+        </div>
     `;
 
     // Insere o painel logo após o bloco de abas
@@ -111,6 +120,7 @@ const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
             txtEstado.innerText = "SHORT";
         }
         buscarPrecoB3(ticket); 
+        carregarHistoricoVisual(ticket);
     }
 
     // 4. Escuta os cliques nas abas do HTML principal
@@ -161,6 +171,22 @@ const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
             });
 
             if (!resposta.ok) throw new Error(`Erro ao salvar: ${resposta.status}`);
+
+            const urlHistorico = `${SUPABASE_URL}/rest/v1/historico_ativos`;
+            await fetch(urlHistorico, {
+                method: 'POST',
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    ticket: ativoAtual,
+                    posicao_antiga: posicaoAtual,
+                    posicao_nova: novaPosicao,
+                    preco_inversao: novoPrecoEntradaNum
+                })
+            });
 
             // 4. Se salvou na nuvem, atualiza a nossa memória local para refletir na tela
             dadosAtivos[ativoAtual].posicao = novaPosicao;
@@ -227,6 +253,50 @@ const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
         }
         return false;
     }
+
+    async function carregarHistoricoVisual(ticket) {
+        const containerLista = document.getElementById('simulacao-lista-historico');
+        if (!containerLista) return;
+
+        try {
+            // Busca as últimas 5 inversões desse ativo específico, ordenando pela mais recente
+            const url = `${SUPABASE_URL}/rest/v1/historico_ativos?ticket=eq.${ticket}&order=data_inversao.desc&limit=5`;
+            const resposta = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`
+                }
+            });
+
+            const dados = await resposta.json();
+            
+            if (dados && dados.length > 0) {
+                containerLista.innerHTML = dados.map(item => {
+                    const dataObj = new Date(item.data_inversao);
+                    const dataFormatada = `${String(dataObj.getDate()).padStart(2, '0')}/${String(dataObj.getMonth() + 1).padStart(2, '0')} ${String(dataObj.getHours()).padStart(2, '0')}:${String(dataObj.getMinutes()).padStart(2, '0')}`;
+                    
+                    const corBadge = item.posicao_nova === 'LONG' ? 'text-emerald-400 bg-emerald-950/40 border-emerald-900/50' : 'text-rose-400 bg-rose-950/40 border-rose-900/50';
+
+                    return `
+                        <div class="flex items-center justify-between bg-gray-900/40 border border-gray-800 rounded-lg p-2.5">
+                            <div class="flex items-center gap-2">
+                                <span class="text-gray-500 font-mono text-[10px]">${dataFormatada}</span>
+                                <span class="text-gray-300 font-medium">Reverteu para</span>
+                                <span class="border px-1.5 py-0.5 rounded font-bold text-[10px] uppercase ${corBadge}">${item.posicao_nova}</span>
+                            </div>
+                            <span class="font-bold text-gray-200 font-mono">R$ ${item.preco_inversao.toFixed(2).replace('.', ',')}</span>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                containerLista.innerHTML = `<div class="text-gray-600 text-center py-2 italic">Nenhuma reversão registrada para este ativo...</div>`;
+            }
+        } catch (erro) {
+            console.error("Erro ao carregar histórico:", erro);
+        }
+    }
+
 
     
     async function buscarPrecoB3(ticket) {
