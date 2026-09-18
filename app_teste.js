@@ -137,7 +137,7 @@
             
             // Faz a requisição para a API gratuita do Brapi
             const token = "whN8hFPcawDXwGhjRLAoN7";
-            const url = `https://brapi.dev/api/quote/${ticket}token=${token}`;
+            const url = `https://brapi.dev/api/quote/${ticket}?token=${token}`;
             const resposta = await fetch(url);
             // const resposta = await fetch(`https://brapi.dev{ticket}?token=whN8hFPcawDXwGhjRLAoN7`);
             
