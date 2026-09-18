@@ -565,13 +565,13 @@ function desenharHistoricoNaTela() {
             classeBG = "bg-blue-950 bg-opacity-40 border border-blue-900";
         }
         if ((tokenExaustao - t2) > 15) {
-            etiquetaSinal = "🟠SAÍDA SHORT";
-            classeCorEtiqueta = "text-red-600"; // Destaca em rosa/vermelho
+            etiquetaSinal = "🟠SAÍDA SHORT A";
+            classeCorEtiqueta = "text-red-700"; // Destaca em rosa/vermelho
             classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
         }
         if (tokenExaustao > (t2 + t3)) {
-            etiquetaSinal = "🟠SAÍDA SHORT";
-            classeCorEtiqueta = "text-red-600"; // Destaca em rosa/vermelho
+            etiquetaSinal = "🟠SAÍDA SHORT B";
+            classeCorEtiqueta = "text-red-500"; // Destaca em rosa/vermelho
             classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
         }
 
