@@ -165,9 +165,9 @@
                 
                 // Calcula baseado na direção (Se for SHORT, inverte o ganho/perda)
                 if (posicaoAtual === 'LONG') {
-                    rentabilidade = ((pMercado - pEntrada) / pEntrada) * 1050; // Ajustado para simulação percentual
+                    rentabilidade = ((pMercado - pEntrada) / pEntrada) * 100; // Ajustado para simulação percentual
                 } else {
-                    rentabilidade = ((pEntrada - pMercado) / pEntrada) * 1050;
+                    rentabilidade = ((pEntrada - pMercado) / pEntrada) * 100;
                 }
 
                 // Ajusta a cor e o texto do badge de porcentagem
