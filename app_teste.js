@@ -1,10 +1,12 @@
     // === ENCAIXAR ESTA NOVA FUNÇÃO AQUI ===
-const SUPABASE_URL = 'https://zqdjkazwinzmmtwgpycn.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 
 (function() {
     // 1. Cria o container do painel de simulação dentro do HTML existente
+    const SUPABASE_URL = 'https://zqdjkazwinzmmtwgpycn.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    
     const containerAbasAtivos = document.getElementById('container-abas-ativos');
     
     if (!containerAbasAtivos) return;
