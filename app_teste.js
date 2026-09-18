@@ -124,47 +124,59 @@ const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
 
     // === MODIFIQUE O EVENTO DE CLIQUE DO BOTÃO PARA ESTA VERSÃO ASSÍNCRONA ===
     btnInverter.addEventListener('click', async function() {
-        // 1. Define qual será a nova posição localmente antes de enviar
         const posicaoAtual = dadosAtivos[ativoAtual].posicao;
         const novaPosicao = posicaoAtual === 'LONG' ? 'SHORT' : 'LONG';
         
-        // Desabilita o botão brevemente para evitar cliques duplos durante o envio
+        // === 1. PEGA O PREÇO DE MERCADO DA TELA E CONVERTE PARA O BANCO ===
+        const precoMercadoTexto = dadosAtivos[ativoAtual].precoMercado; // Ex: "8,89"
+        const novoPrecoEntradaNum = parseFloat(precoMercadoTexto.replace(',', '.'));
+
+        // === 2. GERA A DATA DE HOJE NO FORMATO DO BANCO (AAAA-MM-DD) ===
+        const hoje = new Date();
+        const ano = hoje.getFullYear();
+        const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+        const dia = String(hoje.getDate()).padStart(2, '0');
+        const dataHojeBanco = `${ano}-${mes}-${dia}`;
+        
         btnInverter.disabled = true;
         btnInverter.innerText = "Salvando na Nuvem...";
 
         try {
-            // 2. Monta a URL REST apontando para o ticket selecionado
             const url = `${SUPABASE_URL}/rest/v1/simulacao_ativos?ticket=eq.${ativoAtual}`;
         
-            // 3. Faz a requisição PATCH para atualizar apenas a coluna 'posicao'
             const resposta = await fetch(url, {
                 method: 'PATCH',
                 headers: {
                     'apikey': SUPABASE_KEY,
                     'Authorization': `Bearer ${SUPABASE_KEY}`,
                     'Content-Type': 'application/json',
-                    'Prefer': 'return=representation' // Pede para o banco retornar a linha modificada
+                    'Prefer': 'return=representation'
                 },
+                // === 3. MODIFIQUE O BODY PARA ENVIAR OS TRÊS CAMPOS ATUALIZADOS ===
                 body: JSON.stringify({
-                    posicao: novaPosicao
+                    posicao: novaPosicao,
+                    preco_atual: novoPrecoEntradaNum, // O preço de mercado vira o seu novo preço de entrada
+                    data_inicio: dataHojeBanco       // A data vira o dia de hoje
                 })
             });
 
             if (!resposta.ok) throw new Error(`Erro ao salvar: ${resposta.status}`);
 
-            // 4. Se salvou com sucesso na nuvem, atualiza a nossa memória local e a tela
+            // 4. Se salvou na nuvem, atualiza a nossa memória local para refletir na tela
             dadosAtivos[ativoAtual].posicao = novaPosicao;
+            dadosAtivos[ativoAtual].precoEntrada = precoMercadoTexto; // Atualiza o preço de entrada local
+            dadosAtivos[ativoAtual].inicio = `${dia}/${mes}`;        // Atualiza a data de início local
+
+            // Recarrega o painel visual
             atualizarPainelVisual(ativoAtual);
             
-            console.log(`[Supabase PATCH] Sucesso! ${ativoAtual} agora está em: ${novaPosicao}`);
+            console.log(`[Supabase PATCH] Inversão completa para ${ativoAtual}! Preço: R$ ${precoMercadoTexto}, Data: ${dia}/${mes}`);
 
         } catch (erro) {
             console.error("Erro ao inverter posição no Supabase:", erro);
             alert("Não foi possível salvar a inversão. Tente novamente.");
-            // Restaura o visual se der erro para permitir tentar de novo
             atualizarPainelVisual(ativoAtual);
         } finally {
-            // Reativa o botão de qualquer forma após o término do processo
             btnInverter.disabled = false;
             btnInverter.innerHTML = `
                 <svg xmlns="http://w3.org" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
