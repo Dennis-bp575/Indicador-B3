@@ -542,6 +542,29 @@ function desenharHistoricoNaTela() {
         let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
         let classeBG = "bg-gray-850";
 
+
+        if (tokenExaustao > t2 && somaTendencia >= 15 && t3 > t2 && somaTendencia <= 50) {
+            etiquetaSinal = "🟠SAÍDA SHORT A";
+            classeCorEtiqueta = "text-red-700"; // Destaca em rosa/vermelho
+            classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
+        }
+        if (tokenExaustao <= 5 && (somaTendencia >= 30 && somaTendencia <= 55)) {
+            etiquetaSinal = "🟠SAÍDA SHORT B";
+            classeCorEtiqueta = "text-red-500"; // Destaca em rosa/vermelho
+            classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
+        }
+        if (tokenExaustao > (ultimoA + 28) && somaTendencia <= 15) {
+            etiquetaSinal = "🟠SAÍDA SHORT C";
+            classeCorEtiqueta = "text-red-500"; // Destaca em rosa/vermelho
+            classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
+        }  
+
+        if (tokenExaustao > (ultimoA + 15) && t3 > t2) {
+            etiquetaSinal = "🟠SAÍDA SHORT D";
+            classeCorEtiqueta = "text-red-500"; // Destaca em rosa/vermelho
+            classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
+        }
+
         if (tokenExaustao > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
             etiquetaSinal = "🟢ENTRADA LONG";
             classeCorEtiqueta = "text-emerald-400"; // Destaca em verde
@@ -563,27 +586,6 @@ function desenharHistoricoNaTela() {
             etiquetaSinal = "🔵ENTRADA SHORT";
             classeCorEtiqueta = "text-blue-400"; // Destaca em rosa/vermelho
             classeBG = "bg-blue-950 bg-opacity-40 border border-blue-900";
-        }
-        if (tokenExaustao > t2 && somaTendencia >= 15 && t3 > t2 && somaTendencia <= 50) {
-            etiquetaSinal = "🟠SAÍDA SHORT A";
-            classeCorEtiqueta = "text-red-700"; // Destaca em rosa/vermelho
-            classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
-        }
-        if (tokenExaustao <= 5 && (somaTendencia >= 30 && somaTendencia <= 55)) {
-            etiquetaSinal = "🟠SAÍDA SHORT B";
-            classeCorEtiqueta = "text-red-500"; // Destaca em rosa/vermelho
-            classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
-        }
-        if (tokenExaustao > (ultimoA + 28) && somaTendencia <= 15) {
-            etiquetaSinal = "🟠SAÍDA SHORT C";
-            classeCorEtiqueta = "text-red-500"; // Destaca em rosa/vermelho
-            classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
-        }  
-
-        if (tokenExaustao > (ultimoA + 15) && t3 > t2) {
-            etiquetaSinal = "🟠SAÍDA SHORT D";
-            classeCorEtiqueta = "text-red-500"; // Destaca em rosa/vermelho
-            classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
         }
 
         if (tokenExaustao > (ultimoA + 28) && somaTendencia <= 10) {
