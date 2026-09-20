@@ -1,12 +1,10 @@
-    // === ENCAIXAR ESTA NOVA FUNÇÃO AQUI ===
+// === ENCAIXAR ESTA NOVA FUNÇÃO AQUI ===
 const SUPABASE_URL = 'https://zqdjkazwinzmmtwgpycn.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
 // const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 (function() {
-    // 1. Cria o container do painel de simulação dentro do HTML existente
-    
-    
+    // 1. Localiza o container das novas abas estruturadas
     const containerAbasAtivos = document.getElementById('container-abas-ativos');
     
     if (!containerAbasAtivos) return;
@@ -33,7 +31,7 @@ const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
 
         <!-- Grid de Informações: Preço de Entrada da Simulação e Estado -->
         <div class="grid grid-cols-2 gap-4 text-center">
-            <!-- Bloco de Preço de Entrada (Dia 10/07) -->
+            <!-- Bloco de Preço de Entrada -->
             <div class="bg-gray-900/50 border border-gray-800 rounded-xl p-4 flex flex-col justify-center">
                 <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider block mb-1">Preço Entrada</span>
                 <div id="simulacao-preco" class="text-2xl font-black text-gray-200">R$ --,--</div>
@@ -49,14 +47,14 @@ const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
         <!-- Botão Unificado de Inversão de Posição -->
         <div class="flex justify-center pt-1">
             <button id="btn-inverter-posicao" class="w-full max-w-sm flex items-center justify-center bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-gray-100 font-bold py-3 px-6 rounded-xl shadow-lg transform active:scale-[0.98] transition-all focus:outline-none focus:ring-2 focus:ring-amber-400 text-base gap-2">
-                <svg xmlns="http://w3.org" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.253 8H18" />
                 </svg>
                 <span>Inverter Posição</span>
             </button>
         </div>
 
-        <!-- NOVO CARD: ÚLTIMA NEGOCIAÇÃO DA BOLSA (Abaixo do botão inverter) -->
+        <!-- NOVO CARD: ÚLTIMA NEGOCIAÇÃO DA BOLSA -->
         <div class="bg-gray-900/30 border border-gray-800 rounded-xl p-3 flex justify-between items-center text-sm px-4">
             <div class="flex items-center gap-2">
                 <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -79,14 +77,16 @@ const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
     // Insere o painel logo após o bloco de abas
     containerAbasAtivos.parentNode.insertBefore(painelSimulacao, containerAbasAtivos.nextSibling);
 
-    // 2. Banco de dados local contendo o preço fixo de Entrada (10/07) e o preço Atual de mercado da Bolsa (B3)
+    // 2. Banco de dados local contendo os 5 NOVOS ATIVOS com o dígito "3" para compatibilidade com o Supabase/API
     const dadosAtivos = {
-        'CEAB3': { precoEntrada: '9,34', precoMercado: '8,89', posicao: 'SHORT', inicio: '10/07' },
+        'CEAB3': { precoEntrada: '8,92', precoMercado: '8,94', posicao: 'LONG', inicio: '18/09' },
         'VAMO3': { precoEntrada: '3,46', precoMercado: '3,35', posicao: 'SHORT', inicio: '10/07' },
-        'CSAN3': { precoEntrada: '3,85', precoMercado: '3,67', posicao: 'SHORT', inicio: '10/07' }
+        'BEEF3': { precoEntrada: '6,20', precoMercado: '6,15', posicao: 'LONG', inicio: '10/07' },
+        'CSAN3': { precoEntrada: '12,50', precoMercado: '12,42', posicao: 'SHORT', inicio: '10/07' },
+        'CVCB3': { precoEntrada: '2,10', precoMercado: '2,15', posicao: 'LONG', inicio: '10/07' }
     };
 
-    let ativoAtual = 'CEAB3'; // Iniciando na primeira aba por padrão
+    let ativoAtual = 'CEAB3'; // Iniciando na primeira aba por padrão (em formato com "3")
 
     // Elementos internos do painel para manipulação
     const txtTicket = document.getElementById('simulacao-ticket');
@@ -99,15 +99,18 @@ const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
     const btnInverter = document.getElementById('btn-inverter-posicao');
 
     // 3. Função para renderizar as informações e aplicar as cores correspondentes
-    async function atualizarPainelVisual(ticket) {
-        ativoAtual = ticket;
+    async function atualizarPainelVisual(ticketCom3) {
+        ativoAtual = ticketCom3;
+        
         // Busca os dados atualizados na nuvem antes de renderizar na tela
-        await buscarDadosSupabase(ticket);
+        await buscarDadosSupabase(ticketCom3);
 
-        const dados = dadosAtivos[ticket];
+        const dados = dadosAtivos[ticketCom3];
         if (!dados) return;
 
-        txtTicket.innerText = ticket;
+        // Limpa o "3" apenas no título do cabeçalho para o seu filho ver (ex: "CEAB")
+        txtTicket.innerText = ticketCom3.endsWith('3') ? ticketCom3.slice(0, -1) : ticketCom3;
+        
         txtDataInicio.innerText = `Início: ${dados.inicio}`;
         txtPrecoEntrada.innerText = `R$ ${dados.precoEntrada}`;
         txtPrecoMercado.innerText = `R$ ${dados.precoMercado}`;
@@ -119,29 +122,40 @@ const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
             cardEstado.className = "rounded-xl p-4 border bg-rose-950 bg-opacity-40 border-rose-900 text-rose-400 transition-all duration-300 flex flex-col justify-center";
             txtEstado.innerText = "SHORT";
         }
-        buscarPrecoB3(ticket); 
-        carregarHistoricoVisual(ticket);
+        buscarPrecoB3(ticketCom3); 
+        carregarHistoricoVisual(ticketCom3);
     }
 
     // 4. Escuta os cliques nas abas do HTML principal
     const botoesAbas = document.querySelectorAll('.aba-ativo');
     botoesAbas.forEach(botao => {
         botao.addEventListener('click', function() {
-            const ticket = this.getAttribute('data-ativo');
-            atualizarPainelVisual(ticket);
+            // Remove as classes de destaque ativo de absolutamente todas as abas
+            botoesAbas.forEach(b => {
+                b.className = "aba-ativo flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-gray-800/50";
+            });
+
+            // Aplica a estilização de selecionado (Fundo verde, texto escuro) na aba clicada
+            this.className = "aba-ativo flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-all duration-200 bg-emerald-500 text-emerald-950 shadow-md";
+
+            // Pega o valor do HTML (ex: "CEAB") e trata para colocar o "3" antes de mandar pro painel
+            const ativoHTML = this.getAttribute('data-ativo');
+            const ticketTratado = ativoHTML.endsWith('3') ? ativoHTML : ativoHTML + '3';
+            
+            atualizarPainelVisual(ticketTratado);
         });
     });
 
-    // === MODIFIQUE O EVENTO DE CLIQUE DO BOTÃO PARA ESTA VERSÃO ASSÍNCRONA ===
+    // 5. Evento assíncrono do botão de inversão de posição
     btnInverter.addEventListener('click', async function() {
         const posicaoAtual = dadosAtivos[ativoAtual].posicao;
         const novaPosicao = posicaoAtual === 'LONG' ? 'SHORT' : 'LONG';
         
-        // === 1. PEGA O PREÇO DE MERCADO DA TELA E CONVERTE PARA O BANCO ===
-        const precoMercadoTexto = dadosAtivos[ativoAtual].precoMercado; // Ex: "8,89"
+        // PEGA O PREÇO DE MERCADO DA TELA E CONVERTE PARA O BANCO
+        const precoMercadoTexto = dadosAtivos[ativoAtual].precoMercado; // Ex: "8,94"
         const novoPrecoEntradaNum = parseFloat(precoMercadoTexto.replace(',', '.'));
 
-        // === 2. GERA A DATA DE HOJE NO FORMATO DO BANCO (AAAA-MM-DD) ===
+        // GERA A DATA DE HOJE NO FORMATO DO BANCO (AAAA-MM-DD)
         const hoje = new Date();
         const ano = hoje.getFullYear();
         const mes = String(hoje.getMonth() + 1).padStart(2, '0');
@@ -162,11 +176,10 @@ const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
                     'Content-Type': 'application/json',
                     'Prefer': 'return=representation'
                 },
-                // === 3. MODIFIQUE O BODY PARA ENVIAR OS TRÊS CAMPOS ATUALIZADOS ===
                 body: JSON.stringify({
                     posicao: novaPosicao,
-                    preco_atual: novoPrecoEntradaNum, // O preço de mercado vira o seu novo preço de entrada
-                    data_inicio: dataHojeBanco       // A data vira o dia de hoje
+                    preco_atual: novoPrecoEntradaNum, 
+                    data_inicio: dataHojeBanco       
                 })
             });
 
@@ -188,10 +201,10 @@ const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
                 })
             });
 
-            // 4. Se salvou na nuvem, atualiza a nossa memória local para refletir na tela
+            // Se salvou na nuvem, atualiza a memória local para refletir na tela
             dadosAtivos[ativoAtual].posicao = novaPosicao;
-            dadosAtivos[ativoAtual].precoEntrada = precoMercadoTexto; // Atualiza o preço de entrada local
-            dadosAtivos[ativoAtual].inicio = `${dia}/${mes}`;        // Atualiza a data de início local
+            dadosAtivos[ativoAtual].precoEntrada = precoMercadoTexto; 
+            dadosAtivos[ativoAtual].inicio = `${dia}/${mes}`;        
 
             // Recarrega o painel visual
             atualizarPainelVisual(ativoAtual);
@@ -205,7 +218,7 @@ const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
         } finally {
             btnInverter.disabled = false;
             btnInverter.innerHTML = `
-                <svg xmlns="http://w3.org" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.253 8H18" />
                 </svg>
                 <span>Inverter Posição</span>
@@ -213,21 +226,19 @@ const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
         }
     });
 
-
     // Inicializa exibindo CEAB3 por padrão
     atualizarPainelVisual('CEAB3');
 
     async function buscarDadosSupabase(ticket) {
         try {
-            // Monta a URL REST filtrando pelo ticket exato (eq.TICKET)
             const url = `${SUPABASE_URL}/rest/v1/simulacao_ativos?ticket=eq.${ticket}&select=posicao,preco_atual,data_inicio`;
         
             const resposta = await fetch(url, {
                 method: 'GET',
                 headers: {
-                    'apikey': SUPABASE_KEY, // Use a sua variável de chave aqui
+                    'apikey': SUPABASE_KEY, 
                     'Authorization': `Bearer ${SUPABASE_KEY}`,
-                    'Accept': 'application/vnd.pgrst.object+json' // Força o Supabase a devolver um objeto único em vez de uma lista []
+                    'Accept': 'application/vnd.pgrst.object+json' 
                 }
             });
 
@@ -236,11 +247,12 @@ const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
             const data = await resposta.json();
 
             if (data) {
-                // Formata a data de '2026-07-10' para o padrão visual '10/07'
                 const [ano, mes, dia] = data.data_inicio.split('-');
                 const dataFormatada = `${dia}/${mes}`;
 
-                // Atualiza o nosso objeto temporário local com os dados reais vindos da API REST
+                // Cria o nó dinamicamente caso o ativo consultado não exista por padrão no objeto local
+                if(!dadosAtivos[ticket]) dadosAtivos[ticket] = { precoMercado: '--,--' };
+
                 dadosAtivos[ticket].posicao = data.posicao;
                 dadosAtivos[ticket].precoEntrada = data.preco_atual.toString().replace('.', ',');
                 dadosAtivos[ticket].inicio = dataFormatada;
@@ -259,7 +271,6 @@ const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
         if (!containerLista) return;
 
         try {
-            // Busca as últimas 5 inversões desse ativo específico, ordenando pela mais recente
             const url = `${SUPABASE_URL}/rest/v1/historico_ativos?ticket=eq.${ticket}&order=data_inversao.desc&limit=5`;
             const resposta = await fetch(url, {
                 method: 'GET',
@@ -296,48 +307,39 @@ const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
             console.error("Erro ao carregar histórico:", erro);
         }
     }
-
-
     
     async function buscarPrecoB3(ticket) {
         try {
-            // Mostra um estado de carregando enquanto busca
             txtPrecoMercado.innerText = "Atualizando...";
             
-            // Faz a requisição para a API gratuita do Brapi
             const token = "whN8hFPcawDXwGhjRLAoN7";
             const url = `https://brapi.dev/api/quote/${ticket}?token=${token}`;
             const resposta = await fetch(url);
-            // const resposta = await fetch(`https://brapi.dev{ticket}?token=whN8hFPcawDXwGhjRLAoN7`);
             
-            const dadosApi = Milford = await resposta.json();
+            const dadosApi = await resposta.json();
             
             if (dadosApi && dadosApi.results && dadosApi.results[0]) {
                 const precoFechamento = dadosApi.results[0].regularMarketPrice;
                 
-                // Formata o número recebido para o padrão brasileiro (Ex: 8,89)
                 const precoFormatado = precoFechamento.toLocaleString('pt-BR', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2
                 });
                 
-                // Atualiza o nosso objeto temporário local com o dado real obtido
                 dadosAtivos[ticket].precoMercado = precoFormatado;
               
                 const pEntrada = parseFloat(dadosAtivos[ticket].precoEntrada.replace(',', '.'));
-                const pMercado = precoFechamento; // Usa o valor numérico direto da API
+                const pMercado = precoFechamento; 
                 const posicaoAtual = dadosAtivos[ticket].posicao;
                 
                 let rentabilidade = 0;
                 
-                // Calcula baseado na direção (Se for SHORT, inverte o ganho/perda)
                 if (posicaoAtual === 'LONG') {
-                    rentabilidade = ((pMercado - pEntrada) / pEntrada) * 100; // Ajustado para simulação percentual
+                    rentabilidade = ((pMercado - pEntrada) / pEntrada) * 100; 
                 } else {
                     rentabilidade = ((pEntrada - pMercado) / pEntrada) * 100;
                 }
 
-                // Ajusta a cor e o texto do badge de porcentagem
                 if (rentabilidade > 0) {
                     txtRentabilidade.innerText = `(+${rentabilidade.toFixed(2)}%)`;
                     txtRentabilidade.className = "text-xs font-bold ml-1 text-emerald-400 bg-emerald-950/50 px-1.5 py-0.5 rounded";
@@ -349,7 +351,6 @@ const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
                     txtRentabilidade.className = "text-xs font-bold ml-1 text-gray-500 bg-gray-800 px-1.5 py-0.5 rounded";
                 }
 
-                // Exibe o preço atualizado na tela
                 txtPrecoMercado.innerText = `R$ ${precoFormatado}`;
             } else {
                 txtPrecoMercado.innerText = "Erro ao ler dados";
