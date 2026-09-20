@@ -571,18 +571,18 @@ function desenharHistoricoNaTela() {
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
             classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
         }
-     /*           
+       /*        
         if (tokenExaustao <= 2 && somaTendencia > 49) {
-            etiquetaSinal = "🔵ENTRADA SHORT";
+            etiquetaSinal = "🔵ENTRADA SHORT A";
             classeCorEtiqueta = "text-blue-600"; // Destaca em rosa/vermelho
             classeBG = "bg-blue-950 bg-opacity-40 border border-blue-900";
-        }
+        }*/
         if (somaTendencia < 10) {
-            etiquetaSinal = "🔵ENTRADA SHORT";
+            etiquetaSinal = "🔵ENTRADA SHORT B";
             classeCorEtiqueta = "text-blue-400"; // Destaca em rosa/vermelho
             classeBG = "bg-blue-950 bg-opacity-40 border border-blue-900";
         }
-*/
+
         if (tokenExaustao > (ultimoA + 28) && somaTendencia <= 10) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
             etiquetaSinal = "🟢ENTRADA LONG";
@@ -598,7 +598,7 @@ function desenharHistoricoNaTela() {
         }
                 
         if ((tokenExaustao + t2 + t3) <=25 && tokenExaustao > 2 && t2 > 2 && t3 > 2) {
-            etiquetaSinal = "🟡ENTRADA SHORT";
+            etiquetaSinal = "🟡ENTRADA LONG";
             classeCorEtiqueta = "text-yellow-500"; // Destaca em rosa/vermelho
             classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-900";
         }
