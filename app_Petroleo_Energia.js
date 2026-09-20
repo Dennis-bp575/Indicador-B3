@@ -542,12 +542,12 @@ function desenharHistoricoNaTela() {
         let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
         let classeBG = "bg-gray-850";
 
-
+/*
         if (tokenExaustao > t2 && somaTendencia >= 15 && t3 > t2 && somaTendencia <= 50) {
             etiquetaSinal = "🟠SAÍDA SHORT A";
             classeCorEtiqueta = "text-red-700"; // Destaca em rosa/vermelho
             classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
-        }
+        } 
         if (tokenExaustao <= 5 && (somaTendencia >= 30 && somaTendencia <= 55)) {
             etiquetaSinal = "🟠SAÍDA SHORT B";
             classeCorEtiqueta = "text-red-500"; // Destaca em rosa/vermelho
@@ -558,11 +558,11 @@ function desenharHistoricoNaTela() {
             classeCorEtiqueta = "text-red-500"; // Destaca em rosa/vermelho
             classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
         }  
-
+*/
         if (tokenExaustao > (ultimoA + 15) && t3 > t2) {
-            etiquetaSinal = "🟠SAÍDA SHORT D";
-            classeCorEtiqueta = "text-red-500"; // Destaca em rosa/vermelho
-            classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
+            etiquetaSinal = "🟡SAÍDA LONG D";
+            classeCorEtiqueta = "text-yellow-500"; // Destaca em rosa/vermelho
+            classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-900";
         }
 
         if (tokenExaustao > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
