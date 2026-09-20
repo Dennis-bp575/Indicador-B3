@@ -77,14 +77,18 @@ const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
     // Insere o painel logo após o bloco de abas
     containerAbasAtivos.parentNode.insertBefore(painelSimulacao, containerAbasAtivos.nextSibling);
 
-    // 2. Banco de dados local contendo os 5 NOVOS ATIVOS com o dígito "3" para compatibilidade com o Supabase/API
+    // 2. Banco de dados local contendo as posições e datas atualizadas dos testes
     const dadosAtivos = {
-        'CEAB3': { precoEntrada: '8,92', precoMercado: '8,94', posicao: 'LONG', inicio: '18/09' },
-        'VAMO3': { precoEntrada: '3,46', precoMercado: '3,35', posicao: 'SHORT', inicio: '10/07' },
-        'BEEF3': { precoEntrada: '6,20', precoMercado: '6,15', posicao: 'LONG', inicio: '10/07' },
-        'CSAN3': { precoEntrada: '12,50', precoMercado: '12,42', posicao: 'SHORT', inicio: '10/07' },
-        'CVCB3': { precoEntrada: '2,10', precoMercado: '2,15', posicao: 'LONG', inicio: '10/07' }
+        // PRIMEIRO GRUPO: Entrou SHORT em 10/09
+        'CEAB3': { precoEntrada: '8,92', precoMercado: '8,94', posicao: 'SHORT', inicio: '10/09' },
+        'VAMO3': { precoEntrada: '3,46', precoMercado: '3,35', posicao: 'SHORT', inicio: '10/09' },
+        'BEEF3': { precoEntrada: '6,20', precoMercado: '6,15', posicao: 'SHORT', inicio: '10/09' },
+        
+        // SEGUNDO GRUPO: Entrou LONG em 17/09
+        'CSAN3': { precoEntrada: '12,50', precoMercado: '12,42', posicao: 'LONG', inicio: '17/09' },
+        'CVCB3': { precoEntrada: '2,10', precoMercado: '2,15', posicao: 'LONG', inicio: '17/09' }
     };
+
 
     let ativoAtual = 'CEAB3'; // Iniciando na primeira aba por padrão (em formato com "3")
 
