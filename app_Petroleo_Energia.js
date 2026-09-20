@@ -413,12 +413,12 @@ async function executarScanner() {
                     classeCorEtiqueta = "text-orange-600"; // Destaca em rosa/vermelho
                     classeBG = "bg-rose-950 bg-opacity-40 border-rose-900";
                 }
-                if (somaTendencia < 10) {
+                if (somaTendencia < 10 && t2 > 5 && t2 < 25) {
                     etiquetaSinal = "🔵ENTRADA SHORT";
                     classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
                     classeBG = "bg-rose-950 bg-opacity-40 border-rose-900";
                 }
-
+/*
                 if ((t2 - t3) > 15) {
                         etiquetaSinal = "🟠SAÍDA SHORT";
                         classeCorEtiqueta = "text-red-600"; // Destaca em rosa/vermelho
@@ -429,7 +429,7 @@ async function executarScanner() {
                         classeCorEtiqueta = "text-red-600"; // Destaca em rosa/vermelho
                         classeBG = "bg-red-950 bg-opacity-40 border-red-900";
                 }
-
+*/
 
                 if (t2 > (ultimoAA + 28) && somaTendencia <= 10) {
                         // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
@@ -446,6 +446,12 @@ async function executarScanner() {
                      classeBG = "bg-emerald-950 bg-opacity-40 border-emerald-800";
                 }
 
+                if ((t2 + t3 + totalReversoesCandle) <=25 && t2 > 2 && t3 > 2 && totalReversoesCandle > 2) {
+                        etiquetaSinal = "🟡ENTRADA LONG";
+                        classeCorEtiqueta = "text-yellow-500"; // Destaca em rosa/vermelho
+                        classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-900";
+                }
+                        
                 const agora15 = new Date();
                 const hora15Formatada = agora15.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
