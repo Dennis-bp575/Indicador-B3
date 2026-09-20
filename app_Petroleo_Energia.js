@@ -559,11 +559,6 @@ function desenharHistoricoNaTela() {
             classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
         }  
 */
-        if (tokenExaustao > (ultimoA + 10) && t3 > t2) {
-            etiquetaSinal = "🟡SAÍDA LONG D";
-            classeCorEtiqueta = "text-yellow-500"; // Destaca em rosa/vermelho
-            classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-900";
-        }
 
         if (tokenExaustao > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
             etiquetaSinal = "🟢ENTRADA LONG";
@@ -601,6 +596,16 @@ function desenharHistoricoNaTela() {
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
             classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
         }
+                
+        if ((tokenExaustao + t2 + t3) <=25 && tokenExaustao > 2 && t2 > 2 && t3 > 2) {
+            etiquetaSinal = "🟡ENTRADA SHORT";
+            classeCorEtiqueta = "text-yellow-500"; // Destaca em rosa/vermelho
+            classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-900";
+        }
+
+
+
+                
         ultimoA = tokenExaustao
                 
         tocarBeep();
