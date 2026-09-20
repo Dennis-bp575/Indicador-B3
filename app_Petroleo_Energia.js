@@ -559,7 +559,7 @@ function desenharHistoricoNaTela() {
             classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
         }  
 */
-        if (tokenExaustao > (ultimoA + 15) && t3 > t2) {
+        if (tokenExaustao > (ultimoA + 10) && t3 > t2) {
             etiquetaSinal = "🟡SAÍDA LONG D";
             classeCorEtiqueta = "text-yellow-500"; // Destaca em rosa/vermelho
             classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-900";
