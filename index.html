@@ -118,18 +118,40 @@
             
             <!-- NOVAS ABAS DE ATIVOS (Fica oculto por padrão e aparece imediatamente abaixo dos botões se "Ativos" for clicado) -->
             <div id="container-abas-ativos" class="hidden mt-4 pt-4 border-t border-gray-800">
-                <div class="flex justify-center gap-2 bg-gray-900/60 p-1.5 rounded-xl border border-gray-800">
-                    <button class="aba-ativo flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-all duration-200 bg-emerald-500 text-emerald-950 shadow-md" data-ativo="CSAN3">
-                        CSAN3
-                    </button>
-                    <button class="aba-ativo flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-gray-800/50" data-ativo="CEAB3">
-                        CEAB3
-                    </button>
-                    <button class="aba-ativo flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-gray-800/50" data-ativo="VAMO3">
-                        VAMO3
-                    </button>
+                <div class="flex flex-col gap-3 bg-gray-900/60 p-3 rounded-xl border border-gray-800">
+                    
+                    <!-- ESTRATÉGIA 1: Consumo-Logística (CEAB, VAMO, BEEF) -->
+                    <div>
+                        <div class="text-xs text-gray-500 font-semibold mb-1.5 px-1 uppercase tracking-wider">Consumo-Logística</div>
+                        <div class="flex gap-2">
+                            <button class="aba-ativo flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-all duration-200 bg-emerald-500 text-emerald-950 shadow-md" data-ativo="CEAB">
+                                CEAB
+                            </button>
+                            <button class="aba-ativo flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-gray-800/50" data-ativo="VAMO">
+                                VAMO
+                            </button>
+                            <button class="aba-ativo flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-gray-800/50" data-ativo="BEEF">
+                                BEEF
+                            </button>
+                        </div>
+                    </div>
+            
+                    <!-- ESTRATÉGIA 2: Infra-Serviços (CSAN, CVCB) -->
+                    <div class="border-t border-gray-800/60 pt-2.5">
+                        <div class="text-xs text-gray-500 font-semibold mb-1.5 px-1 uppercase tracking-wider">Infra-Serviços</div>
+                        <div class="flex gap-2">
+                            <button class="aba-ativo flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-gray-800/50" data-ativo="CSAN">
+                                CSAN
+                            </button>
+                            <button class="aba-ativo flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-gray-200 hover:bg-gray-800/50" data-ativo="CVCB">
+                                CVCB
+                            </button>
+                        </div>
+                    </div>
+            
                 </div>
             </div>
+
             
             <!-- Bloco de Sinal Atual (Será ocultado se "Ativos" estiver selecionado) -->
             <div id="card-sinal" class="mt-4 bg-gray-700/50 rounded-xl p-6 text-center border border-gray-600 transition-all duration-300">
@@ -203,7 +225,7 @@
             }
 
             // SE O SCRIPT FOR O DE ATIVOS: Esconde o padrão e mostra as novas abas imediatamente
-            if (scriptParaCarregar === 'app_teste.js') {
+            if (scriptParaCarregar === 'app_investimento.js') {
                 cardSinal.classList.add('hidden');
                 containerBtnAtualizar.classList.add('hidden');
                 containerHistorico.classList.add('hidden');
