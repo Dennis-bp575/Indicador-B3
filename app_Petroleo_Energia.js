@@ -576,13 +576,13 @@ function desenharHistoricoNaTela() {
             etiquetaSinal = "🔵ENTRADA SHORT A";
             classeCorEtiqueta = "text-blue-600"; // Destaca em rosa/vermelho
             classeBG = "bg-blue-950 bg-opacity-40 border border-blue-900";
-        }/*
-        if (somaTendencia < 10) {
+        }
+        if (somaTendencia < 10 && tokenExaustao > 5 && tokenExaustao < 25) {
             etiquetaSinal = "🔵ENTRADA SHORT B";
             classeCorEtiqueta = "text-blue-400"; // Destaca em rosa/vermelho
             classeBG = "bg-blue-950 bg-opacity-40 border border-blue-900";
         }
-*/
+
         if (tokenExaustao > (ultimoA + 28) && somaTendencia <= 10) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
             etiquetaSinal = "🟢ENTRADA LONG";
