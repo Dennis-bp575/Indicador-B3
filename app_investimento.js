@@ -254,11 +254,16 @@ const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
                 const [ano, mes, dia] = data.data_inicio.split('-');
                 const dataFormatada = `${dia}/${mes}`;
 
-                // Cria o nó dinamicamente caso o ativo consultado não exista por padrão no objeto local
                 if(!dadosAtivos[ticket]) dadosAtivos[ticket] = { precoMercado: '--,--' };
 
+                // === CORREÇÃO AQUI: Força o número a virar texto no formato brasileiro (com vírgula) ===
+                const precoFormatadoBanco = Number(data.preco_atual).toLocaleString('pt-BR', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+
                 dadosAtivos[ticket].posicao = data.posicao;
-                dadosAtivos[ticket].precoEntrada = data.preco_atual.toString().replace('.', ',');
+                dadosAtivos[ticket].precoEntrada = precoFormatadoBanco; // Agora sim vai com vírgula para a memória
                 dadosAtivos[ticket].inicio = dataFormatada;
 
                 console.log(`[Supabase REST] Dados carregados para ${ticket}:`, data);
