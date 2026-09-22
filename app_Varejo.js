@@ -405,8 +405,8 @@ async function executarScanner() {
             // 2. Defina os critérios sutis/flexíveis (Suas alternativas)
             let condicaoA_S = numA >= numB;
             let condicaoB_S = numC >= numB;
-            let condicaoC_S = somaBC >= 23;
-            let condicaoD_S = somaBC <= 58;
+            let condicaoC_S = somaBC >= 24;
+            let condicaoD_S = somaBC <= 61;
             
             // 3. Verificação Lógica
             if (condicaoA && condicaoB && condicaoC && condicaoD) {
@@ -431,8 +431,8 @@ async function executarScanner() {
                 condicaoB = somaBC >= 35;
                 condicaoC = somaBC <= 48;
             condicaoA_S =numA <= 3;
-            condicaoB_S = somaBC >= 33;
-            condicaoC_S = somaBC <= 50;         
+            condicaoB_S = somaBC >= 34;
+            condicaoC_S = somaBC <= 49;         
 
             if (condicaoA && condicaoB && condicaoC) {
                 // SINAL PRINCIPAL (Forte)
@@ -455,7 +455,7 @@ async function executarScanner() {
             condicaoA = numA <= 2;
             condicaoB = somaBC > 49;
             condicaoA_S =numA <= 3;
-            condicaoB_S = somaBC > 47;
+            condicaoB_S = somaBC > 48;
 
             if (condicaoA && condicaoB) {
                 // SINAL PRINCIPAL (Forte)
