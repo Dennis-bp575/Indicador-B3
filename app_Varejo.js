@@ -672,13 +672,49 @@ function desenharHistoricoNaTela() {
             classeBG = "bg-blue-950 bg-opacity-40 border border-blue-900";
         }
 
-        if (numA > (ultimoA + 28) && somaBC <= 10) {
-            // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
-            etiquetaSinal = "🟢ENTRADA LONG";
-            classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
-            classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
-        }
+            condicaoA = numA > (ultimoA + 28);
+            condicaoB = somaBC <= 10;
+            condicaoA_S = numA > (ultimoA + 27);
+            condicaoB_S = somaBC <= 11;
 
+             if (condicaoA && condicaoB) {
+                // SINAL PRINCIPAL (Forte)
+                etiquetaSinal = "🟢ENTRADA LONG"; 
+                classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
+
+            } else if (
+                (condicaoA_S && condicaoB) || // numA sutil
+                (condicaoA && condicaoB_S)
+            ) {
+                // SINAL SUTIL (Moderado / Amarelo ou Verde Claro)
+                etiquetaSinal = "🟡LONG (MODERADO)"; 
+                classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
+            }
+
+
+            condicaoA = numA > (ultimoA + 20);
+            condicaoB = numC > numB;
+            condicaoA_S = numA >= (ultimoA + 20);
+            condicaoB_S = numC >= numB;
+
+             if (condicaoA && condicaoB) {
+                // SINAL PRINCIPAL (Forte)
+                etiquetaSinal = "🟢ENTRADA LONG"; 
+                classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
+
+            } else if (
+                (condicaoA_S && condicaoB) || // numA sutil
+                (condicaoA && condicaoB_S)
+            ) {
+                // SINAL SUTIL (Moderado / Amarelo ou Verde Claro)
+                etiquetaSinal = "🟡LONG (MODERADO)"; 
+                classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
+            }                
+       
         if (numA > (ultimoA + 20) && numC > numB) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
             etiquetaSinal = "🟢ENTRADA LONG";
