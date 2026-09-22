@@ -386,46 +386,47 @@ async function executarScanner() {
 
             if (blocoResultadoAtual) {
                
-                const t2 = totalMatchesPalavras;
-                const t3 = totalMatchesFonteSecundaria;
-                const somaTendencia = totalReversoesCandle + t3; 
-                const resultado = `${t2} e ${t3}+${totalReversoesCandle}=${somaTendencia}`;
+                const numA = totalMatchesPalavras;
+                const numB = totalMatchesFonteSecundaria;
+                const numC = totalReversoesCandle;
+                const somaBC = numC + numB; 
+                const resultado = `${numA} e ${numB}+${numC}=${somaBC}`;
 
                 // 🧠 Lógica Dinâmica das Etiquetas de Previsão
                 let etiquetaSinal = "[⚪NEUTRO]";
                 let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
                 
 
-                if (t2 > t3 && somaTendencia >= 25 && totalReversoesCandle > t3 && somaTendencia <= 60) {
+                if (numA > numB && somaBC >= 25 && numC > numB && somaBC <= 60) {
                     etiquetaSinal = "🟢ENTRADA LONG";
                     classeCorEtiqueta = "text-emerald-400"; // Destaca em verde
                     classeBG = "bg-emerald-950 bg-opacity-40 border-emerald-800";
                 } 
-                if (t2 <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
+                if (numA <= 2 && (somaBC >= 35 && somaBC <= 48)) {
                     // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
                     etiquetaSinal = "🟢ENTRADA LONG";
                     classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
                     classeBG = "bg-emerald-950 bg-opacity-40 border-emerald-800";
                 }
                         
-                if (t2 <= 2 && somaTendencia > 49) {
+                if (numA <= 2 && somaBC > 49) {
                     etiquetaSinal = "🔵ENTRADA SHORT";
                     classeCorEtiqueta = "text-blue-600"; // Destaca em rosa/vermelho
                     classeBG = "bg-blue-950 bg-opacity-40 border-blue-900";
                 }
-                if (somaTendencia < 10) {
+                if (somaBC < 10) {
                     etiquetaSinal = "🔵ENTRADA SHORT";
                     classeCorEtiqueta = "text-blue-400"; // Destaca em rosa/vermelho
                     classeBG = "bg-blue-950 bg-opacity-40 border-blue-900";
                 }
 
-                if (t2 > (ultimoAA + 28) && somaTendencia <= 10) {
+                if (numA > (ultimoAA + 28) && somaBC <= 10) {
                         // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
                         etiquetaSinal = "🟢ENTRADA LONG";
                         classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
                 }
             
-                if (t2 > (ultimoAA + 20) && t3 > t2) {
+                if (numA > (ultimoAA + 20) && numB > numA) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
                      etiquetaSinal = "🟢ENTRADA LONG ";
                      classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
@@ -516,54 +517,55 @@ function desenharHistoricoNaTela() {
         // Processamento matemático dos tokens mapeados na escala de Peso 3
         const placar = item.placar; // Exemplo: "2-35-6"
         const numeros = placar.split('-').map(Number);
-        const tokenExaustao = numeros[0]; 
-        const t2 = numeros[1];
-        const t3 = numeros[2];
-        const somaTendencia = t2 + t3; 
-        const resultado = `${tokenExaustao} e ${t2}+${t3}=${somaTendencia}`;
-
+        
+        const numA = numeros[0]; 
+        const numB = numeros[1];
+        const numC =  numeros[2];
+        const somaBC = numC + numB; 
+        const resultado = `${numA} e ${numB}+${numC}=${somaBC}`;
+                
         // 🧠 Lógica Dinâmica das Etiquetas de Previsão
         let etiquetaSinal = "[⚪NEUTRO]";
         let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
         let classeBG = "bg-gray-850";
 
-        if (tokenExaustao > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
+        if (numA > numB && somaBC >= 25 && numC > numB && somaBC <= 60) {
             etiquetaSinal = "🟢ENTRADA LONG";
             classeCorEtiqueta = "text-emerald-400"; // Destaca em verde
             classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
         } 
-        if (tokenExaustao <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
+        if (numA <= 2 && (somaBC >= 35 && somaBC <= 48)) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
             etiquetaSinal = "🟢ENTRADA LONG";
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
             classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
         }
                 
-        if (tokenExaustao <= 2 && somaTendencia > 49) {
+        if (numA <= 2 && somaBC > 49) {
             etiquetaSinal = "🔵ENTRADA SHORT";
             classeCorEtiqueta = "text-blue-600"; // Destaca em rosa/vermelho
             classeBG = "bg-blue-950 bg-opacity-40 border border-blue-900";
         }
-        if (somaTendencia < 10) {
+        if (somaBC < 10) {
             etiquetaSinal = "🔵ENTRADA SHORT";
             classeCorEtiqueta = "text-blue-400"; // Destaca em rosa/vermelho
             classeBG = "bg-blue-950 bg-opacity-40 border border-blue-900";
         }
 
-        if (tokenExaustao > (ultimoA + 28) && somaTendencia <= 10) {
+        if (numA > (ultimoA + 28) && somaBC <= 10) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
             etiquetaSinal = "🟢ENTRADA LONG";
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
             classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
         }
 
-        if (tokenExaustao > (ultimoA + 20) && t3 > t2) {
+        if (numA > (ultimoA + 20) && numC > numB) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
             etiquetaSinal = "🟢ENTRADA LONG";
             classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
             classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
         }
-        ultimoA = tokenExaustao
+        ultimoA = numA
                 
         tocarBeep();
                 
