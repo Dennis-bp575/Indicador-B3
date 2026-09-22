@@ -529,23 +529,84 @@ function desenharHistoricoNaTela() {
         let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
         let classeBG = "bg-gray-850";
 
-        if (numA > numB && somaBC >= 25 && numC > numB && somaBC <= 60) {
-            etiquetaSinal = "🟢ENTRADA LONG";
-            classeCorEtiqueta = "text-emerald-400"; // Destaca em verde
-            classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
-        } 
-        if (numA <= 2 && (somaBC >= 35 && somaBC <= 48)) {
-            // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
-            etiquetaSinal = "🟢ENTRADA LONG";
-            classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
-            classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
-        }
-                
-        if (numA <= 2 && somaBC > 49) {
-            etiquetaSinal = "🔵ENTRADA SHORT";
-            classeCorEtiqueta = "text-blue-600"; // Destaca em rosa/vermelho
-            classeBG = "bg-blue-950 bg-opacity-40 border border-blue-900";
-        }
+                   // 1. Defina os critérios ideais (Sinal Principal)
+            const condicaoA = numA > numB;
+            const condicaoB = numC > numB;
+            const condicaoC = somaBC >= 25;
+            const condicaoD = somaBC <= 60;
+            
+            // 2. Defina os critérios sutis/flexíveis (Suas alternativas)
+            const condicaoA_S = numA >= numB;
+            const condicaoB_S = numC >= numB;
+            const condicaoC_S = somaBC >= 23;
+            const condicaoD_S = somaBC <= 58;
+            
+            // 3. Verificação Lógica
+            if (condicaoA && condicaoB && condicaoC && condicaoD) {
+                // SINAL PRINCIPAL (Forte)
+                etiquetaSinal = "🟢 ENTRADA LONG";
+                classeCorEtiqueta = "text-emerald-400";
+                classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
+            
+            } else if (
+                (condicaoA_S && condicaoB && condicaoC && condicaoD) || // numA sutil
+                (condicaoA && condicaoB_S && condicaoC && condicaoD) || // somaBC min sutil
+                (condicaoA && condicaoB && condicaoC_S && condicaoD) || // numC sutil
+                (condicaoA && condicaoB && condicaoC && condicaoD_S)    // somaBC max sutil
+            ) {
+                // SINAL SUTIL (Moderado / Amarelo ou Verde Claro)
+                etiquetaSinal = "🟡 LONG (MODERADO)"; 
+                classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
+            }
+            
+                condicaoA = numA <= 2;
+                condicaoB = somaBC >= 35;
+                condicaoC = somaBC <= 48;
+            const condicaoA_S =numA <= 3;
+            const condicaoB_S = somaBC >= 33;
+            const condicaoC_S = somaBC <= 50;         
+
+            if (condicaoA && condicaoB && condicaoC) {
+                // SINAL PRINCIPAL (Forte)
+                etiquetaSinal = "🟢 ENTRADA LONG";
+                classeCorEtiqueta = "text-emerald-400";
+                classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
+
+            } else if (
+                (condicaoA_S && condicaoB && condicaoC) || // numA sutil
+                (condicaoA && condicaoB_S && condicaoC) || // somaBC min sutil
+                (condicaoA && condicaoB && condicaoC_S) 
+            ) {
+                // SINAL SUTIL (Moderado / Amarelo ou Verde Claro)
+                etiquetaSinal = "🟡 LONG (MODERADO)"; 
+                classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
+            }
+
+
+            condicaoA = numA <= 2;
+            condicaoB = somaBC > 49;
+            const condicaoA_S =numA <= 3;
+            const condicaoB_S = somaBC > 47;
+
+            if (condicaoA && condicaoB) {
+                // SINAL PRINCIPAL (Forte)
+                etiquetaSinal = "🔵ENTRADA SHORT";
+                classeCorEtiqueta = "text-emerald-400";
+                classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
+
+            } else if (
+                (condicaoA_S && condicaoB) || // numA sutil
+                (condicaoA && condicaoB_S)
+            ) {
+                // SINAL SUTIL (Moderado / Amarelo ou Verde Claro)
+                etiquetaSinal = "🔵SHORT (MODERADO)"; 
+                classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
+            }
+
+
         if (somaBC < 10) {
             etiquetaSinal = "🔵ENTRADA SHORT";
             classeCorEtiqueta = "text-blue-400"; // Destaca em rosa/vermelho
