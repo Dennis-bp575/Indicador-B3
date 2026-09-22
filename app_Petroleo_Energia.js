@@ -962,7 +962,7 @@ function desenharHistoricoNaTela() {
                 classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
             }
                 
-        ultimoA = tokenExaustao
+        ultimoA = numA
                 
         tocarBeep();
                  
