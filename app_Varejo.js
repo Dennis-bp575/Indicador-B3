@@ -622,9 +622,9 @@ function desenharHistoricoNaTela() {
                 condicaoA = numA <= 2;
                 condicaoB = somaBC >= 35;
                 condicaoC = somaBC <= 48;
-            const condicaoA_S =numA <= 3;
-            const condicaoB_S = somaBC >= 33;
-            const condicaoC_S = somaBC <= 50;         
+            condicaoA_S =numA <= 3;
+            condicaoB_S = somaBC >= 33;
+            condicaoC_S = somaBC <= 50;         
 
             if (condicaoA && condicaoB && condicaoC) {
                 // SINAL PRINCIPAL (Forte)
@@ -646,8 +646,8 @@ function desenharHistoricoNaTela() {
 
             condicaoA = numA <= 2;
             condicaoB = somaBC > 49;
-            const condicaoA_S =numA <= 3;
-            const condicaoB_S = somaBC > 47;
+            condicaoA_S =numA <= 3;
+            condicaoB_S = somaBC > 47;
 
             if (condicaoA && condicaoB) {
                 // SINAL PRINCIPAL (Forte)
