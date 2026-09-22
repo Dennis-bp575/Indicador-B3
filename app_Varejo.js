@@ -652,8 +652,8 @@ function desenharHistoricoNaTela() {
             if (condicaoA && condicaoB) {
                 // SINAL PRINCIPAL (Forte)
                 etiquetaSinal = "🔵ENTRADA SHORT";
-                classeCorEtiqueta = "text-emerald-400";
-                classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
+                classeCorEtiqueta = "text-blue-400";
+                classeBG = "bg-blue-950 bg-opacity-40 border border-blue-800";
 
             } else if (
                 (condicaoA_S && condicaoB) || // numA sutil
@@ -661,8 +661,8 @@ function desenharHistoricoNaTela() {
             ) {
                 // SINAL SUTIL (Moderado / Amarelo ou Verde Claro)
                 etiquetaSinal = "🔵SHORT (MODERADO)"; 
-                classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
-                classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
+                classeCorEtiqueta = "text-blue-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-blue-950 bg-opacity-40 border border-blue-800";
             }
 
 
