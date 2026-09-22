@@ -479,17 +479,49 @@ async function executarScanner() {
                     classeBG = "bg-blue-950 bg-opacity-40 border-blue-900";
                 }
 
-                if (numA > (ultimoAA + 28) && somaBC <= 10) {
-                        // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
-                        etiquetaSinal = "🟢ENTRADA LONG";
-                        classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
-                }
-            
-                if (numA > (ultimoAA + 20) && numB > numA) {
-            // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
-                     etiquetaSinal = "🟢ENTRADA LONG ";
-                     classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
-                }
+            condicaoA = numA > (ultimoAA + 28);
+            condicaoB = somaBC <= 10;
+            condicaoA_S = numA > (ultimoAA + 27);
+            condicaoB_S = somaBC <= 11;
+
+             if (condicaoA && condicaoB) {
+                // SINAL PRINCIPAL (Forte)
+                etiquetaSinal = "🟢LONG"; 
+                classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
+
+            } else if (
+                (condicaoA_S && condicaoB) || // numA sutil
+                (condicaoA && condicaoB_S)
+            ) {
+                // SINAL SUTIL (Moderado / Amarelo ou Verde Claro)
+                etiquetaSinal = "🟡LONG (MODERADO)"; 
+                classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
+            }
+
+
+            condicaoA = numA > (ultimoAA + 20);
+            condicaoB = numC > numB;
+            condicaoA_S = numA >= (ultimoAA + 20);
+            condicaoB_S = numC >= numB;
+
+             if (condicaoA && condicaoB) {
+                // SINAL PRINCIPAL (Forte)
+                etiquetaSinal = "🟢LONG"; 
+                classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
+
+            } else if (
+                (condicaoA_S && condicaoB) || // numA sutil
+                (condicaoA && condicaoB_S)
+            ) {
+                // SINAL SUTIL (Moderado / Amarelo ou Verde Claro)
+                etiquetaSinal = "🟡LONG (MODERADO)"; 
+                classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
+            }                
+      
 
                 const agora15 = new Date();
                 const hora15Formatada = agora15.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
@@ -603,7 +635,7 @@ function desenharHistoricoNaTela() {
             // 3. Verificação Lógica
             if (condicaoA && condicaoB && condicaoC && condicaoD) {
                 // SINAL PRINCIPAL (Forte)
-                etiquetaSinal = "🟢 ENTRADA LONG";
+                etiquetaSinal = "🟢LONG";
                 classeCorEtiqueta = "text-emerald-400";
                 classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
             
@@ -614,7 +646,7 @@ function desenharHistoricoNaTela() {
                 (condicaoA && condicaoB && condicaoC && condicaoD_S)    // somaBC max sutil
             ) {
                 // SINAL SUTIL (Moderado / Amarelo ou Verde Claro)
-                etiquetaSinal = "🟡 LONG (MODERADO)"; 
+                etiquetaSinal = "🟡LONG (MODERADO)"; 
                 classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
                 classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
             }
@@ -628,7 +660,7 @@ function desenharHistoricoNaTela() {
 
             if (condicaoA && condicaoB && condicaoC) {
                 // SINAL PRINCIPAL (Forte)
-                etiquetaSinal = "🟢 ENTRADA LONG";
+                etiquetaSinal = "🟢LONG";
                 classeCorEtiqueta = "text-emerald-400";
                 classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
 
@@ -638,7 +670,7 @@ function desenharHistoricoNaTela() {
                 (condicaoA && condicaoB && condicaoC_S) 
             ) {
                 // SINAL SUTIL (Moderado / Amarelo ou Verde Claro)
-                etiquetaSinal = "🟡 LONG (MODERADO)"; 
+                etiquetaSinal = "🟡LONG (MODERADO)"; 
                 classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
                 classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
             }
@@ -651,7 +683,7 @@ function desenharHistoricoNaTela() {
 
             if (condicaoA && condicaoB) {
                 // SINAL PRINCIPAL (Forte)
-                etiquetaSinal = "🔵ENTRADA SHORT";
+                etiquetaSinal = "🔵SHORT";
                 classeCorEtiqueta = "text-blue-400";
                 classeBG = "bg-blue-950 bg-opacity-40 border border-blue-800";
 
@@ -667,7 +699,7 @@ function desenharHistoricoNaTela() {
 
 
         if (somaBC < 10) {
-            etiquetaSinal = "🔵ENTRADA SHORT";
+            etiquetaSinal = "🔵SHORT";
             classeCorEtiqueta = "text-blue-400"; // Destaca em rosa/vermelho
             classeBG = "bg-blue-950 bg-opacity-40 border border-blue-900";
         }
@@ -679,7 +711,7 @@ function desenharHistoricoNaTela() {
 
              if (condicaoA && condicaoB) {
                 // SINAL PRINCIPAL (Forte)
-                etiquetaSinal = "🟢ENTRADA LONG"; 
+                etiquetaSinal = "🟢LONG"; 
                 classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
                 classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
 
@@ -701,7 +733,7 @@ function desenharHistoricoNaTela() {
 
              if (condicaoA && condicaoB) {
                 // SINAL PRINCIPAL (Forte)
-                etiquetaSinal = "🟢ENTRADA LONG"; 
+                etiquetaSinal = "🟢LONG"; 
                 classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
                 classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
 
@@ -715,12 +747,6 @@ function desenharHistoricoNaTela() {
                 classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
             }                
        
-        if (numA > (ultimoA + 20) && numC > numB) {
-            // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
-            etiquetaSinal = "🟢ENTRADA LONG";
-            classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
-            classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
-        }
         ultimoA = numA
                 
         tocarBeep();
