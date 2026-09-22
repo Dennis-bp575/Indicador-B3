@@ -386,50 +386,153 @@ async function executarScanner() {
 
             if (blocoResultadoAtual) {
                
-                const t2 = totalMatchesPalavras;
+                /*const t2 = totalMatchesPalavras;
                 const t3 = totalMatchesFonteSecundaria;
                 const somaTendencia = totalReversoesCandle + t3; 
-                const resultado = `${t2} e ${t3}+${totalReversoesCandle}=${somaTendencia}`;
+                const resultado = `${t2} e ${t3}+${totalReversoesCandle}=${somaTendencia}`;*/
+
+                const numA = totalMatchesPalavras;
+                const numB = totalMatchesFonteSecundaria;
+                const numC = totalReversoesCandle;
+                const somaBC = numC + numB; 
+                const resultado = `${numA} e ${numB}+${numC}=${somaBC}`;
 
                 // 🧠 Lógica Dinâmica das Etiquetas de Previsão
                 let etiquetaSinal = "[⚪NEUTRO]";
                 let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
                 let classeBG = "bg-gray-800 border border-gray-700";
 
-                if (t2 > t3 && somaTendencia >= 25 && totalReversoesCandle > t3 && somaTendencia <= 60) {
+
+            let condicaoA = numA > numB;
+            let condicaoB = numC > numB;
+            let condicaoC = somaBC >= 25;
+            let condicaoD = somaBC <= 60;
+            
+            // 2. Defina os critérios sutis/flexíveis (Suas alternativas)
+            let condicaoA_S = numA >= numB;
+            let condicaoB_S = numC >= numB;
+            let condicaoC_S = somaBC >= 23;
+            let condicaoD_S = somaBC <= 58;
+
+                
+            /*if (t2 > t3 && somaTendencia >= 25 && totalReversoesCandle > t3 && somaTendencia <= 60) {
                     etiquetaSinal = "🟢ENTRADA LONG";
                     classeCorEtiqueta = "text-emerald-400"; // Destaca em verde
-                    classeBG = "bg-emerald-950 bg-opacity-40 border-emerald-800";
-                } 
+                    classeBG = "bg-emerald-950 bg-opacity-40 border-emerald-800";                
+                } */
+
+            if (condicaoA && condicaoB && condicaoC && condicaoD) {
+                // SINAL PRINCIPAL (Forte)
+                etiquetaSinal = "🟢LONG";
+                classeCorEtiqueta = "text-emerald-400";
+                classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
+            
+            } else if (
+                (condicaoA_S && condicaoB && condicaoC && condicaoD) || // numA sutil
+                (condicaoA && condicaoB_S && condicaoC && condicaoD) || // somaBC min sutil
+                (condicaoA && condicaoB && condicaoC_S && condicaoD) || // numC sutil
+                (condicaoA && condicaoB && condicaoC && condicaoD_S)    // somaBC max sutil
+            ) {
+                // SINAL SUTIL (Moderado / Amarelo ou Verde Claro)
+                etiquetaSinal = "🟡LONG (MODERADO)"; 
+                classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
+            }
+            
+                /*        
                 if (t2 <= 2 && (somaTendencia >= 35 && somaTendencia <= 48)) {
                     // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
                     etiquetaSinal = "🟢ENTRADA LONG";
                     classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
                     classeBG = "bg-emerald-950 bg-opacity-40 border-emerald-800";
-                }
-                        
+                }*/
+
+            
+                condicaoA = numA <= 2;
+                condicaoB = somaBC >= 35;
+                condicaoC = somaBC <= 48;
+            condicaoA_S =numA <= 3;
+            condicaoB_S = somaBC >= 33;
+            condicaoC_S = somaBC <= 50;         
+
+            if (condicaoA && condicaoB && condicaoC) {
+                // SINAL PRINCIPAL (Forte)
+                etiquetaSinal = "🟢LONG";
+                classeCorEtiqueta = "text-emerald-400";
+                classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
+
+            } else if (
+                (condicaoA_S && condicaoB && condicaoC) || // numA sutil
+                (condicaoA && condicaoB_S && condicaoC) || // somaBC min sutil
+                (condicaoA && condicaoB && condicaoC_S) 
+            ) {
+                // SINAL SUTIL (Moderado / Amarelo ou Verde Claro)
+                etiquetaSinal = "🟡LONG (MODERADO)"; 
+                classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
+            }
+
+
+              /*          
                 if (t2 <= 2 && somaTendencia > 49) {
                     etiquetaSinal = "🔵ENTRADA SHORT";
                     classeCorEtiqueta = "text-orange-600"; // Destaca em rosa/vermelho
                     classeBG = "bg-rose-950 bg-opacity-40 border-rose-900";
-                }
+                }*/
+
+
+            condicaoA = numA <= 2;
+            condicaoB = somaBC > 49;
+            condicaoA_S =numA <= 3;
+            condicaoB_S = somaBC > 47;
+
+            if (condicaoA && condicaoB) {
+                // SINAL PRINCIPAL (Forte)
+                etiquetaSinal = "🔵SHORT";
+                classeCorEtiqueta = "text-blue-400";
+                classeBG = "bg-blue-950 bg-opacity-40 border border-blue-800";
+
+            } else if (
+                (condicaoA_S && condicaoB) || // numA sutil
+                (condicaoA && condicaoB_S)
+            ) {
+                // SINAL SUTIL (Moderado / Amarelo ou Verde Claro)
+                etiquetaSinal = "🔵SHORT (MODERADO)"; 
+                classeCorEtiqueta = "text-blue-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-blue-950 bg-opacity-40 border border-blue-800";
+            }
+
+
+            condicaoA = somaBC < 10;
+            condicaoB = numA > 5;
+            condicaoC = numA < 25
+            condicaoA_S = somaBC <= 10;
+            condicaoB_S = numA >= 5;
+            condicaoC_S = numA <= 25
+
+            if (condicaoA && condicaoB && condicaoC) {
+                // SINAL PRINCIPAL (Forte)
+                etiquetaSinal = "🔵SHORT";
+                classeCorEtiqueta = "text-blue-400";
+                classeBG = "bg-blue-950 bg-opacity-40 border border-blue-800";
+
+            } else if (
+                (condicaoA_S && condicaoB && condicaoC) || // numA sutil
+                (condicaoA && condicaoB_S && condicaoC) || // somaBC min sutil
+                (condicaoA && condicaoB && condicaoC_S) 
+            ) {
+                // SINAL SUTIL (Moderado / Amarelo ou Verde Claro)
+                etiquetaSinal = "🔵SHORT (MODERADO)"; 
+                classeCorEtiqueta = "text-blue-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-blue-950 bg-opacity-40 border border-blue-800";
+            }
+
+             /*           
                 if (somaTendencia < 10 && t2 > 5 && t2 < 25) {
                     etiquetaSinal = "🔵ENTRADA SHORT";
                     classeCorEtiqueta = "text-rose-400"; // Destaca em rosa/vermelho
                     classeBG = "bg-rose-950 bg-opacity-40 border-rose-900";
                 }
-/*
-                if ((t2 - t3) > 15) {
-                        etiquetaSinal = "🟠SAÍDA SHORT";
-                        classeCorEtiqueta = "text-red-600"; // Destaca em rosa/vermelho
-                        classeBG = "bg-red-950 bg-opacity-40 border-red-900";
-                }
-                if (t2 > (totalReversoesCandle + t3)) {
-                        etiquetaSinal = "🟠SAÍDA SHORT";
-                        classeCorEtiqueta = "text-red-600"; // Destaca em rosa/vermelho
-                        classeBG = "bg-red-950 bg-opacity-40 border-red-900";
-                }
-*/
 
                 if (t2 > (ultimoAA + 28) && somaTendencia <= 10) {
                         // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
@@ -438,19 +541,93 @@ async function executarScanner() {
                         classeBG = "bg-emerald-950 bg-opacity-40 border-emerald-800";
                         
                 }
+
+
             
                 if (t2 > (ultimoAA + 20) && t3 > t2) {
             // Texto curto e objetivo mantendo a bolinha amarela ao lado da compra
                      etiquetaSinal = "🟢ENTRADA LONG";
                      classeCorEtiqueta = "text-emerald-400"; // Mantém o texto em destaque verde
                      classeBG = "bg-emerald-950 bg-opacity-40 border-emerald-800";
-                }
+                }*/
 
-                if ((t2 + t3 + totalReversoesCandle) <=25 && t2 > 2 && t3 > 2 && totalReversoesCandle > 2) {
+            condicaoA = numA > (ultimoAA + 28);
+            condicaoB = somaBC <= 10;
+            condicaoA_S = numA > (ultimoAA + 27);
+            condicaoB_S = somaBC <= 11;
+
+             if (condicaoA && condicaoB) {
+                // SINAL PRINCIPAL (Forte)
+                etiquetaSinal = "🟢LONG"; 
+                classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
+
+            } else if (
+                (condicaoA_S && condicaoB) || // numA sutil
+                (condicaoA && condicaoB_S)
+            ) {
+                // SINAL SUTIL (Moderado / Amarelo ou Verde Claro)
+                etiquetaSinal = "🟡LONG (MODERADO)"; 
+                classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
+            }
+
+
+            condicaoA = numA > (ultimoAA + 20);
+            condicaoB = numC > numB;
+            condicaoA_S = numA >= (ultimoAA + 20);
+            condicaoB_S = numC >= numB;
+
+             if (condicaoA && condicaoB) {
+                // SINAL PRINCIPAL (Forte)
+                etiquetaSinal = "🟢LONG"; 
+                classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
+
+            } else if (
+                (condicaoA_S && condicaoB) || // numA sutil
+                (condicaoA && condicaoB_S)
+            ) {
+                // SINAL SUTIL (Moderado / Amarelo ou Verde Claro)
+                etiquetaSinal = "🟡LONG (MODERADO)"; 
+                classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
+            }         
+
+            condicaoA = (numA + numB + numC) <= 25;
+            condicaoB = numA > 2;
+            condicaoC = numB > 2;
+            condicaoD = numC > 2;
+            
+            // 2. Defina os critérios sutis/flexíveis (Suas alternativas)
+            condicaoA_S = (numA + numB + numC) <= 26;
+            condicaoB_S = numA >= 2;
+            condicaoC_S = numB >= 2;
+            condicaoD_S = numC >= 2;
+
+            if (condicaoA && condicaoB && condicaoC && condicaoD) {
+                // SINAL PRINCIPAL (Forte)
+                etiquetaSinal = "🟢LONG";
+                classeCorEtiqueta = "text-emerald-400";
+                classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
+            
+            } else if (
+                (condicaoA_S && condicaoB && condicaoC && condicaoD) || // numA sutil
+                (condicaoA && condicaoB_S && condicaoC && condicaoD) || // somaBC min sutil
+                (condicaoA && condicaoB && condicaoC_S && condicaoD) || // numC sutil
+                (condicaoA && condicaoB && condicaoC && condicaoD_S)    // somaBC max sutil
+            ) {
+                // SINAL SUTIL (Moderado / Amarelo ou Verde Claro)
+                etiquetaSinal = "🟡LONG (MODERADO)"; 
+                classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
+            }
+            
+               /* if ((t2 + t3 + totalReversoesCandle) <=25 && t2 > 2 && t3 > 2 && totalReversoesCandle > 2) {
                         etiquetaSinal = "🟡ENTRADA LONG";
                         classeCorEtiqueta = "text-yellow-500"; // Destaca em rosa/vermelho
                         classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-900";
-                }
+                }*/
                         
                 const agora15 = new Date();
                 const hora15Formatada = agora15.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
@@ -564,7 +741,7 @@ function desenharHistoricoNaTela() {
             classeCorEtiqueta = "text-red-500"; // Destaca em rosa/vermelho
             classeBG = "bg-red-950 bg-opacity-40 border border-red-900";
         }  
-*/
+
 
         if (tokenExaustao > t2 && somaTendencia >= 25 && t3 > t2 && somaTendencia <= 60) {
             etiquetaSinal = "🟢ENTRADA LONG";
@@ -608,9 +785,180 @@ function desenharHistoricoNaTela() {
             classeCorEtiqueta = "text-yellow-500"; // Destaca em rosa/vermelho
             classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-900";
         }
+*/
 
 
+            let condicaoA = numA > numB;
+            let condicaoB = numC > numB;
+            let condicaoC = somaBC >= 25;
+            let condicaoD = somaBC <= 60;
+            
+            // 2. Defina os critérios sutis/flexíveis (Suas alternativas)
+            let condicaoA_S = numA >= numB;
+            let condicaoB_S = numC >= numB;
+            let condicaoC_S = somaBC >= 23;
+            let condicaoD_S = somaBC <= 58;
 
+            if (condicaoA && condicaoB && condicaoC && condicaoD) {
+                // SINAL PRINCIPAL (Forte)
+                etiquetaSinal = "🟢LONG";
+                classeCorEtiqueta = "text-emerald-400";
+                classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
+            
+            } else if (
+                (condicaoA_S && condicaoB && condicaoC && condicaoD) || // numA sutil
+                (condicaoA && condicaoB_S && condicaoC && condicaoD) || // somaBC min sutil
+                (condicaoA && condicaoB && condicaoC_S && condicaoD) || // numC sutil
+                (condicaoA && condicaoB && condicaoC && condicaoD_S)    // somaBC max sutil
+            ) {
+                // SINAL SUTIL (Moderado / Amarelo ou Verde Claro)
+                etiquetaSinal = "🟡LONG (MODERADO)"; 
+                classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
+            }
+
+                condicaoA = numA <= 2;
+                condicaoB = somaBC >= 35;
+                condicaoC = somaBC <= 48;
+            condicaoA_S =numA <= 3;
+            condicaoB_S = somaBC >= 33;
+            condicaoC_S = somaBC <= 50;         
+
+            if (condicaoA && condicaoB && condicaoC) {
+                // SINAL PRINCIPAL (Forte)
+                etiquetaSinal = "🟢LONG";
+                classeCorEtiqueta = "text-emerald-400";
+                classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
+
+            } else if (
+                (condicaoA_S && condicaoB && condicaoC) || // numA sutil
+                (condicaoA && condicaoB_S && condicaoC) || // somaBC min sutil
+                (condicaoA && condicaoB && condicaoC_S) 
+            ) {
+                // SINAL SUTIL (Moderado / Amarelo ou Verde Claro)
+                etiquetaSinal = "🟡LONG (MODERADO)"; 
+                classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
+            }
+
+
+            condicaoA = numA <= 2;
+            condicaoB = somaBC > 49;
+            condicaoA_S =numA <= 3;
+            condicaoB_S = somaBC > 47;
+
+            if (condicaoA && condicaoB) {
+                // SINAL PRINCIPAL (Forte)
+                etiquetaSinal = "🔵SHORT";
+                classeCorEtiqueta = "text-blue-400";
+                classeBG = "bg-blue-950 bg-opacity-40 border border-blue-800";
+
+            } else if (
+                (condicaoA_S && condicaoB) || // numA sutil
+                (condicaoA && condicaoB_S)
+            ) {
+                // SINAL SUTIL (Moderado / Amarelo ou Verde Claro)
+                etiquetaSinal = "🔵SHORT (MODERADO)"; 
+                classeCorEtiqueta = "text-blue-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-blue-950 bg-opacity-40 border border-blue-800";
+            }
+
+
+            condicaoA = somaBC < 10;
+            condicaoB = numA > 5;
+            condicaoC = numA < 25
+            condicaoA_S = somaBC <= 10;
+            condicaoB_S = numA >= 5;
+            condicaoC_S = numA <= 25
+
+            if (condicaoA && condicaoB && condicaoC) {
+                // SINAL PRINCIPAL (Forte)
+                etiquetaSinal = "🔵SHORT";
+                classeCorEtiqueta = "text-blue-400";
+                classeBG = "bg-blue-950 bg-opacity-40 border border-blue-800";
+
+            } else if (
+                (condicaoA_S && condicaoB && condicaoC) || // numA sutil
+                (condicaoA && condicaoB_S && condicaoC) || // somaBC min sutil
+                (condicaoA && condicaoB && condicaoC_S) 
+            ) {
+                // SINAL SUTIL (Moderado / Amarelo ou Verde Claro)
+                etiquetaSinal = "🔵SHORT (MODERADO)"; 
+                classeCorEtiqueta = "text-blue-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-blue-950 bg-opacity-40 border border-blue-800";
+            }
+
+            condicaoA = numA > (ultimoA + 28);
+            condicaoB = somaBC <= 10;
+            condicaoA_S = numA > (ultimoA + 27);
+            condicaoB_S = somaBC <= 11;
+
+             if (condicaoA && condicaoB) {
+                // SINAL PRINCIPAL (Forte)
+                etiquetaSinal = "🟢LONG"; 
+                classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
+
+            } else if (
+                (condicaoA_S && condicaoB) || // numA sutil
+                (condicaoA && condicaoB_S)
+            ) {
+                // SINAL SUTIL (Moderado / Amarelo ou Verde Claro)
+                etiquetaSinal = "🟡LONG (MODERADO)"; 
+                classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
+            }
+
+
+            condicaoA = numA > (ultimoA + 20);
+            condicaoB = numC > numB;
+            condicaoA_S = numA >= (ultimoA + 20);
+            condicaoB_S = numC >= numB;
+
+             if (condicaoA && condicaoB) {
+                // SINAL PRINCIPAL (Forte)
+                etiquetaSinal = "🟢LONG"; 
+                classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
+
+            } else if (
+                (condicaoA_S && condicaoB) || // numA sutil
+                (condicaoA && condicaoB_S)
+            ) {
+                // SINAL SUTIL (Moderado / Amarelo ou Verde Claro)
+                etiquetaSinal = "🟡LONG (MODERADO)"; 
+                classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
+            }         
+
+            condicaoA = (numA + numB + numC) <= 25;
+            condicaoB = numA > 2;
+            condicaoC = numB > 2;
+            condicaoD = numC > 2;
+            
+            // 2. Defina os critérios sutis/flexíveis (Suas alternativas)
+            condicaoA_S = (numA + numB + numC) <= 26;
+            condicaoB_S = numA >= 2;
+            condicaoC_S = numB >= 2;
+            condicaoD_S = numC >= 2;
+
+            if (condicaoA && condicaoB && condicaoC && condicaoD) {
+                // SINAL PRINCIPAL (Forte)
+                etiquetaSinal = "🟢LONG";
+                classeCorEtiqueta = "text-emerald-400";
+                classeBG = "bg-emerald-950 bg-opacity-40 border border-emerald-800";
+            
+            } else if (
+                (condicaoA_S && condicaoB && condicaoC && condicaoD) || // numA sutil
+                (condicaoA && condicaoB_S && condicaoC && condicaoD) || // somaBC min sutil
+                (condicaoA && condicaoB && condicaoC_S && condicaoD) || // numC sutil
+                (condicaoA && condicaoB && condicaoC && condicaoD_S)    // somaBC max sutil
+            ) {
+                // SINAL SUTIL (Moderado / Amarelo ou Verde Claro)
+                etiquetaSinal = "🟡LONG (MODERADO)"; 
+                classeCorEtiqueta = "text-yellow-400"; // Mudado para diferenciar do sinal forte
+                classeBG = "bg-yellow-950 bg-opacity-40 border border-yellow-800";
+            }
                 
         ultimoA = tokenExaustao
                 
