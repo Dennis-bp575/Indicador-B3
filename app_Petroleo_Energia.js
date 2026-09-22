@@ -714,11 +714,13 @@ function desenharHistoricoNaTela() {
         // Processamento matemático dos tokens mapeados na escala de Peso 3
         const placar = item.placar; // Exemplo: "2-35-6"
         const numeros = placar.split('-').map(Number);
-        const tokenExaustao = numeros[0]; 
-        const t2 = numeros[1];
-        const t3 = numeros[2];
-        const somaTendencia = t2 + t3; 
-        const resultado = `${tokenExaustao} e ${t2}+${t3}=${somaTendencia}`;
+
+        const numA = numeros[0]; 
+        const numB = numeros[1];
+        const numC =  numeros[2];
+        const somaBC = numC + numB; 
+        const resultado = `${numA} e ${numB}+${numC}=${somaBC}`;
+
 
         // 🧠 Lógica Dinâmica das Etiquetas de Previsão
         let etiquetaSinal = "[⚪NEUTRO]";
