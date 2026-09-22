@@ -397,16 +397,16 @@ async function executarScanner() {
                 let classeCorEtiqueta = "text-gray-400"; // Cor padrão neutra
                 
                    // 1. Defina os critérios ideais (Sinal Principal)
-            const condicaoA = numA > numB;
-            const condicaoB = numC > numB;
-            const condicaoC = somaBC >= 25;
-            const condicaoD = somaBC <= 60;
+            let condicaoA = numA > numB;
+            let condicaoB = numC > numB;
+            let condicaoC = somaBC >= 25;
+            let condicaoD = somaBC <= 60;
             
             // 2. Defina os critérios sutis/flexíveis (Suas alternativas)
-            const condicaoA_S = numA >= numB;
-            const condicaoB_S = numC >= numB;
-            const condicaoC_S = somaBC >= 23;
-            const condicaoD_S = somaBC <= 58;
+            let condicaoA_S = numA >= numB;
+            let condicaoB_S = numC >= numB;
+            let condicaoC_S = somaBC >= 23;
+            let condicaoD_S = somaBC <= 58;
             
             // 3. Verificação Lógica
             if (condicaoA && condicaoB && condicaoC && condicaoD) {
@@ -589,16 +589,16 @@ function desenharHistoricoNaTela() {
         let classeBG = "bg-gray-850";
 
                    // 1. Defina os critérios ideais (Sinal Principal)
-            const condicaoA = numA > numB;
-            const condicaoB = numC > numB;
-            const condicaoC = somaBC >= 25;
-            const condicaoD = somaBC <= 60;
+            let condicaoA = numA > numB;
+            let condicaoB = numC > numB;
+            let condicaoC = somaBC >= 25;
+            let condicaoD = somaBC <= 60;
             
             // 2. Defina os critérios sutis/flexíveis (Suas alternativas)
-            const condicaoA_S = numA >= numB;
-            const condicaoB_S = numC >= numB;
-            const condicaoC_S = somaBC >= 23;
-            const condicaoD_S = somaBC <= 58;
+            let condicaoA_S = numA >= numB;
+            let condicaoB_S = numC >= numB;
+            let condicaoC_S = somaBC >= 23;
+            let condicaoD_S = somaBC <= 58;
             
             // 3. Verificação Lógica
             if (condicaoA && condicaoB && condicaoC && condicaoD) {
