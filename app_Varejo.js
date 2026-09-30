@@ -91,12 +91,19 @@ async function executarScanner() {
                                     // Evita sobrecarregar a API pública fazendo requisições rápidas demais
                                     await esperar(100); 
                                     
-                                    // O Yahoo Finance precisa do sufixo ".SA" para ações brasileiras (ex: PETR4.SA)
-                                    // Se o ticker for o Ibovespa, geralmente usa-se ^BVSP (ajuste na sua lista se necessário)
-                                    const tickerYahoo = ticker.includes('.') || ticker.startsWith('^') ? ticker : `${ticker}.SA`;
+                                    // Tratamos o ticker para o formato do Yahoo Finance
+                                    let tickerYahoo = ticker;
                                     
-                                    // URL da API pública do Yahoo Finance (v8) configurada para 3 meses com intervalo diário
-                                    const url = `https://yahoo.com{tickerYahoo}?range=3mo&interval=1d`;
+                                    // Se for o Ibovespa codificado (%5EBVSP), transforma no formato correto (^BVSP)
+                                    if (tickerYahoo === "%5EBVSP" || tickerYahoo === "%5ebvsp") {
+                                                tickerYahoo = "^BVSP";
+                                    } else if (!tickerYahoo.includes('.') && !tickerYahoo.startsWith('^')) {
+                                                // Adiciona o sufixo .SA para as ações brasileiras comuns
+                                                tickerYahoo = `${tickerYahoo}.SA`;
+                                    }
+                                    
+                                    // URL Oficial corrigida da API do Yahoo Finance (v8)
+                                    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${tickerYahoo}?range=3mo&interval=1d`;
                                     
                                     const response = await fetch(url);
                                     
@@ -108,20 +115,20 @@ async function executarScanner() {
                                                             const resultadoYahoo = jsonYahoo.chart.result[0];
                                                             
                                                             // Montamos o objeto simulando a estrutura que a BRAPI entregava
-                                                            // para você não precisar reescrever as funções de leitura abaixo
                                                             const dadosFormatados = {
-                                                                        symbol: ticker,
+                                                                        symbol: ticker, // Mantém o nome original da sua lista para não quebrar o resto do script
                                                                         currency: resultadoYahoo.meta.currency,
                                                                         regularMarketPrice: resultadoYahoo.meta.regularMarketPrice,
                                                                         historicalDataPrice: []
                                                             };
                                                             
                                                             const timestamps = resultadoYahoo.timestamp || [];
-                                                            const indicators = resultadoYahoo.indicators.quote[0];
+                                                            const indicators = resultadoYahoo.indicators.quote[0] || {};
                                                             
                                                             // Converte o formato do histórico do Yahoo para o modelo BRAPI
                                                             for (let i = 0; i < timestamps.length; i++) {
-                                                                        if (indicators.close[i] !== null) { // ignora dias sem dados
+                                                                        // Ignora dias sem dados ou nulos (finais de semana/feriados)
+                                                                        if (indicators.close && indicators.close[i] !== null && indicators.close[i] !== undefined) { 
                                                                                     dadosFormatados.historicalDataPrice.push({
                                                                                                 date: timestamps[i], // Timestamp Unix
                                                                                                 open: indicators.open[i],
@@ -133,7 +140,7 @@ async function executarScanner() {
                                                                         }
                                                             }
                                                             
-                                                            // Adiciona ao lote na memória simulando o .results[0] da BRAPI
+                                                            // Adiciona ao lote na memória simulando o .results da BRAPI
                                                             dadosBrutos.results.push(dadosFormatados);
                                                 }
                                     } else {
