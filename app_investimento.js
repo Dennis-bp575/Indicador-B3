@@ -144,7 +144,7 @@ const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
             // Pega o valor do HTML (ex: "CEAB") e trata para colocar o "3" antes de mandar pro painel
             const ativoHTML = this.getAttribute('data-ativo');
             const ticketTratado = ativoHTML + '3';
-            
+            console.log(ticketTratado);
             atualizarPainelVisual(ticketTratado);
         });
     });
@@ -317,6 +317,8 @@ const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
     }
     
     async function buscarPrecoB3(ticket) {
+        console.log("buscar b3");
+        console.log(ticket);
         try {
             txtPrecoMercado.innerText = "Atualizando...";
             
