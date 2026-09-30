@@ -86,7 +86,7 @@ const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
         'CSAN3': { precoEntrada: '3,85', precoMercado: '3,67', posicao: 'SHORT', inicio: '10/07' }
     };
 
-    let ativoAtual = 'CEAB3'; // Iniciando na primeira aba por padrão
+    let ativoAtual = 'CSNA3'; // Iniciando na primeira aba por padrão
 
     // Elementos internos do painel para manipulação
     const txtTicket = document.getElementById('simulacao-ticket');
@@ -215,7 +215,7 @@ const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
 
 
     // Inicializa exibindo CEAB3 por padrão
-    atualizarPainelVisual('CEAB3');
+    atualizarPainelVisual('CSNA3');
 
     async function buscarDadosSupabase(ticket) {
         try {
