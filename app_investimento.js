@@ -143,7 +143,7 @@ const SUPABASE_KEY = 'sb_publishable_s3vcDX41fY9DA48qO8k80g_cZTOckMg';
 
             // Pega o valor do HTML (ex: "CEAB") e trata para colocar o "3" antes de mandar pro painel
             const ativoHTML = this.getAttribute('data-ativo');
-            const ticketTratado = ativoHTML.endsWith('3') ? ativoHTML : ativoHTML + '3';
+            const ticketTratado = ativoHTML + '3';
             
             atualizarPainelVisual(ticketTratado);
         });
