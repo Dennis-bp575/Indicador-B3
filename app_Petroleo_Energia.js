@@ -391,9 +391,9 @@ async function executarScanner() {
                 const somaTendencia = totalReversoesCandle + t3; 
                 const resultado = `${t2} e ${t3}+${totalReversoesCandle}=${somaTendencia}`;*/
 
-                const numA = totalMatchesPalavras;
+                const numC = totalMatchesPalavras;
                 const numB = totalMatchesFonteSecundaria;
-                const numC = totalReversoesCandle;
+                const numA = totalReversoesCandle;
                 const somaBC = numC + numB; 
                 const resultado = `${numA} e ${numB}+${numC}=${somaBC}`;
 
@@ -715,9 +715,9 @@ function desenharHistoricoNaTela() {
         const placar = item.placar; // Exemplo: "2-35-6"
         const numeros = placar.split('-').map(Number);
 
-        const numA = numeros[0]; 
+        const numC = numeros[0]; 
         const numB = numeros[1];
-        const numC =  numeros[2];
+        const numA =  numeros[2];
         const somaBC = numC + numB; 
         const resultado = `${numA} e ${numB}+${numC}=${somaBC}`;
 
